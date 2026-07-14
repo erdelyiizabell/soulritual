@@ -22,12 +22,19 @@ import {
 } from "lucide-react";
 
 import jurtaHero from "@/assets/jurta-hero.asset.json";
-import logo from "@/assets/soul-ritual-logo.asset.json";
 import kakao from "@/assets/kakao.asset.json";
 import kezTermeszet from "@/assets/kez-termeszet.asset.json";
 import ritualObject from "@/assets/ritual-object.asset.json";
 import sunsetWalk from "@/assets/sunset-walk.asset.json";
 import kezekOssze from "@/assets/kezek-osszekapcsolodas.asset.json";
+import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
+import jurtaInterior from "@/assets/jurta-interior.jpg";
+import whyLavender from "@/assets/why-lavender.jpg";
+import eventCouples from "@/assets/event-couples.jpg";
+import eventWomensCircle from "@/assets/event-womens-circle.jpg";
+import blogSlowLiving from "@/assets/blog-slow-living.jpg";
+import blogCacao from "@/assets/blog-cacao.jpg";
+import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -69,13 +76,13 @@ const events = [
     desc: "Szív-nyitó este ceremoniális kakaóval, dobszóval és csenddel.",
   },
   {
-    img: sunsetWalk.url,
+    img: eventCouples,
     date: "2026. augusztus 17.",
     title: "Hétvégi elvonulás párokban",
     desc: "Két nap közös lelassulás, jóga, meditáció és természetjárás.",
   },
   {
-    img: ritualObject.url,
+    img: eventWomensCircle,
     date: "2026. szeptember 5.",
     title: "Női kör — az őszi egyensúly",
     desc: "Rituálé, megosztás és belső csend a jurta ölelésében.",
@@ -99,19 +106,19 @@ const testimonials = [
 
 const posts = [
   {
-    img: kezTermeszet.url,
+    img: blogSlowLiving,
     tag: "Önismeret",
     title: "A lelassulás művészete a hétköznapokban",
     excerpt: "Öt apró rituálé, amit már ma bevezethetsz — és amitől megváltozik a napod ritmusa.",
   },
   {
-    img: ritualObject.url,
+    img: blogCacao,
     tag: "Rituálé",
     title: "Mi történik egy kakaó szertartáson?",
     excerpt: "A ceremoniális kakaó nem trend, hanem évezredes szív-nyitó gyakorlat. Bemutatjuk.",
   },
   {
-    img: kezekOssze.url,
+    img: blogSafeSpace,
     tag: "Kapcsolódás",
     title: "Miért van szükségünk biztonságos terekre?",
     excerpt: "A modern élet elszakít önmagunktól. A jurta emlékeztet, hogyan találjunk vissza.",
@@ -187,24 +194,24 @@ function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-cream/85 backdrop-blur-md shadow-[0_1px_0_0_color-mix(in_oklab,var(--gold)_25%,transparent)]"
-          : "bg-transparent"
+          ? "bg-earth/90 backdrop-blur-md shadow-[0_1px_0_0_color-mix(in_oklab,var(--gold)_35%,transparent)]"
+          : "bg-gradient-to-b from-earth/50 to-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <a href="#top" className="flex items-center gap-3">
           <img
-            src={logo.url}
+            src={logoUrl}
             alt="Soul Ritual"
-            className={`transition-all duration-500 ${scrolled ? "h-11" : "h-14"} w-auto`}
+            className={`transition-all duration-500 ${scrolled ? "h-16" : "h-24"} w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]`}
           />
         </a>
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-9 lg:flex">
           {nav.map(([label, href]) => (
             <a
               key={href}
               href={href}
-              className="text-[11px] tracking-[0.28em] uppercase text-earth/80 transition hover:text-gold"
+              className="text-sm font-medium tracking-[0.18em] uppercase text-cream transition hover:text-gold-soft"
             >
               {label}
             </a>
@@ -212,7 +219,7 @@ function Header() {
         </nav>
         <a
           href="#contact"
-          className="hidden rounded-full border border-earth px-5 py-2.5 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-earth hover:text-cream lg:inline-block"
+          className="hidden rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth lg:inline-block"
         >
           Időpontot foglalok
         </a>
@@ -221,20 +228,20 @@ function Header() {
           className="flex flex-col gap-1.5 p-2 lg:hidden"
           aria-label="Menü"
         >
-          <span className={`h-px w-6 bg-earth transition ${open ? "translate-y-2 rotate-45" : ""}`} />
-          <span className={`h-px w-6 bg-earth transition ${open ? "opacity-0" : ""}`} />
-          <span className={`h-px w-6 bg-earth transition ${open ? "-translate-y-2 -rotate-45" : ""}`} />
+          <span className={`h-px w-6 bg-cream transition ${open ? "translate-y-2 rotate-45" : ""}`} />
+          <span className={`h-px w-6 bg-cream transition ${open ? "opacity-0" : ""}`} />
+          <span className={`h-px w-6 bg-cream transition ${open ? "-translate-y-2 -rotate-45" : ""}`} />
         </button>
       </div>
       {open && (
-        <div className="border-t border-border bg-cream/95 backdrop-blur-md lg:hidden">
+        <div className="border-t border-cream/20 bg-earth/95 backdrop-blur-md lg:hidden">
           <nav className="flex flex-col gap-1 px-6 py-4">
             {nav.map(([label, href]) => (
               <a
                 key={href}
                 href={href}
                 onClick={() => setOpen(false)}
-                className="border-b border-border/60 py-3 text-sm tracking-widest uppercase text-earth"
+                className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-cream"
               >
                 {label}
               </a>
@@ -242,7 +249,7 @@ function Header() {
             <a
               href="#contact"
               onClick={() => setOpen(false)}
-              className="mt-3 rounded-full bg-earth py-3 text-center text-[11px] tracking-[0.28em] uppercase text-cream"
+              className="mt-3 rounded-full bg-cream py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth"
             >
               Időpontot foglalok
             </a>
@@ -420,15 +427,12 @@ function Jurta() {
                 Egy hely, ahol kiszakadhatsz a mindennapokból, lelassulhatsz, és biztonságos
                 térben kapcsolódhatsz önmagadhoz.
               </p>
-              <p className="text-earth/55">
-                Levendula, fa, kő és csend. Ennyi kell — semmi több.
-              </p>
             </div>
           </div>
           <div className="lg:col-span-7" data-reveal>
             <img
-              src={jurtaHero.url}
-              alt="A jurta bejárata"
+              src={jurtaInterior}
+              alt="A jurta belső tere"
               className="aspect-[4/5] w-full object-cover"
             />
           </div>
@@ -449,7 +453,7 @@ function Why() {
     <section
       className="relative overflow-hidden bg-earth px-6 py-28 text-cream lg:py-40"
       style={{
-        backgroundImage: `linear-gradient(to bottom, color-mix(in oklab, var(--earth) 92%, transparent), color-mix(in oklab, var(--earth) 96%, transparent)), url(${kezekOssze.url})`,
+        backgroundImage: `linear-gradient(to bottom, color-mix(in oklab, var(--earth) 92%, transparent), color-mix(in oklab, var(--earth) 96%, transparent)), url(${whyLavender})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
@@ -680,11 +684,11 @@ function Contact() {
             </li>
             <li className="flex items-start gap-4">
               <Phone className="mt-1 h-5 w-5 shrink-0 text-gold" strokeWidth={1.25} />
-              <a href="tel:+36000000000" className="hover:text-gold">+36 00 000 0000</a>
+              <a href="tel:+36304078583" className="hover:text-gold">+36 30 407 85 83</a>
             </li>
             <li className="flex items-start gap-4">
               <Mail className="mt-1 h-5 w-5 shrink-0 text-gold" strokeWidth={1.25} />
-              <a href="mailto:hello@soulritual.hu" className="hover:text-gold">hello@soulritual.hu</a>
+              <a href="mailto:info@soulritual.hu" className="hover:text-gold">info@soulritual.hu</a>
             </li>
           </ul>
 
@@ -780,7 +784,7 @@ function Footer() {
     <footer className="bg-earth px-6 py-20 text-cream/80">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <img src={logo.url} alt="Soul Ritual" className="h-24 w-auto brightness-125" />
+          <img src={logoUrl} alt="Soul Ritual" className="h-32 w-auto" />
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream/70">
             Egy hely, ahol lelassulhatsz, feltöltődhetsz és újra kapcsolódhatsz önmagadhoz.
           </p>
