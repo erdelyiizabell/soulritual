@@ -86,10 +86,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "Egy hely, ahol lelassulhatsz, feltöltődhetsz és újra kapcsolódhatsz önmagadhoz.",
+          "Soul Ritual — természetközeli elvonulóhely egy mongol jurtában. Jóga, meditáció, Access Bars, ThetaHealing és kakaó szertartás elegáns, biztonságos térben.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Soul Ritual — Találj vissza önmagadhoz" },
+      { name: "twitter:description", content: "Soul Ritual — természetközeli elvonulóhely egy mongol jurtában. Jóga, meditáció, Access Bars, ThetaHealing és kakaó szertartás elegáns, biztonságos térben." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cad8897f-56c5-4525-8c48-1904a898b57c/id-preview-1acd6cbd--3e87deea-ae26-4f83-9bc3-db2be5d4a6f9.lovable.app-1784046974356.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cad8897f-56c5-4525-8c48-1904a898b57c/id-preview-1acd6cbd--3e87deea-ae26-4f83-9bc3-db2be5d4a6f9.lovable.app-1784046974356.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
