@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 
 import jurtaHero from "@/assets/jurta-hero.asset.json";
-import kakao from "@/assets/kakao.asset.json";
 import kezTermeszet from "@/assets/kez-termeszet.asset.json";
 import ritualObject from "@/assets/ritual-object.asset.json";
 import sunsetWalk from "@/assets/sunset-walk.asset.json";
@@ -35,6 +34,7 @@ import eventWomensCircle from "@/assets/event-womens-circle.jpg";
 import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
+import kakaoSacred from "@/assets/kakao-sacred.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -70,7 +70,7 @@ const reasons = [
 
 const events = [
   {
-    img: kakao.url,
+    img: kakaoSacred,
     date: "2026. augusztus 3.",
     title: "Kakaó szertartás telihold alatt",
     desc: "Szív-nyitó este ceremoniális kakaóval, dobszóval és csenddel.",
@@ -203,7 +203,8 @@ function Header() {
           <img
             src={logoUrl}
             alt="Soul Ritual"
-            className={`transition-all duration-500 ${scrolled ? "h-16" : "h-24"} w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]`}
+            className={`transition-all duration-500 ${scrolled ? "h-14 sm:h-16" : "h-20 sm:h-28"} w-auto`}
+            style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.55)) drop-shadow(0 6px 24px rgba(0,0,0,0.45))" }}
           />
         </a>
         <nav className="hidden items-center gap-9 lg:flex">
@@ -264,6 +265,8 @@ function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Disable parallax on touch / small screens to prevent image jump
+    if (window.matchMedia("(max-width: 1023px), (pointer: coarse)").matches) return;
     const onScroll = () => {
       if (!heroRef.current) return;
       const y = window.scrollY;
@@ -274,12 +277,14 @@ function Hero() {
   }, []);
 
   return (
-    <section id="top" className="relative h-[100svh] min-h-[640px] w-full overflow-hidden">
+    <section id="top" className="relative h-[100svh] min-h-[560px] w-full overflow-hidden">
       <div ref={heroRef} className="absolute inset-0 will-change-transform">
         <img
           src={jurtaHero.url}
           alt="Soul Ritual jurta a levendulamező szélén"
           className="ken-burns h-full w-full object-cover"
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-earth/25 via-earth/10 to-earth/60" />
       </div>
@@ -456,7 +461,6 @@ function Why() {
         backgroundImage: `linear-gradient(to bottom, color-mix(in oklab, var(--earth) 92%, transparent), color-mix(in oklab, var(--earth) 96%, transparent)), url(${whyLavender})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
       }}
     >
       <div className="mx-auto max-w-6xl">
