@@ -107,21 +107,24 @@ const testimonials = [
 const posts = [
   {
     img: blogSlowLiving,
-    tag: "Önismeret",
+    tag: "Vlog",
     title: "A lelassulás művészete a hétköznapokban",
     excerpt: "Öt apró rituálé, amit már ma bevezethetsz — és amitől megváltozik a napod ritmusa.",
+    href: "https://www.youtube.com/@soulritual",
   },
   {
     img: blogCacao,
-    tag: "Rituálé",
+    tag: "Vlog",
     title: "Mi történik egy kakaó szertartáson?",
     excerpt: "A ceremoniális kakaó nem trend, hanem évezredes szív-nyitó gyakorlat. Bemutatjuk.",
+    href: "https://www.youtube.com/@soulritual",
   },
   {
     img: blogSafeSpace,
-    tag: "Kapcsolódás",
+    tag: "Vlog",
     title: "Miért van szükségünk biztonságos terekre?",
     excerpt: "A modern élet elszakít önmagunktól. A jurta emlékeztet, hogyan találjunk vissza.",
+    href: "https://www.youtube.com/@soulritual",
   },
 ];
 
@@ -589,20 +592,37 @@ function Blog() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end" data-reveal>
           <div className="max-w-xl">
-            <p className="eyebrow">Blog</p>
+            <p className="eyebrow">Vlog</p>
             <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
               Gondolatok az <em className="italic text-gold">útról</em>.
             </h2>
           </div>
+          <a
+            href="https://www.youtube.com/@soulritual"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[11px] tracking-[0.28em] uppercase text-earth underline decoration-gold underline-offset-8 hover:decoration-earth"
+          >
+            YouTube csatorna →
+          </a>
         </div>
 
         <div className="mt-16 grid gap-12 lg:grid-cols-3">
           {posts.map((p, i) => (
-            <article key={p.title} data-reveal style={{ transitionDelay: `${i * 80}ms` }} className="group">
+            <a
+              key={p.title}
+              href={p.href}
+              target="_blank"
+              rel="noreferrer"
+              data-reveal
+              style={{ transitionDelay: `${i * 80}ms` }}
+              className="group block"
+            >
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src={p.img}
                   alt={p.title}
+                  loading="lazy"
                   className="h-full w-full object-cover transition duration-[1200ms] group-hover:scale-105"
                 />
               </div>
@@ -611,7 +631,10 @@ function Blog() {
                 {p.title}
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-earth/65">{p.excerpt}</p>
-            </article>
+              <span className="mt-4 inline-flex items-center gap-2 text-[11px] tracking-[0.28em] uppercase text-gold">
+                Megnézem <ArrowUpRight className="h-3.5 w-3.5" />
+              </span>
+            </a>
           ))}
         </div>
       </div>
