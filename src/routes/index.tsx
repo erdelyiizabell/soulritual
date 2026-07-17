@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Flower2,
   Heart,
@@ -184,6 +185,14 @@ function useReveal() {
 function Header() {
   const scrolled = useScrolled(60);
   const [open, setOpen] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setIsAuthed(!!session);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
   const nav = [
     ["Bemutatkozás", "#about"],
     ["Szolgáltatások", "#services"],
@@ -221,12 +230,20 @@ function Header() {
             </a>
           ))}
         </nav>
-        <a
-          href="#contact"
-          className="hidden rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth lg:inline-block"
-        >
-          Időpontot foglalok
-        </a>
+        <div className="hidden items-center gap-4 lg:flex">
+          <Link
+            to={isAuthed ? "/gyakorloter" : "/auth"}
+            className="text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:text-gold-soft"
+          >
+            {isAuthed ? "Gyakorlótér" : "Belépés"}
+          </Link>
+          <a
+            href="#contact"
+            className="rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth"
+          >
+            Időpontot foglalok
+          </a>
+        </div>
         <button
           onClick={() => setOpen(!open)}
           className="flex flex-col gap-1.5 p-2 lg:hidden"
