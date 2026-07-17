@@ -267,6 +267,13 @@ function Header() {
                 {label}
               </a>
             ))}
+            <Link
+              to={isAuthed ? "/gyakorloter" : "/auth"}
+              onClick={() => setOpen(false)}
+              className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-cream"
+            >
+              {isAuthed ? "Gyakorlótér" : "Belépés"}
+            </Link>
             <a
               href="#contact"
               onClick={() => setOpen(false)}
