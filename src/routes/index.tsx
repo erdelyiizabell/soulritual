@@ -865,7 +865,7 @@ function Footer() {
             <li><a href="#services" className="hover:text-gold">Szolgáltatások</a></li>
             <li><a href="#events" className="hover:text-gold">Események</a></li>
             <li><a href="#blog" className="hover:text-gold">Blog</a></li>
-            <li><a href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer" className="hover:text-gold">Kapcsolat</a></li>
+            <li><a href="#contact" className="hover:text-gold">Kapcsolat</a></li>
           </ul>
         </div>
       </div>
