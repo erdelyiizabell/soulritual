@@ -101,6 +101,22 @@ function Gyakorloter() {
             A videótár feltöltés alatt áll. Nemsokára itt találod majd az összes gyakorlatot.
           </p>
         </div>
+
+        <div className="mt-10 rounded-2xl border border-earth/15 bg-cream/40 p-10 text-center">
+          <p className="eyebrow">Személyes alkalom</p>
+          <h2 className="mt-3 text-2xl lg:text-3xl">Foglalj időpontot</h2>
+          <p className="mt-3 text-sm text-muted-foreground max-w-xl mx-auto">
+            Egyéni ülés, konzultáció vagy jurta látogatás — foglalj magadnak időt.
+          </p>
+          <a
+            href="https://app.minup.io/book/soulritual"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-earth px-8 py-3 text-xs uppercase tracking-[0.24em] text-cream hover:bg-earth/90 transition"
+          >
+            Időpontot foglalok
+          </a>
+        </div>
       </main>
     </div>
   );
