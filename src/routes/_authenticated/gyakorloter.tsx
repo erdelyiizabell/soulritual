@@ -75,7 +75,7 @@ function Gyakorloter() {
         <p className="eyebrow">Gyakorlótér</p>
         <h1 className="mt-4 text-4xl lg:text-5xl">Üdv újra itt</h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">
-          Ez a te saját tereid — meditációk, légzőgyakorlatok és jógaóra videók.
+          Ez a te saját tered — meditációk, légzőgyakorlatok és jógaóra videók.
           Hamarosan feltöltjük az első tartalmakat.
         </p>
 
