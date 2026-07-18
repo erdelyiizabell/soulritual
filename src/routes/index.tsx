@@ -238,7 +238,7 @@ function Header() {
             {isAuthed ? "Gyakorlótér" : "Belépés"}
           </Link>
           <a
-            href="#contact"
+            href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
             className="rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth"
           >
             Időpontot foglalok
@@ -275,7 +275,7 @@ function Header() {
               {isAuthed ? "Gyakorlótér" : "Belépés"}
             </Link>
             <a
-              href="#contact"
+              href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               className="mt-3 rounded-full bg-cream py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth"
             >
@@ -337,7 +337,7 @@ function Hero() {
           style={{ animationDelay: "0.75s" }}
         >
           <a
-            href="#contact"
+            href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
             className="group inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
           >
             Időpontot foglalok
@@ -525,7 +525,7 @@ function Events() {
             </h2>
           </div>
           <a
-            href="#contact"
+            href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
             className="text-[11px] tracking-[0.28em] uppercase text-earth underline decoration-gold underline-offset-8 hover:decoration-earth"
           >
             Összes esemény →
@@ -553,7 +553,7 @@ function Events() {
               <h3 className="mt-6 text-2xl leading-snug">{e.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-earth/65">{e.desc}</p>
               <a
-                href="#contact"
+                href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center gap-2 text-[11px] tracking-[0.28em] uppercase text-gold hover:text-earth"
               >
                 Jelentkezem <ArrowUpRight className="h-3.5 w-3.5" />
@@ -865,7 +865,7 @@ function Footer() {
             <li><a href="#services" className="hover:text-gold">Szolgáltatások</a></li>
             <li><a href="#events" className="hover:text-gold">Események</a></li>
             <li><a href="#blog" className="hover:text-gold">Blog</a></li>
-            <li><a href="#contact" className="hover:text-gold">Kapcsolat</a></li>
+            <li><a href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer" className="hover:text-gold">Kapcsolat</a></li>
           </ul>
         </div>
       </div>
