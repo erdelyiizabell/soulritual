@@ -352,14 +352,14 @@ function Hero() {
         </div>
       </div>
 
-      <a
-        href="#about"
-        aria-label="Tovább"
+      <Link
+        to="/auth"
+        aria-label="Belépés"
         className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-cream/70"
       >
         <span className="text-[10px] tracking-[0.32em] uppercase">Belépek</span>
         <ChevronDown className="h-4 w-4 animate-bounce" />
-      </a>
+      </Link>
     </section>
   );
 }
