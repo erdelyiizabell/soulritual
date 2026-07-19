@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_authenticated/gyakorloter")({
   component: Gyakorloter,
   head: () => ({
     meta: [
-      { title: "Gyakorlótér — Soul Ritual" },
+      { title: "Ébredés — Soul Ritual" },
       {
         name: "description",
         content: "Meditációk, légzőgyakorlatok és jógaóra videók a Soul Ritual közösségének.",
