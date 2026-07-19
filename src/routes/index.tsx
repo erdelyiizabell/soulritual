@@ -235,7 +235,7 @@ function Header() {
             to={isAuthed ? "/gyakorloter" : "/auth"}
             className="text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:text-gold-soft"
           >
-            {isAuthed ? "Gyakorlótér" : "Belépés"}
+            {isAuthed ? "Ébredés" : "Belépés"}
           </Link>
           <a
             href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
