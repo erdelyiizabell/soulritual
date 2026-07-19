@@ -272,7 +272,7 @@ function Header() {
               onClick={() => setOpen(false)}
               className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-cream"
             >
-              {isAuthed ? "Gyakorlótér" : "Belépés"}
+              {isAuthed ? "Ébredés" : "Belépés"}
             </Link>
             <a
               href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
