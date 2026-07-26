@@ -57,22 +57,6 @@ function AuthPage() {
     }
   };
 
-  const handleGoogle = async () => {
-    setLoading(true);
-    setMsg(null);
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (result.error) throw new Error(result.error.message ?? "Google bejelentkezési hiba");
-      if (result.redirected) return;
-      await router.invalidate();
-      navigate({ to: "/gyakorloter", replace: true });
-    } catch (err) {
-      setMsg({ type: "error", text: (err as Error).message });
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-16">
