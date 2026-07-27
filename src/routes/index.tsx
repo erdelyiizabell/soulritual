@@ -36,6 +36,8 @@ import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 import kakaoSacred from "@/assets/kakao-sacred.jpg";
 
+const SCOOL_URL = "https://www.scool.hu";
+
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
