@@ -1,6 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import {
   Flower2,
   Heart,
@@ -36,6 +35,8 @@ import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 import kakaoSacred from "@/assets/kakao-sacred.jpg";
+
+const SCOOL_URL = "https://www.scool.hu";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -185,14 +186,6 @@ function useReveal() {
 function Header() {
   const scrolled = useScrolled(60);
   const [open, setOpen] = useState(false);
-  const [isAuthed, setIsAuthed] = useState(false);
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setIsAuthed(!!session);
-    });
-    return () => sub.subscription.unsubscribe();
-  }, []);
   const nav = [
     ["Bemutatkozás", "#about"],
     ["Szolgáltatások", "#services"],
@@ -231,12 +224,14 @@ function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-4 lg:flex">
-          <Link
-            to={isAuthed ? "/gyakorloter" : "/auth"}
+          <a
+            href={SCOOL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:text-gold-soft"
           >
-            {isAuthed ? "Ébredés" : "Belépés"}
-          </Link>
+            Videótár
+          </a>
           <a
             href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
             className="rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth"
@@ -267,13 +262,15 @@ function Header() {
                 {label}
               </a>
             ))}
-            <Link
-              to={isAuthed ? "/gyakorloter" : "/auth"}
+            <a
+              href={SCOOL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-cream"
             >
-              {isAuthed ? "Ébredés" : "Belépés"}
-            </Link>
+              Videótár
+            </a>
             <a
               href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
               onClick={() => setOpen(false)}
@@ -352,14 +349,14 @@ function Hero() {
         </div>
       </div>
 
-      <Link
-        to="/auth"
-        aria-label="Belépés"
+      <a
+        href="#about"
+        aria-label="Tovább"
         className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-cream/70"
       >
-        <span className="text-[10px] tracking-[0.32em] uppercase">Belépek</span>
+        <span className="text-[10px] tracking-[0.32em] uppercase">Tovább</span>
         <ChevronDown className="h-4 w-4 animate-bounce" />
-      </Link>
+      </a>
     </section>
   );
 }
