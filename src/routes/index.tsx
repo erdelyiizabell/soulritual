@@ -1,6 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import {
   Flower2,
   Heart,
@@ -185,14 +184,6 @@ function useReveal() {
 function Header() {
   const scrolled = useScrolled(60);
   const [open, setOpen] = useState(false);
-  const [isAuthed, setIsAuthed] = useState(false);
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setIsAuthed(!!session);
-    });
-    return () => sub.subscription.unsubscribe();
-  }, []);
   const nav = [
     ["Bemutatkozás", "#about"],
     ["Szolgáltatások", "#services"],
