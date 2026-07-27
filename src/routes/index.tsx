@@ -222,12 +222,14 @@ function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-4 lg:flex">
-          <Link
-            to={isAuthed ? "/gyakorloter" : "/auth"}
+          <a
+            href={SCOOL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:text-gold-soft"
           >
-            {isAuthed ? "Ébredés" : "Belépés"}
-          </Link>
+            Videótár
+          </a>
           <a
             href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
             className="rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth"
@@ -258,13 +260,15 @@ function Header() {
                 {label}
               </a>
             ))}
-            <Link
-              to={isAuthed ? "/gyakorloter" : "/auth"}
+            <a
+              href={SCOOL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-cream"
             >
-              {isAuthed ? "Ébredés" : "Belépés"}
-            </Link>
+              Videótár
+            </a>
             <a
               href="https://app.minup.io/book/soulritual" target="_blank" rel="noopener noreferrer"
               onClick={() => setOpen(false)}
@@ -343,14 +347,14 @@ function Hero() {
         </div>
       </div>
 
-      <Link
-        to="/auth"
-        aria-label="Belépés"
+      <a
+        href="#about"
+        aria-label="Tovább"
         className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-cream/70"
       >
-        <span className="text-[10px] tracking-[0.32em] uppercase">Belépek</span>
+        <span className="text-[10px] tracking-[0.32em] uppercase">Tovább</span>
         <ChevronDown className="h-4 w-4 animate-bounce" />
-      </Link>
+      </a>
     </section>
   );
 }
