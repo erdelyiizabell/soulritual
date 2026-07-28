@@ -218,6 +218,14 @@ function Header() {
         </nav>
         <div className="hidden items-center gap-4 lg:flex">
           <a
+            href="https://app.minup.io/book/soulritual"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-cream px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-earth transition hover:bg-gold hover:text-cream"
+          >
+            Időpontfoglalás
+          </a>
+          <a
             href={SKOOL_URL}
             target="_blank"
             rel="noopener noreferrer"
@@ -254,11 +262,20 @@ function Header() {
               </a>
             ))}
             <a
+              href="https://app.minup.io/book/soulritual"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="mt-4 rounded-full bg-cream py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
+            >
+              Időpontfoglalás
+            </a>
+            <a
               href={SKOOL_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
-              className="mt-3 rounded-full bg-cream py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth"
+              className="mt-2.5 rounded-full border border-cream/80 py-3 text-center text-[11px] tracking-[0.28em] uppercase text-cream transition hover:bg-cream hover:text-earth"
             >
               Csatlakozom
             </a>
@@ -408,6 +425,17 @@ function Services() {
               <ArrowUpRight className="absolute right-6 top-6 h-4 w-4 text-earth/20 transition duration-500 group-hover:text-gold" />
             </div>
           ))}
+        </div>
+        <div className="mt-16 flex justify-center" data-reveal>
+          <a
+            href="https://app.minup.io/book/soulritual"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 rounded-full bg-earth px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-cream transition hover:bg-gold hover:text-cream"
+          >
+            Időpontot foglalok egyéni folyamatra
+            <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
         </div>
       </div>
     </section>
