@@ -335,17 +335,8 @@ function Hero() {
           style={{ animationDelay: "0.75s" }}
         >
           <a
-            href={SKOOL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
-          >
-            Csatlakozom a közösséghez
-            <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
-          <a
             href="#events"
-            className="inline-flex items-center gap-3 rounded-full border border-cream/60 px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-cream transition hover:border-cream"
+            className="inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
           >
             Közelgő események
           </a>
