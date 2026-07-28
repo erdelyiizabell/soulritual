@@ -43,13 +43,13 @@
   --radius: 0.5rem;
 
   /* Brand tokens */
-  --cream: oklch(0.98 0.012 85);        /* #FAF8F3 */
-  --sand: oklch(0.92 0.024 78);         /* #EFE6D8 */
-  --linen: oklch(0.955 0.014 82);       /* #F6F2EA */
-  --gold: oklch(0.68 0.11 75);          /* #C89B3C */
+  --cream: oklch(0.98 0.012 85); /* #FAF8F3 */
+  --sand: oklch(0.92 0.024 78); /* #EFE6D8 */
+  --linen: oklch(0.955 0.014 82); /* #F6F2EA */
+  --gold: oklch(0.68 0.11 75); /* #C89B3C */
   --gold-soft: oklch(0.82 0.07 78);
-  --olive: oklch(0.55 0.04 125);        /* #78866B */
-  --earth: oklch(0.32 0.03 55);         /* #4B3A30 */
+  --olive: oklch(0.55 0.04 125); /* #78866B */
+  --earth: oklch(0.32 0.03 55); /* #4B3A30 */
 
   --background: var(--cream);
   --foreground: var(--earth);
@@ -90,7 +90,12 @@
     letter-spacing: 0.005em;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: -0.01em;
@@ -106,7 +111,12 @@
 @utility hairline {
   height: 1px;
   width: 100%;
-  background: linear-gradient(to right, transparent, color-mix(in oklab, var(--gold) 50%, transparent), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklab, var(--gold) 50%, transparent),
+    transparent
+  );
 }
 
 @utility gold-underline {
@@ -130,13 +140,23 @@
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slowZoom {
-  from { transform: scale(1.05); }
-  to { transform: scale(1.15); }
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1.15);
+  }
 }
 
 @utility ken-burns {
