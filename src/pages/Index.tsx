@@ -221,14 +221,6 @@ function Header() {
             href={SKOOL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:text-gold-soft"
-          >
-            Közösség
-          </a>
-          <a
-            href={SKOOL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
             className="rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth"
           >
             Csatlakozom
@@ -261,15 +253,6 @@ function Header() {
                 {label}
               </a>
             ))}
-            <a
-              href={SKOOL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
-              className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-cream"
-            >
-              Közösség
-            </a>
             <a
               href={SKOOL_URL}
               target="_blank"
