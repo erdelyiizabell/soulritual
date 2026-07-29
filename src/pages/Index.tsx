@@ -20,7 +20,7 @@ import {
   Quote,
 } from "lucide-react";
 
-import jurtaHero from "@/assets/jurta-hero.png";
+import jurtaHero from "@/assets/jurta-hero.jpg";
 import kezTermeszet from "@/assets/kez-termeszet.jpg";
 import ritualObject from "@/assets/ritual-object.png";
 import sunsetWalk from "@/assets/sunset-walk.png";
