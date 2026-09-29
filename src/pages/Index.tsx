@@ -28,12 +28,10 @@ import kezekOssze from "@/assets/kezek-osszekapcsolodas.png";
 import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
 import jurtaInterior from "@/assets/jurta-interior.jpg";
 import whyLavender from "@/assets/why-lavender.jpg";
-import eventCouples from "@/assets/event-couples.jpg";
-import eventWomensCircle from "@/assets/event-womens-circle.jpg";
+import eventIntimitas from "@/assets/event-intimitas-tere.jpg";
 import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
-import kakaoSacred from "@/assets/kakao-sacred.jpg";
 
 const SKOOL_URL = "https://www.skool.com/soul-ritual-academy-6258";
 const YOUTUBE_URL = "https://www.youtube.com/@soulritual";
@@ -62,22 +60,26 @@ const reasons = [
 
 const events = [
   {
-    img: kakaoSacred,
-    date: "2026. augusztus 3.",
-    title: "Kakaó szertartás telihold alatt",
-    desc: "Szív-nyitó este ceremoniális kakaóval, dobszóval és csenddel.",
-  },
-  {
-    img: eventCouples,
-    date: "2026. augusztus 17.",
-    title: "Hétvégi elvonulás párokban",
-    desc: "Két nap közös lelassulás, jóga, meditáció és természetjárás.",
-  },
-  {
-    img: eventWomensCircle,
-    date: "2026. szeptember 5.",
-    title: "Női kör — az őszi egyensúly",
-    desc: "Rituálé, megosztás és belső csend a jurta ölelésében.",
+    img: eventIntimitas,
+    date: "2026. október 24. · 10:00–17:00",
+    location: "Jurta · 2073 Tök, Táncsics Mihály u. 7.",
+    title: "Önismereti workshop — Az Intimitás Tere",
+    desc: "Speciális önismereti workshop, ahol főként újragondolt pszichodramatikus technikák segítségével dolgozunk az ödipális korszak, a kamaszkor és a kora felnőttkor szexuális állomásain, változásain, szokásain, hiedelmein és tabuin — mindazon, ami befolyásolhatja a felnőtt, érett, kiegyensúlyozott és szorongásmentes érzelmi intimitás megélését.",
+    topics: [
+      "A saját és a másik nemhez fűződő érzések, viszonyulások, tabuk, hiedelmek, szokások és félelmek",
+      "Párkapcsolati és szexuális problémák",
+      "Női és férfi érzelmi intimitás",
+      "Önbecsülési és önértékelési problémák",
+      "Boldogtalanság, a teljesítménnyel kapcsolatos nehézségek és az ezekből fakadó szégyenérzet",
+    ],
+    pillars:
+      "Érzelmi intimitás, pszichodramatikus mozgás- és táncterápiás elemek, bodywork módszerek és meditációs gyakorlatok.",
+    goal: "Hogy megtaláld a Benned rejtőző szabadságot, és újra kapcsolódj hozzá, valamint a saját erőforrásaidhoz. A csoport hangulatát a kedvesség, lágyság, bensőségesség és intimitás jellemzi — egy tér, ahol közelebb kerülhetsz önmagadhoz, és őszintébben kapcsolódhatsz önmagadhoz és másokhoz.",
+    price: "18 000 Ft",
+    capacity: "3–15 fő",
+    facilitator: "Rácz Jenő — pszichodráma vezető, buddhista tanító",
+    email: "workshop@soulritual.hu",
+    href: "https://www.facebook.com/events/jurta-2073-t%C3%B6k-t%C3%A1ncsics-mih%C3%A1ly-u-7/%C3%B6nismereti-workshop-az-intimit%C3%A1s-tere/2686014968480428/",
   },
 ];
 
@@ -547,15 +549,19 @@ function Events() {
           </a>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
-          {events.map((e, i) => (
+        <div className="mt-16 flex flex-col gap-16">
+          {events.map((e) => (
             <article
               key={e.title}
               data-reveal
-              style={{ transitionDelay: `${i * 80}ms` }}
-              className="group flex flex-col"
+              className="group grid gap-10 md:grid-cols-2 lg:gap-16"
             >
-              <div className="relative aspect-[4/5] overflow-hidden">
+              <a
+                href={e.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative block aspect-[5/4] overflow-hidden md:sticky md:top-28 md:self-start"
+              >
                 <img
                   src={e.img}
                   alt={e.title}
@@ -564,17 +570,75 @@ function Events() {
                 <div className="absolute left-4 top-4 bg-cream/95 px-3 py-1.5 text-[10px] tracking-[0.24em] uppercase text-earth">
                   {e.date}
                 </div>
-              </div>
-              <h3 className="mt-6 text-2xl leading-snug">{e.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-earth/65">{e.desc}</p>
-              <a
-                href={SKOOL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 text-[11px] tracking-[0.28em] uppercase text-gold hover:text-earth"
-              >
-                Jelentkezem <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
+              <div className="flex flex-col">
+                <p className="text-[11px] tracking-[0.28em] uppercase text-gold">{e.location}</p>
+                <h3 className="mt-4 text-3xl leading-snug sm:text-4xl">{e.title}</h3>
+                <p className="mt-6 text-sm leading-relaxed text-earth/65">{e.desc}</p>
+
+                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">Témáink</p>
+                <ul className="mt-4 space-y-2 text-sm leading-relaxed text-earth/65">
+                  {e.topics.map((t) => (
+                    <li key={t} className="flex gap-3">
+                      <span className="mt-2 h-px w-4 shrink-0 bg-gold" />
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">
+                  A munkánk fő pillérei
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-earth/65">{e.pillars}</p>
+
+                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">
+                  A csoport célja
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-earth/65">{e.goal}</p>
+
+                <dl className="mt-10 grid grid-cols-2 gap-6 border-t border-earth/15 pt-8 text-sm">
+                  <div>
+                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
+                      Részvételi díj
+                    </dt>
+                    <dd className="mt-2 font-display text-xl text-earth">{e.price}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
+                      Létszám
+                    </dt>
+                    <dd className="mt-2 font-display text-xl text-earth">{e.capacity}</dd>
+                  </div>
+                  <div className="col-span-2">
+                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
+                      Vezeti
+                    </dt>
+                    <dd className="mt-2 text-earth/80">{e.facilitator}</dd>
+                  </div>
+                  <div className="col-span-2">
+                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
+                      Jelentkezés e-mailben
+                    </dt>
+                    <dd className="mt-2">
+                      <a
+                        href={`mailto:${e.email}`}
+                        className="text-earth/80 underline decoration-gold underline-offset-4 hover:text-gold"
+                      >
+                        {e.email}
+                      </a>
+                    </dd>
+                  </div>
+                </dl>
+
+                <a
+                  href={e.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-10 inline-flex items-center gap-2 text-[11px] tracking-[0.28em] uppercase text-gold hover:text-earth"
+                >
+                  Esemény a Facebookon <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </article>
           ))}
         </div>
