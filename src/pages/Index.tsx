@@ -17,8 +17,11 @@ import {
   Instagram,
   Facebook,
   ArrowUpRight,
+  ArrowRight,
   Quote,
 } from "lucide-react";
+
+import EventRegistrationModal, { EventDetails } from "@/components/EventRegistrationModal";
 
 import jurtaHero from "@/assets/jurta-hero.jpg";
 import kezTermeszet from "@/assets/kez-termeszet.jpg";
@@ -175,7 +178,7 @@ function useReveal() {
   }, []);
 }
 
-function Header() {
+function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
   const scrolled = useScrolled(60);
   const [open, setOpen] = useState(false);
   const nav = [
@@ -218,7 +221,14 @@ function Header() {
             </a>
           ))}
         </nav>
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-3 lg:flex">
+          <button
+            type="button"
+            onClick={onOpenRegistration}
+            className="rounded-full bg-gold px-5 py-2.5 text-xs font-semibold tracking-[0.2em] uppercase text-earth transition hover:bg-cream cursor-pointer shadow-sm"
+          >
+            Workshop regisztráció
+          </button>
           <a
             href="https://app.minup.io/book/soulritual"
             target="_blank"
@@ -263,12 +273,22 @@ function Header() {
                 {label}
               </a>
             ))}
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onOpenRegistration();
+              }}
+              className="mt-4 w-full rounded-full bg-gold py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-cream cursor-pointer font-semibold shadow-sm"
+            >
+              Workshop regisztráció (Okt. 24.)
+            </button>
             <a
               href="https://app.minup.io/book/soulritual"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
-              className="mt-4 rounded-full bg-cream py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
+              className="mt-2.5 rounded-full bg-cream py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
             >
               Időpontfoglalás
             </a>
@@ -288,7 +308,7 @@ function Header() {
   );
 }
 
-function Hero() {
+function Hero({ onOpenRegistration }: { onOpenRegistration: () => void }) {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -336,9 +356,17 @@ function Hero() {
           className="fade-up mt-12 flex flex-col items-center gap-4 sm:flex-row"
           style={{ animationDelay: "0.75s" }}
         >
+          <button
+            type="button"
+            onClick={onOpenRegistration}
+            className="inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream cursor-pointer shadow-lg"
+          >
+            <span>Jelentkezem a workshopra</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
           <a
             href="#events"
-            className="inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
+            className="inline-flex items-center gap-2 rounded-full border border-cream/80 px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-cream transition hover:bg-cream hover:text-earth"
           >
             Közelgő események
           </a>
@@ -525,7 +553,7 @@ function Why() {
   );
 }
 
-function Events() {
+function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof events)[0]) => void }) {
   return (
     <section id="events" className="bg-linen px-6 py-28 lg:py-40">
       <div className="mx-auto max-w-6xl">
@@ -556,21 +584,32 @@ function Events() {
               data-reveal
               className="group grid gap-10 md:grid-cols-2 lg:gap-16"
             >
-              <a
-                href={e.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative block aspect-[5/4] overflow-hidden md:sticky md:top-28 md:self-start"
+              <div
+                onClick={() => onOpenRegistration(e)}
+                className="relative block aspect-[5/4] overflow-hidden md:sticky md:top-28 md:self-start rounded-2xl cursor-pointer group/img shadow-md"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter" || ev.key === " ") {
+                    ev.preventDefault();
+                    onOpenRegistration(e);
+                  }
+                }}
+                aria-label={`Jelentkezés: ${e.title}`}
               >
                 <img
                   src={e.img}
                   alt={e.title}
                   className="h-full w-full object-cover transition duration-[1200ms] group-hover:scale-105"
                 />
-                <div className="absolute left-4 top-4 bg-cream/95 px-3 py-1.5 text-[10px] tracking-[0.24em] uppercase text-earth">
+                <div className="absolute left-4 top-4 bg-cream/95 px-3 py-1.5 text-[10px] tracking-[0.24em] uppercase text-earth font-medium shadow-sm">
                   {e.date}
                 </div>
-              </a>
+                <div className="absolute bottom-4 right-4 bg-earth/90 backdrop-blur-sm px-4 py-2 text-[10px] tracking-[0.2em] uppercase text-cream rounded-full transition group-hover/img:bg-gold group-hover/img:text-earth flex items-center gap-1.5 shadow-lg">
+                  <Sparkles className="h-3 w-3 text-gold-soft group-hover/img:text-earth" />
+                  Kattints a jelentkezéshez
+                </div>
+              </div>
               <div className="flex flex-col">
                 <p className="text-[11px] tracking-[0.28em] uppercase text-gold">{e.location}</p>
                 <h3 className="mt-4 text-3xl leading-snug sm:text-4xl">{e.title}</h3>
@@ -602,12 +641,14 @@ function Events() {
                       Részvételi díj
                     </dt>
                     <dd className="mt-2 font-display text-xl text-earth">{e.price}</dd>
+                    <span className="text-[11px] text-earth/50">Helyszínen fizetendő</span>
                   </div>
                   <div>
                     <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
                       Létszám
                     </dt>
                     <dd className="mt-2 font-display text-xl text-earth">{e.capacity}</dd>
+                    <span className="text-[11px] text-earth/50">Kis létszámú csoport</span>
                   </div>
                   <div className="col-span-2">
                     <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
@@ -615,29 +656,48 @@ function Events() {
                     </dt>
                     <dd className="mt-2 text-earth/80">{e.facilitator}</dd>
                   </div>
-                  <div className="col-span-2">
-                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
-                      Jelentkezés e-mailben
-                    </dt>
-                    <dd className="mt-2">
-                      <a
-                        href={`mailto:${e.email}`}
-                        className="text-earth/80 underline decoration-gold underline-offset-4 hover:text-gold"
-                      >
-                        {e.email}
-                      </a>
-                    </dd>
-                  </div>
                 </dl>
 
-                <a
-                  href={e.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-10 inline-flex items-center gap-2 text-[11px] tracking-[0.28em] uppercase text-gold hover:text-earth"
-                >
-                  Esemény a Facebookon <ArrowUpRight className="h-3.5 w-3.5" />
-                </a>
+                {/* Prominent Registration CTA Card */}
+                <div className="mt-8 rounded-2xl bg-cream/90 p-6 border border-gold/40 shadow-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                    <div>
+                      <span className="eyebrow block">Regisztráció</span>
+                      <h4 className="mt-1 font-display text-xl text-earth">
+                        Foglald le a helyed a workshopra
+                      </h4>
+                      <p className="mt-1 text-xs text-earth/70">
+                        Online fizetés nélkül · Lemondás legkésőbb 2 nappal az esemény előtt
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onOpenRegistration(e)}
+                      className="group inline-flex items-center justify-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream transition hover:bg-gold hover:text-earth cursor-pointer shadow-md shrink-0"
+                    >
+                      <span>Jelentkezem a workshopra</span>
+                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-earth/70">
+                  <a
+                    href={e.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.24em] uppercase text-gold hover:text-earth"
+                  >
+                    Esemény a Facebookon <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                  <span className="text-earth/30">·</span>
+                  <a
+                    href={`mailto:${e.email}`}
+                    className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.24em] uppercase text-earth/70 hover:text-gold"
+                  >
+                    Kérdésed van? {e.email}
+                  </a>
+                </div>
               </div>
             </article>
           ))}
@@ -959,23 +1019,59 @@ function RevealStyles() {
 
 export default function Index() {
   useReveal();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventDetails>({
+    id: "az-intimitas-tere-2026-10-24",
+    title: events[0].title,
+    date: events[0].date,
+    time: "10:00 – 17:00",
+    location: events[0].location,
+    desc: events[0].desc,
+    price: events[0].price,
+    capacity: events[0].capacity,
+    facilitator: events[0].facilitator,
+    email: events[0].email,
+  });
+
+  const handleOpenRegistration = (ev?: (typeof events)[0]) => {
+    const target = ev || events[0];
+    setSelectedEvent({
+      id: "az-intimitas-tere-2026-10-24",
+      title: target.title,
+      date: target.date,
+      time: "10:00 – 17:00",
+      location: target.location,
+      desc: target.desc,
+      price: target.price,
+      capacity: target.capacity,
+      facilitator: target.facilitator,
+      email: target.email,
+    });
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="bg-cream">
       <RevealStyles />
-      <Header />
+      <Header onOpenRegistration={() => handleOpenRegistration(events[0])} />
       <main>
-        <Hero />
+        <Hero onOpenRegistration={() => handleOpenRegistration(events[0])} />
         <About />
         <Services />
         <Jurta />
         <Why />
-        <Events />
+        <Events onOpenRegistration={handleOpenRegistration} />
         <Testimonials />
         <Blog />
         <FAQ />
         <Contact />
       </main>
       <Footer />
+      <EventRegistrationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        event={selectedEvent}
+      />
     </div>
   );
 }
