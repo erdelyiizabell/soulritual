@@ -133,32 +133,61 @@ export default function EventRegistrationModal({
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const record: RegistrationRecord = {
-        id: window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-        eventId: event.id,
-        eventTitle: event.title,
-        eventDate: event.date,
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim() || undefined,
-        note: note.trim() || undefined,
-        committed,
-        cancellationAccepted,
-        createdAt: new Date().toISOString(),
-      };
+    const record: RegistrationRecord = {
+      id: window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      eventId: event.id,
+      eventTitle: event.title,
+      eventDate: event.date,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim() || undefined,
+      note: note.trim() || undefined,
+      committed,
+      cancellationAccepted,
+      createdAt: new Date().toISOString(),
+    };
 
-      saveRegistration(record);
-      setSavedList(getSavedRegistrations());
+    // 1. Mentés a böngésző helyi tárhelyébe
+    saveRegistration(record);
+    setSavedList(getSavedRegistrations());
+
+    // 2. Automatikus e-mail küldés a workshop@soulritual.hu címre (Formsubmit AJAX)
+    try {
+      const targetEmail = event.email || "workshop@soulritual.hu";
+      await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          _subject: `Új workshop jelentkezés: ${event.title} (${event.date})`,
+          _template: "table",
+          _captcha: "false",
+          "Jelentkező neve": name.trim(),
+          "E-mail címe": email.trim(),
+          Telefonszáma: phone.trim() || "Nem adott meg",
+          Esemény: event.title,
+          Időpont: event.date,
+          Helyszín: event.location || "Soul Ritual Jurta (Tök)",
+          "Üzenet / Szándék": note.trim() || "Nincs külön megjegyzés",
+          "Részvételi nyilatkozat": "Ott szeretnék lenni a workshopon!",
+          "Lemondási feltétel": "Elfogadva (lemondás max. 2 nappal az esemény előtt)",
+          "Jelentkezés időpontja": new Date().toLocaleString("hu-HU"),
+        }),
+      });
+    } catch (err) {
+      console.warn("Értesítő e-mail küldési hiba (helyi mentés sikeres):", err);
+    } finally {
       setIsSubmitting(false);
       setIsSubmitted(true);
-    }, 600);
+    }
   };
 
   const handleResetAndClose = () => {
@@ -528,7 +557,8 @@ export default function EventRegistrationModal({
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-gold shrink-0" />
                 <span>
-                  <strong>Visszaigazolás:</strong> Rögzítve a(z) <u>{email}</u> címre
+                  <strong>Visszaigazolás:</strong> Értesítés elküldve (workshop@soulritual.hu), és
+                  rögzítve a(z) <u>{email}</u> címre
                 </span>
               </div>
             </div>
@@ -541,12 +571,12 @@ export default function EventRegistrationModal({
                   Emlékeztető a lemondási feltételről:
                 </strong>
                 Amennyiben mégsem tudnál jelen lenni, kérünk, legkésőbb{" "}
-                <strong>2 nappal (48 órával) az esemény előtt</strong> jelezd felénk az{" "}
+                <strong>2 nappal (48 órával) az esemény előtt</strong> jelezd felénk a{" "}
                 <a
-                  href="mailto:info@soulritual.hu"
+                  href={`mailto:${event.email || "workshop@soulritual.hu"}`}
                   className="underline font-medium hover:text-gold"
                 >
-                  info@soulritual.hu
+                  {event.email || "workshop@soulritual.hu"}
                 </a>{" "}
                 címen, hogy a helyet átadhassuk valaki másnak.
               </div>
