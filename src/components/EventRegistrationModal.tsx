@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 import {
   X,
   Check,
@@ -16,6 +17,10 @@ import {
   Download,
   Trash2,
 } from "lucide-react";
+
+const EMAILJS_SERVICE_ID = "service_b3x3vph";
+const EMAILJS_TEMPLATE_ID = "template_r3jdl0r";
+const EMAILJS_PUBLIC_KEY = "0hiWiCqQxp86EdGXi";
 
 export interface EventDetails {
   id: string;
