@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 
 import EventRegistrationModal, { EventDetails } from "@/components/EventRegistrationModal";
+import YogaSignup from "@/components/YogaSignup";
 
 import jurtaHero from "@/assets/jurta-hero.jpg";
 import kezTermeszet from "@/assets/kez-termeszet.jpg";
@@ -1061,6 +1062,7 @@ export default function Index() {
         <Jurta />
         <Why />
         <Events onOpenRegistration={handleOpenRegistration} />
+        <YogaSignup />
         <Testimonials />
         <Blog />
         <FAQ />
