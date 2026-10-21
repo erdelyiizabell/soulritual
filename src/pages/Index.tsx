@@ -33,6 +33,7 @@ import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
 import jurtaInterior from "@/assets/jurta-interior.jpg";
 import whyLavender from "@/assets/why-lavender.jpg";
 import eventIntimitas from "@/assets/event-intimitas-tere.jpg";
+import onismereti from "@/assets/onismereti-utmutato.png";
 import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
@@ -64,7 +65,7 @@ const reasons = [
 
 const events = [
   {
-    img: eventIntimitas,
+    img: onismereti,
     date: "Ingyenes · Azonnal letölthető",
     location: "PDF útmutató · Digitális anyag",
     title: "Ingyenes Önismereti útmutató — Az elengedéshez, az újrakezdéshez és önmagadhoz való visszataláláshoz",
