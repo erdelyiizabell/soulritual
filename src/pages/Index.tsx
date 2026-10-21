@@ -65,25 +65,25 @@ const reasons = [
 const events = [
   {
     img: eventIntimitas,
-    date: "2026. október 24. · 10:00–17:00",
-    location: "Jurta · 2073 Tök, Táncsics Mihály u. 7.",
-    title: "Önismereti workshop — Az Intimitás Tere",
-    desc: "Speciális önismereti workshop, ahol főként újragondolt pszichodramatikus technikák segítségével dolgozunk az ödipális korszak, a kamaszkor és a kora felnőttkor szexuális állomásain, változásain, szokásain, hiedelmein és tabuin — mindazon, ami befolyásolhatja a felnőtt, érett, kiegyensúlyozott és szorongásmentes érzelmi intimitás megélését.",
+    date: "Ingyenes · Azonnal letölthető",
+    location: "PDF útmutató · Digitális anyag",
+    title: "Ingyenes Önismereti útmutató — Az elengedéshez, az újrakezdéshez és önmagadhoz való visszataláláshoz",
+    desc: "Van, amikor tudod, hogy valaminek változnia kell. De azt még nem, hogyan tovább. 🌿 Lehet, hogy egy ideje már érzed, hogy nem vagy a helyeden. Hogy valami megváltozott benned. Hogy a régi már nem az igazi, de az új még csak körvonalazódik. Ilyenkor könnyű elbizonytalanodni — és épp ilyenkor segít ez az útmutató.",
     topics: [
-      "A saját és a másik nemhez fűződő érzések, viszonyulások, tabuk, hiedelmek, szokások és félelmek",
-      "Párkapcsolati és szexuális problémák",
-      "Női és férfi érzelmi intimitás",
-      "Önbecsülési és önértékelési problémák",
-      "Boldogtalanság, a teljesítménnyel kapcsolatos nehézségek és az ezekből fakadó szégyenérzet",
+      "Önismereti kérdések, amelyek segítenek tisztábban látni, merre szeretnél továbbindulni",
+      "7 napos gyakorlatsor — apró, de hatékony napi feladatok",
+      "Saját újrakezdési terv, amelyet kitölthetsz és megtarthatsz magadnak",
+      "Bátorítás és lágy iránymutatás a változás első lépéseihez",
+      "Önmagadhoz való visszatalálás — a félelem és a bizonytalanság ellenére is",
     ],
     pillars:
-      "Érzelmi intimitás, pszichodramatikus mozgás- és táncterápiás elemek, bodywork módszerek és meditációs gyakorlatok.",
-    goal: "Hogy megtaláld a Benned rejtőző szabadságot, és újra kapcsolódj hozzá, valamint a saját erőforrásaidhoz. A csoport hangulatát a kedvesség, lágyság, bensőségesség és intimitás jellemzi — egy tér, ahol közelebb kerülhetsz önmagadhoz, és őszintébben kapcsolódhatsz önmagadhoz és másokhoz.",
-    price: "18 000 Ft",
-    capacity: "3–15 fő",
-    facilitator: "Rácz Jenő — pszichodráma vezető, buddhista tanító",
-    email: "workshop@soulritual.hu",
-    href: "https://www.facebook.com/events/jurta-2073-t%C3%B6k-t%C3%A1ncsics-mih%C3%A1ly-u-7/%C3%B6nismereti-workshop-az-intimit%C3%A1s-tere/2686014968480428/",
+      "Önismereti kérdések · 7 napos gyakorlatsor · Személyes újrakezdési terv · Megértés és elfogadás.",
+    goal: "Az újrakezdéshez nem kell minden választ ismerned. És nem kell félelem nélkül elindulnod. Néha az első lépés csupán annyi, hogy megállsz, őszintén magadra figyelsz, és megengeded magadnak a változást. 🤎 A bátorság ott kezdődik, ahol a régi véget ér.",
+    price: "",
+    capacity: "",
+    facilitator: "Izabella — Soul Ritual alapítója",
+    email: "info@soulritual.hu",
+    href: "",
   },
 ];
 
@@ -228,7 +228,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             onClick={onOpenRegistration}
             className="rounded-full bg-gold px-5 py-2.5 text-xs font-semibold tracking-[0.2em] uppercase text-earth transition hover:bg-cream cursor-pointer shadow-sm"
           >
-            Workshop regisztráció
+            Ingyenes útmutató
           </button>
           <a
             href="https://app.minup.io/book/soulritual"
@@ -282,7 +282,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
               }}
               className="mt-4 w-full rounded-full bg-gold py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-cream cursor-pointer font-semibold shadow-sm"
             >
-              Workshop regisztráció (Okt. 24.)
+              Ingyenes útmutató
             </button>
             <a
               href="https://app.minup.io/book/soulritual"
@@ -362,7 +362,7 @@ function Hero({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             onClick={onOpenRegistration}
             className="inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream cursor-pointer shadow-lg"
           >
-            <span>Jelentkezem a workshopra</span>
+            <span>Kérem az ingyenes PDF-et</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
           <a
@@ -563,9 +563,9 @@ function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof event
           data-reveal
         >
           <div className="max-w-xl">
-            <p className="eyebrow">Közelgő események</p>
+            <p className="eyebrow">Ingyenes anyag</p>
             <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
-              Együtt <em className="italic text-gold">lelassulni</em>.
+              Egy lépés <em className="italic text-gold">önmagad felé</em>.
             </h2>
           </div>
           <a
@@ -574,7 +574,7 @@ function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof event
             rel="noopener noreferrer"
             className="text-[11px] tracking-[0.28em] uppercase text-earth underline decoration-gold underline-offset-8 hover:decoration-earth"
           >
-            Összes esemény →
+            Soul Ritual közösség →
           </a>
         </div>
 
@@ -596,19 +596,19 @@ function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof event
                     onOpenRegistration(e);
                   }
                 }}
-                aria-label={`Jelentkezés: ${e.title}`}
+                aria-label={`PDF kérése: ${e.title}`}
               >
                 <img
                   src={e.img}
                   alt={e.title}
                   className="h-full w-full object-cover transition duration-[1200ms] group-hover:scale-105"
                 />
-                <div className="absolute left-4 top-4 bg-cream/95 px-3 py-1.5 text-[10px] tracking-[0.24em] uppercase text-earth font-medium shadow-sm">
-                  {e.date}
+                <div className="absolute left-4 top-4 bg-gold px-3 py-1.5 text-[10px] tracking-[0.24em] uppercase text-earth font-semibold shadow-sm">
+                  Ingyenes PDF
                 </div>
                 <div className="absolute bottom-4 right-4 bg-earth/90 backdrop-blur-sm px-4 py-2 text-[10px] tracking-[0.2em] uppercase text-cream rounded-full transition group-hover/img:bg-gold group-hover/img:text-earth flex items-center gap-1.5 shadow-lg">
                   <Sparkles className="h-3 w-3 text-gold-soft group-hover/img:text-earth" />
-                  Kattints a jelentkezéshez
+                  Kattints a letöltéshez
                 </div>
               </div>
               <div className="flex flex-col">
@@ -616,7 +616,7 @@ function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof event
                 <h3 className="mt-4 text-3xl leading-snug sm:text-4xl">{e.title}</h3>
                 <p className="mt-6 text-sm leading-relaxed text-earth/65">{e.desc}</p>
 
-                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">Témáink</p>
+                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">Az útmutatóban találsz</p>
                 <ul className="mt-4 space-y-2 text-sm leading-relaxed text-earth/65">
                   {e.topics.map((t) => (
                     <li key={t} className="flex gap-3">
@@ -627,48 +627,35 @@ function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof event
                 </ul>
 
                 <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">
-                  A munkánk fő pillérei
+                  Az útmutató pillérei
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-earth/65">{e.pillars}</p>
 
                 <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">
-                  A csoport célja
+                  Miért készítettem
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-earth/65">{e.goal}</p>
 
-                <dl className="mt-10 grid grid-cols-2 gap-6 border-t border-earth/15 pt-8 text-sm">
-                  <div>
-                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
-                      Részvételi díj
-                    </dt>
-                    <dd className="mt-2 font-display text-xl text-earth">{e.price}</dd>
-                    <span className="text-[11px] text-earth/50">Helyszínen fizetendő</span>
+                <div className="mt-10 border-t border-earth/15 pt-8">
+                  <div className="flex items-center gap-3">
+                    <span className="font-display text-3xl italic text-gold">🤎</span>
+                    <div>
+                      <p className="text-[10px] tracking-[0.24em] uppercase text-earth/50">Összeállította</p>
+                      <p className="mt-1 text-earth/80">{e.facilitator}</p>
+                    </div>
                   </div>
-                  <div>
-                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
-                      Létszám
-                    </dt>
-                    <dd className="mt-2 font-display text-xl text-earth">{e.capacity}</dd>
-                    <span className="text-[11px] text-earth/50">Kis létszámú csoport</span>
-                  </div>
-                  <div className="col-span-2">
-                    <dt className="text-[10px] tracking-[0.24em] uppercase text-earth/50">
-                      Vezeti
-                    </dt>
-                    <dd className="mt-2 text-earth/80">{e.facilitator}</dd>
-                  </div>
-                </dl>
+                </div>
 
-                {/* Prominent Registration CTA Card */}
+                {/* Prominent CTA Card */}
                 <div className="mt-8 rounded-2xl bg-cream/90 p-6 border border-gold/40 shadow-sm">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div>
-                      <span className="eyebrow block">Regisztráció</span>
+                      <span className="eyebrow block">Ingyenes letöltés</span>
                       <h4 className="mt-1 font-display text-xl text-earth">
-                        Foglald le a helyed a workshopra
+                        Kérem az ingyenes önismereti PDF-et
                       </h4>
                       <p className="mt-1 text-xs text-earth/70">
-                        Online fizetés nélkül · Lemondás legkésőbb 2 nappal az esemény előtt
+                        Teljesen ingyenes · E-mailben küldjük el neked
                       </p>
                     </div>
                     <button
@@ -676,22 +663,13 @@ function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof event
                       onClick={() => onOpenRegistration(e)}
                       className="group inline-flex items-center justify-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream transition hover:bg-gold hover:text-earth cursor-pointer shadow-md shrink-0"
                     >
-                      <span>Jelentkezem a workshopra</span>
+                      <span>Megkapom a PDF-et</span>
                       <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                     </button>
                   </div>
                 </div>
 
                 <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-earth/70">
-                  <a
-                    href={e.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.24em] uppercase text-gold hover:text-earth"
-                  >
-                    Esemény a Facebookon <ArrowUpRight className="h-3.5 w-3.5" />
-                  </a>
-                  <span className="text-earth/30">·</span>
                   <a
                     href={`mailto:${e.email}`}
                     className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.24em] uppercase text-earth/70 hover:text-gold"
@@ -1022,10 +1000,10 @@ export default function Index() {
   useReveal();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<EventDetails>({
-    id: "az-intimitas-tere-2026-10-24",
+    id: "ingyenes-onismereti-utmutato",
     title: events[0].title,
     date: events[0].date,
-    time: "10:00 – 17:00",
+    time: "",
     location: events[0].location,
     desc: events[0].desc,
     price: events[0].price,
@@ -1037,10 +1015,10 @@ export default function Index() {
   const handleOpenRegistration = (ev?: (typeof events)[0]) => {
     const target = ev || events[0];
     setSelectedEvent({
-      id: "az-intimitas-tere-2026-10-24",
+      id: "ingyenes-onismereti-utmutato",
       title: target.title,
       date: target.date,
-      time: "10:00 – 17:00",
+      time: "",
       location: target.location,
       desc: target.desc,
       price: target.price,

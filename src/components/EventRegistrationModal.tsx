@@ -162,9 +162,9 @@ export default function EventRegistrationModal({
     saveRegistration(record);
     setSavedList(getSavedRegistrations());
 
-    // 2. Automatikus e-mail küldés a workshop@soulritual.hu címre (Formsubmit AJAX)
+    // 2. Automatikus e-mail küldés az info@soulritual.hu címre (Formsubmit AJAX)
     try {
-      const targetEmail = event.email || "workshop@soulritual.hu";
+      const targetEmail = event.email || "info@soulritual.hu";
       await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
         method: "POST",
         headers: {
@@ -172,19 +172,16 @@ export default function EventRegistrationModal({
           Accept: "application/json",
         },
         body: JSON.stringify({
-          _subject: `Új workshop jelentkezés: ${event.title} (${event.date})`,
+          _subject: `Új PDF-kérés: Ingyenes Önismereti útmutató — ${name.trim()}`,
           _template: "table",
           _captcha: "false",
-          "Jelentkező neve": name.trim(),
+          "Kérelmező neve": name.trim(),
           "E-mail címe": email.trim(),
           Telefonszáma: phone.trim() || "Nem adott meg",
-          Esemény: event.title,
-          Időpont: event.date,
-          Helyszín: event.location || "Soul Ritual Jurta (Tök)",
-          "Üzenet / Szándék": note.trim() || "Nincs külön megjegyzés",
-          "Részvételi nyilatkozat": "Ott szeretnék lenni a workshopon!",
-          "Lemondási feltétel": "Elfogadva (lemondás max. 2 nappal az esemény előtt)",
-          "Jelentkezés időpontja": new Date().toLocaleString("hu-HU"),
+          Anyag: event.title,
+          "Üzenet / Gondolat": note.trim() || "Nincs külön megjegyzés",
+          "Hozzájárulás": "Elfogadva — szeretném megkapni az ingyenes PDF-et",
+          "Kérés időpontja": new Date().toLocaleString("hu-HU"),
         }),
       });
     } catch (err) {
@@ -279,7 +276,7 @@ export default function EventRegistrationModal({
           <div>
             {/* Header */}
             <div className="pr-8">
-              <span className="eyebrow block">Jelentkezés a workshopra</span>
+              <span className="eyebrow block">Ingyenes PDF kérése</span>
               <h2
                 id="modal-title"
                 className="mt-2 font-display text-2xl sm:text-3xl text-earth leading-tight"
@@ -287,35 +284,20 @@ export default function EventRegistrationModal({
                 {event.title}
               </h2>
 
-              {/* Event Meta Badges */}
+              {/* Badges */}
               <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs text-earth/80">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-sand/60 px-3 py-1 font-medium text-earth">
-                  <Calendar className="h-3.5 w-3.5 text-gold" />
-                  {event.date}
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-sand/60 px-3 py-1 font-medium text-earth">
-                  <Clock className="h-3.5 w-3.5 text-gold" />
-                  {event.time || "10:00 – 17:00"}
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-sand/60 px-3 py-1 font-medium text-earth">
-                  <MapPin className="h-3.5 w-3.5 text-gold" />
-                  {event.location || "Soul Ritual Jurta · Tök"}
-                </span>
-                {event.price && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-olive/15 px-3 py-1 font-medium text-olive">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    {event.price} (helyszínen)
-                  </span>
-                )}
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1 font-medium text-earth">
-                  Online fizetés nélkül · Csak jelentkezés
+                  <Sparkles className="h-3.5 w-3.5 text-gold" />
+                  Teljesen ingyenes
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-sand/60 px-3 py-1 font-medium text-earth">
+                  <Mail className="h-3.5 w-3.5 text-gold" />
+                  E-mailben küldjük el
                 </span>
               </div>
 
               <p className="mt-4 text-sm leading-relaxed text-earth/75 border-b border-earth/10 pb-4">
-                A jelentkezéshez nem szükséges bankkártya vagy online fizetés — a helyedet az űrlap
-                beküldésével foglalod le. A jurta meghitt mérete miatt a férőhelyek száma
-                korlátozott (3–15 fő).
+                Add meg a nevedet és az e-mail címedet — az ingyenes önismereti PDF-et azonnal elküldjük neked. Nincs fizetés, nincs kötelezettség.
               </p>
             </div>
 
@@ -381,7 +363,7 @@ export default function EventRegistrationModal({
                   </p>
                 ) : (
                   <p className="mt-1 text-[11px] text-earth/55">
-                    Ide küldjük a megerősítést, a tudnivalókat és a jurta pontos megközelítését.
+                    Erre a címre küldjük el az ingyenes önismereti PDF útmutatót.
                   </p>
                 )}
               </div>
@@ -409,7 +391,7 @@ export default function EventRegistrationModal({
                   />
                 </div>
                 <p className="mt-1 text-[11px] text-earth/55">
-                  Kizárólag sürgős értesítés (pl. helyszíni eligazítás) esetén hívunk.
+                  Csak ha szeretnél személyes kapcsolatot — teljesen opcionális.
                 </p>
               </div>
 
@@ -419,7 +401,7 @@ export default function EventRegistrationModal({
                   htmlFor="reg-note"
                   className="block text-xs font-semibold tracking-wider uppercase text-earth/90 mb-1.5"
                 >
-                  Üzenet vagy szándék Izabellának{" "}
+                  Megosztanál valamit Izabellával?{" "}
                   <span className="text-earth/40 text-[10px] font-normal lowercase">
                     (opcionális)
                   </span>
@@ -429,14 +411,14 @@ export default function EventRegistrationModal({
                   rows={2}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Van-e bármilyen gondolatod, kérdésed vagy érzésed, amit szívesen megosztanál az érkezés előtt?..."
+                  placeholder="Hol tartasz most? Mi az, amin változtatnál? Bármit szívesen olvasok..."
                   className="w-full rounded-xl border border-earth/20 bg-linen/70 px-4 py-2.5 text-sm text-earth placeholder:text-earth/40 focus:border-gold focus:bg-cream focus:outline-none transition resize-none"
                 />
               </div>
 
               {/* Checkboxes container */}
               <div className="space-y-3 rounded-2xl bg-sand/35 p-4 border border-gold/25">
-                {/* Frappáns Checkbox 1: Ott szeretnék lenni a workshopon */}
+                {/* Checkbox 1: Szeretném megkapni az ingyenes PDF-et */}
                 <label className="flex items-start gap-3 cursor-pointer select-none">
                   <div className="relative flex items-center pt-0.5">
                     <input
@@ -458,8 +440,8 @@ export default function EventRegistrationModal({
                   </div>
                   <span className="text-xs sm:text-sm font-medium leading-relaxed text-earth">
                     <span className="text-gold font-serif mr-1">✦</span>
-                    <strong>Ott szeretnék lenni a workshopon!</strong> — Elfogadom a jelentkezést,
-                    és elköteleződöm a jelenlétem mellett a Jurtában.
+                    <strong>Szeretném megkapni az ingyenes PDF útmutatót!</strong> — Hozzájárulok,
+                    hogy az e-mail címemre elküldjék az önismereti anyagot.
                   </span>
                 </label>
                 {errors.committed && (
@@ -468,7 +450,7 @@ export default function EventRegistrationModal({
                   </p>
                 )}
 
-                {/* Lemondási szabályzat Checkbox 2: 2 nappal előtte */}
+                {/* Checkbox 2: Adatkezelés */}
                 <label className="flex items-start gap-3 cursor-pointer select-none pt-2 border-t border-earth/10">
                   <div className="relative flex items-center pt-0.5">
                     <input
@@ -492,12 +474,10 @@ export default function EventRegistrationModal({
                     </div>
                   </div>
                   <span className="text-xs sm:text-sm leading-relaxed text-earth/85">
-                    Tudomásul veszem a feltételeket:{" "}
-                    <strong>
-                      a lemondás legkésőbb 2 nappal (48 órával) a workshop előtt lehetséges
-                    </strong>{" "}
-                    az {event.email ? `${event.email}` : "info@soulritual.hu"} címen, hogy
-                    megüresedés esetén átadhassuk a helyet valaki másnak.
+                    Elfogadom, hogy az adataimat{" "}
+                    <strong>kizárólag az ingyenes anyag elküldéséhez</strong>{" "}
+                    használják fel, és bármikor leiratkozhatok a{" "}
+                    {event.email ? `${event.email}` : "info@soulritual.hu"} címen.
                   </span>
                 </label>
                 {errors.cancellationAccepted && (
@@ -515,16 +495,16 @@ export default function EventRegistrationModal({
                   className="w-full group inline-flex items-center justify-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.25em] uppercase text-cream transition hover:bg-gold hover:text-earth disabled:opacity-60 cursor-pointer shadow-md"
                 >
                   {isSubmitting ? (
-                    <span>Jelentkezés rögzítése...</span>
+                    <span>Kérés elküldése...</span>
                   ) : (
                     <>
-                      <span>Jelentkezem a workshopra</span>
+                      <span>Megkapom az ingyenes PDF-et</span>
                       <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                     </>
                   )}
                 </button>
                 <p className="mt-2 text-center text-[11px] text-earth/50">
-                  Fizetés nélkül, azonnali regisztráció · Biztonságos adatkezelés
+                  Teljesen ingyenes · E-mailben küldjük el · Biztonságos adatkezelés
                 </p>
               </div>
             </form>
@@ -536,74 +516,63 @@ export default function EventRegistrationModal({
               <Sparkles className="h-8 w-8 animate-pulse" />
             </div>
 
-            <span className="eyebrow block">Sikeres jelentkezés</span>
+            <span className="eyebrow block">PDF kérés elküldve</span>
             <h2 className="mt-2 font-display text-3xl text-earth">
-              Szeretettel várunk a Jurtában!
+              Hamarosan megérkezik! 🌿
             </h2>
             <p className="mt-3 text-base text-earth/80">
-              Kedves <strong>{name}</strong>, a jelentkezésedet rögzítettük az{" "}
-              <strong>{event.title}</strong> eseményre!
+              Kedves <strong>{name}</strong>, kérésed megkaptuk —{" "}
+              az ingyenes önismereti útmutatót elküldtük a megadott e-mail címre.
             </p>
 
-            {/* Event Summary Card */}
+            {/* Summary Card */}
             <div className="mt-6 rounded-2xl bg-linen p-5 text-left border border-gold/30 space-y-2.5 text-sm">
-              <div className="flex items-center gap-3">
-                <Calendar className="h-4 w-4 text-gold shrink-0" />
-                <span>
-                  <strong>Időpont:</strong> {event.date} ({event.time || "10:00 – 17:00"})
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-gold shrink-0" />
-                <span>
-                  <strong>Helyszín:</strong> Soul Ritual Jurta (természetközeli helyszín)
-                </span>
-              </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-gold shrink-0" />
                 <span>
-                  <strong>Visszaigazolás:</strong> Értesítés elküldve (workshop@soulritual.hu), és
-                  rögzítve a(z) <u>{email}</u> címre
+                  <strong>Küldési cím:</strong> <u>{email}</u>
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-4 w-4 text-gold shrink-0" />
+                <span>
+                  <strong>Anyag:</strong> Ingyenes Önismereti útmutató — az elengedéshez, az újrakezdéshez és önmagadhoz való visszataláláshoz
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="h-4 w-4 text-gold shrink-0" />
+                <span>
+                  <strong>Értesítve:</strong> Izabella is értesítést kapott a kérésedről ({event.email || "info@soulritual.hu"})
                 </span>
               </div>
             </div>
 
-            {/* Cancellation reminder alert */}
+            {/* Note */}
             <div className="mt-4 rounded-xl bg-sand/40 p-4 text-left border border-earth/15 flex items-start gap-3">
               <ShieldCheck className="h-5 w-5 text-gold shrink-0 mt-0.5" />
               <div className="text-xs leading-relaxed text-earth/80">
                 <strong className="block text-earth font-medium mb-0.5">
-                  Emlékeztető a lemondási feltételről:
+                  Ha nem érkezik meg az e-mail:
                 </strong>
-                Amennyiben mégsem tudnál jelen lenni, kérünk, legkésőbb{" "}
-                <strong>2 nappal (48 órával) az esemény előtt</strong> jelezd felénk a{" "}
+                Nézd meg a spam/levélszemét mappádat, vagy írj nekünk a{" "}
                 <a
-                  href={`mailto:${event.email || "workshop@soulritual.hu"}`}
+                  href={`mailto:${event.email || "info@soulritual.hu"}`}
                   className="underline font-medium hover:text-gold"
                 >
-                  {event.email || "workshop@soulritual.hu"}
+                  {event.email || "info@soulritual.hu"}
                 </a>{" "}
-                címen, hogy a helyet átadhassuk valaki másnak.
+                címre — örömmel segítünk!
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a
-                href={getGoogleCalendarUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-earth/30 bg-cream px-6 py-3 text-xs tracking-wider uppercase font-medium text-earth transition hover:border-gold hover:text-gold"
-              >
-                <CalendarCheck className="h-4 w-4 text-gold" />
-                Naptárhoz adás (Google)
-              </a>
               <button
                 type="button"
                 onClick={handleResetAndClose}
                 className="w-full sm:w-auto inline-flex items-center justify-center rounded-full bg-earth px-8 py-3 text-xs tracking-wider uppercase font-semibold text-cream transition hover:bg-gold hover:text-earth cursor-pointer"
               >
-                Rendben, köszönöm!
+                Köszönöm, bezárom!
               </button>
             </div>
           </div>
