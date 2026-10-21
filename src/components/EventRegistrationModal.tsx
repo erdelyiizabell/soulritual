@@ -172,16 +172,15 @@ export default function EventRegistrationModal({
           Accept: "application/json",
         },
         body: JSON.stringify({
-          _subject: `Új PDF-kérés: Ingyenes Önismereti útmutató — ${name.trim()}`,
+          _subject: `Új feliratkozás: Soul Ritual közösség — ${name.trim()}`,
           _template: "table",
           _captcha: "false",
-          "Kérelmező neve": name.trim(),
+          "Feliratkozó neve": name.trim(),
           "E-mail címe": email.trim(),
           Telefonszáma: phone.trim() || "Nem adott meg",
-          Anyag: event.title,
-          "Üzenet / Gondolat": note.trim() || "Nincs külön megjegyzés",
-          "Hozzájárulás": "Elfogadva — szeretném megkapni az ingyenes PDF-et",
-          "Kérés időpontja": new Date().toLocaleString("hu-HU"),
+          "Megjegyzés / Gondolat": note.trim() || "Nincs külön megjegyzés",
+          "Hozzájárulás": "Elfogadva — feliratkozás a Soul Ritual hírlevelére + ingyenes PDF elküldése",
+          "Feliratkozás időpontja": new Date().toLocaleString("hu-HU"),
         }),
       });
     } catch (err) {
@@ -276,28 +275,28 @@ export default function EventRegistrationModal({
           <div>
             {/* Header */}
             <div className="pr-8">
-              <span className="eyebrow block">Ingyenes PDF kérése</span>
+              <span className="eyebrow block">Soul Ritual feliratkozás</span>
               <h2
                 id="modal-title"
                 className="mt-2 font-display text-2xl sm:text-3xl text-earth leading-tight"
               >
-                {event.title}
+                Csatlakozz — és kapd meg az ingyenes útmutatót 🤎
               </h2>
 
               {/* Badges */}
               <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs text-earth/80">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1 font-medium text-earth">
                   <Sparkles className="h-3.5 w-3.5 text-gold" />
-                  Teljesen ingyenes
+                  Ingyenes PDF ajándékként
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-sand/60 px-3 py-1 font-medium text-earth">
                   <Mail className="h-3.5 w-3.5 text-gold" />
-                  E-mailben küldjük el
+                  Hírlevelek, tartalmak, új anyagok
                 </span>
               </div>
 
               <p className="mt-4 text-sm leading-relaxed text-earth/75 border-b border-earth/10 pb-4">
-                Add meg a nevedet és az e-mail címedet — az ingyenes önismereti PDF-et azonnal elküldjük neked. Nincs fizetés, nincs kötelezettség.
+                Iratkozz fel a Soul Ritual közösségbe — első ajándékként azonnal megkapod az ingyenes önismereti útmutatót. Ezután értesítünk az új anyagokról, eseményekről és exkluzív tartalmakról is.
               </p>
             </div>
 
@@ -363,12 +362,12 @@ export default function EventRegistrationModal({
                   </p>
                 ) : (
                   <p className="mt-1 text-[11px] text-earth/55">
-                    Erre a címre küldjük el az ingyenes önismereti PDF útmutatót.
+                    Erre a címre küldjük az ingyenes PDF-et és a jövőbeni Soul Ritual tartalmakat.
                   </p>
                 )}
               </div>
 
-              {/* Phone field */}
+              {/* Phone field - optional */}
               <div>
                 <label
                   htmlFor="reg-phone"
@@ -418,7 +417,7 @@ export default function EventRegistrationModal({
 
               {/* Checkboxes container */}
               <div className="space-y-3 rounded-2xl bg-sand/35 p-4 border border-gold/25">
-                {/* Checkbox 1: Szeretném megkapni az ingyenes PDF-et */}
+                {/* Checkbox 1: Feliratkozás */}
                 <label className="flex items-start gap-3 cursor-pointer select-none">
                   <div className="relative flex items-center pt-0.5">
                     <input
@@ -440,8 +439,7 @@ export default function EventRegistrationModal({
                   </div>
                   <span className="text-xs sm:text-sm font-medium leading-relaxed text-earth">
                     <span className="text-gold font-serif mr-1">✦</span>
-                    <strong>Szeretném megkapni az ingyenes PDF útmutatót!</strong> — Hozzájárulok,
-                    hogy az e-mail címemre elküldjék az önismereti anyagot.
+                    <strong>Feliratkozom a Soul Ritual hírlevélre</strong> — értesítést kérek az új anyagokról, eseményekről és tartalmakról, és szeretném megkapni az ingyenes önismereti útmutatót.
                   </span>
                 </label>
                 {errors.committed && (
@@ -474,9 +472,9 @@ export default function EventRegistrationModal({
                     </div>
                   </div>
                   <span className="text-xs sm:text-sm leading-relaxed text-earth/85">
-                    Elfogadom, hogy az adataimat{" "}
-                    <strong>kizárólag az ingyenes anyag elküldéséhez</strong>{" "}
-                    használják fel, és bármikor leiratkozhatok a{" "}
+                    Elfogadom, hogy az adataimat a Soul Ritual{" "}
+                    <strong>kizárólag hírlevél küldéséhez</strong>{" "}
+                    használja fel, és bármikor leiratkozhatok a{" "}
                     {event.email ? `${event.email}` : "info@soulritual.hu"} címen.
                   </span>
                 </label>
@@ -495,16 +493,16 @@ export default function EventRegistrationModal({
                   className="w-full group inline-flex items-center justify-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.25em] uppercase text-cream transition hover:bg-gold hover:text-earth disabled:opacity-60 cursor-pointer shadow-md"
                 >
                   {isSubmitting ? (
-                    <span>Kérés elküldése...</span>
+                    <span>Feliratkozás...</span>
                   ) : (
                     <>
-                      <span>Megkapom az ingyenes PDF-et</span>
+                      <span>Feliratkozom + megkapom a PDF-et</span>
                       <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                     </>
                   )}
                 </button>
                 <p className="mt-2 text-center text-[11px] text-earth/50">
-                  Teljesen ingyenes · E-mailben küldjük el · Biztonságos adatkezelés
+                  Ingyenes · Bármikor leiratkozhatsz · Biztonságos adatkezelés
                 </p>
               </div>
             </form>
@@ -516,13 +514,13 @@ export default function EventRegistrationModal({
               <Sparkles className="h-8 w-8 animate-pulse" />
             </div>
 
-            <span className="eyebrow block">PDF kérés elküldve</span>
+            <span className="eyebrow block">Sikeres feliratkozás</span>
             <h2 className="mt-2 font-display text-3xl text-earth">
-              Hamarosan megérkezik! 🌿
+              Üdvözlünk a Soul Ritual közösségben! 🌿
             </h2>
             <p className="mt-3 text-base text-earth/80">
-              Kedves <strong>{name}</strong>, kérésed megkaptuk —{" "}
-              az ingyenes önismereti útmutatót elküldtük a megadott e-mail címre.
+              Kedves <strong>{name}</strong>, feliratkozásod rögzítettük —{" "}
+              az ingyenes önismereti útmutató hamarosan megérkezik a megadott e-mail címre.
             </p>
 
             {/* Summary Card */}
