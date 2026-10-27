@@ -201,7 +201,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
           : "bg-gradient-to-b from-earth/50 to-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-6 px-6 py-4 lg:px-10">
         <a href="#top" className="flex shrink-0 items-center gap-3">
           <img
             src={logoUrl}
