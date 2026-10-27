@@ -201,7 +201,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
           : "bg-gradient-to-b from-earth/50 to-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-6 px-6 py-4 lg:px-10">
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-6 py-4 lg:px-10">
         <a href="#top" className="flex shrink-0 items-center gap-3">
           <img
             src={logoUrl}
@@ -213,12 +213,12 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             }}
           />
         </a>
-        <nav className="hidden items-center gap-6 2xl:flex">
+        <nav className="hidden items-center gap-5 2xl:flex">
           {nav.map(([label, href]) => (
             <a
               key={href}
               href={href}
-              className="whitespace-nowrap text-[13px] font-medium tracking-[0.14em] uppercase text-cream transition hover:text-gold-soft"
+              className="whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-cream transition hover:text-gold-soft"
             >
               {label}
             </a>
@@ -227,7 +227,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             href={BUDAPEST_YOGA_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 whitespace-nowrap text-[13px] font-medium tracking-[0.14em] uppercase text-gold-soft transition hover:text-cream"
+            className="inline-flex items-center gap-1 whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
           >
             Budapesti jógaóráim
             <ArrowUpRight className="h-3.5 w-3.5" />
@@ -237,7 +237,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
           <button
             type="button"
             onClick={onOpenRegistration}
-            className="rounded-full bg-gold whitespace-nowrap px-4 py-2.5 text-[11px] font-semibold tracking-[0.16em] uppercase text-earth transition hover:bg-cream cursor-pointer shadow-sm"
+            className="rounded-full bg-gold whitespace-nowrap px-4 py-2.5 text-[11px] font-semibold tracking-[0.12em] uppercase text-earth transition hover:bg-cream cursor-pointer shadow-sm"
           >
             Ingyenes útmutató
           </button>
@@ -245,7 +245,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             href="https://app.minup.io/book/soulritual"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-cream whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.16em] uppercase text-earth transition hover:bg-gold hover:text-cream"
+            className="rounded-full bg-cream whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.12em] uppercase text-earth transition hover:bg-gold hover:text-cream"
           >
             Időpontfoglalás
           </a>
@@ -253,7 +253,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             href={SKOOL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-cream/80 whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.16em] uppercase text-cream transition hover:bg-cream hover:text-earth"
+            className="rounded-full border border-cream/80 whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.12em] uppercase text-cream transition hover:bg-cream hover:text-earth"
           >
             Csatlakozom
           </a>
