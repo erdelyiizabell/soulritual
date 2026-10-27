@@ -40,6 +40,7 @@ import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 
 const SKOOL_URL = "https://www.skool.com/soul-ritual-academy-6258";
 const YOUTUBE_URL = "https://www.youtube.com/@soulritual";
+const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
 const services = [
   { icon: Flower2, name: "Jóga", desc: "Tudatos mozgás, légzés és jelenlét." },
@@ -222,6 +223,15 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
               {label}
             </a>
           ))}
+          <a
+            href={BUDAPEST_YOGA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm font-medium tracking-[0.18em] uppercase text-gold-soft transition hover:text-cream"
+          >
+            Budapesti jógaóráim
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
           <button
@@ -275,6 +285,16 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
                 {label}
               </a>
             ))}
+            <a
+              href={BUDAPEST_YOGA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-1.5 border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-gold-soft"
+            >
+              Budapesti jógaóráim
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
             <button
               type="button"
               onClick={() => {
@@ -967,6 +987,16 @@ function Footer() {
             <li>
               <a href="#contact" className="hover:text-gold">
                 Kapcsolat
+              </a>
+            </li>
+            <li>
+              <a
+                href={BUDAPEST_YOGA_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-gold-soft hover:text-gold"
+              >
+                Budapesti jógaóráim <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
             </li>
           </ul>
