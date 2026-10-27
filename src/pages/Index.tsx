@@ -40,6 +40,7 @@ import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 
 const SKOOL_URL = "https://www.skool.com/soul-ritual-academy-6258";
 const YOUTUBE_URL = "https://www.youtube.com/@soulritual";
+const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
 const services = [
   { icon: Flower2, name: "Jóga", desc: "Tudatos mozgás, légzés és jelenlét." },
@@ -200,8 +201,8 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
           : "bg-gradient-to-b from-earth/50 to-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-        <a href="#top" className="flex items-center gap-3">
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-6 py-4 lg:px-10">
+        <a href="#top" className="flex shrink-0 items-center gap-3">
           <img
             src={logoUrl}
             alt="Soul Ritual"
@@ -212,22 +213,31 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             }}
           />
         </a>
-        <nav className="hidden items-center gap-9 lg:flex">
+        <nav className="hidden items-center gap-5 2xl:flex">
           {nav.map(([label, href]) => (
             <a
               key={href}
               href={href}
-              className="text-sm font-medium tracking-[0.18em] uppercase text-cream transition hover:text-gold-soft"
+              className="whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-cream transition hover:text-gold-soft"
             >
               {label}
             </a>
           ))}
+          <a
+            href={BUDAPEST_YOGA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
+          >
+            Budapesti jógaóráim
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
         </nav>
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 2xl:flex">
           <button
             type="button"
             onClick={onOpenRegistration}
-            className="rounded-full bg-gold px-5 py-2.5 text-xs font-semibold tracking-[0.2em] uppercase text-earth transition hover:bg-cream cursor-pointer shadow-sm"
+            className="rounded-full bg-gold whitespace-nowrap px-4 py-2.5 text-[11px] font-semibold tracking-[0.12em] uppercase text-earth transition hover:bg-cream cursor-pointer shadow-sm"
           >
             Ingyenes útmutató
           </button>
@@ -235,7 +245,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             href="https://app.minup.io/book/soulritual"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-cream px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-earth transition hover:bg-gold hover:text-cream"
+            className="rounded-full bg-cream whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.12em] uppercase text-earth transition hover:bg-gold hover:text-cream"
           >
             Időpontfoglalás
           </a>
@@ -243,14 +253,14 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             href={SKOOL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth"
+            className="rounded-full border border-cream/80 whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.12em] uppercase text-cream transition hover:bg-cream hover:text-earth"
           >
             Csatlakozom
           </a>
         </div>
         <button
           onClick={() => setOpen(!open)}
-          className="flex flex-col gap-1.5 p-2 lg:hidden"
+          className="flex flex-col gap-1.5 p-2 2xl:hidden"
           aria-label="Menü"
         >
           <span
@@ -263,7 +273,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
         </button>
       </div>
       {open && (
-        <div className="border-t border-cream/20 bg-earth/95 backdrop-blur-md lg:hidden">
+        <div className="border-t border-cream/20 bg-earth/95 backdrop-blur-md 2xl:hidden">
           <nav className="flex flex-col gap-1 px-6 py-4">
             {nav.map(([label, href]) => (
               <a
@@ -275,6 +285,16 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
                 {label}
               </a>
             ))}
+            <a
+              href={BUDAPEST_YOGA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-1.5 border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-gold-soft"
+            >
+              Budapesti jógaóráim
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
             <button
               type="button"
               onClick={() => {
@@ -967,6 +987,16 @@ function Footer() {
             <li>
               <a href="#contact" className="hover:text-gold">
                 Kapcsolat
+              </a>
+            </li>
+            <li>
+              <a
+                href={BUDAPEST_YOGA_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-gold-soft hover:text-gold"
+              >
+                Budapesti jógaóráim <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
             </li>
           </ul>
