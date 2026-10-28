@@ -598,17 +598,14 @@ function EventCard({
   const isExternal = event.id === "budapest-yoga";
   const accent = event.color === "gold" ? "var(--gold)" : "var(--earth)";
 
-  // Live capacity from localStorage
+  // Live capacity from localStorage (only for non-Stripe modal events)
   const [spotsLeft, setSpotsLeft] = useState<number | null>(null);
   useEffect(() => {
-    if (event.capacity === undefined) return;
     try {
-      const all = JSON.parse(localStorage.getItem("soulritual_event_regs_v2") || "[]");
-      const count = all.filter((r: { eventId: string }) => r.eventId === event.id).length;
-      setSpotsLeft(Math.max(0, event.capacity - count));
-    } catch {
-      setSpotsLeft(event.capacity);
-    }
+      localStorage.removeItem("soulritual_event_regs_v2");
+    } catch {}
+    if (event.capacity === undefined) return;
+    setSpotsLeft(event.capacity);
   }, [event.id, event.capacity]);
 
   return (
@@ -636,17 +633,9 @@ function EventCard({
               {event.subtitle}
             </span>
           )}
-          {spotsLeft !== null && (
-            <span
-              className={`rounded-full px-3 py-1 text-[10px] font-semibold tracking-widest uppercase ${
-                spotsLeft === 0
-                  ? "bg-destructive/10 text-destructive"
-                  : spotsLeft <= 3
-                  ? "bg-gold/15 text-gold"
-                  : "bg-earth/10 text-earth/60"
-              }`}
-            >
-              {spotsLeft === 0 ? "Megtelt" : `${spotsLeft}/${event.capacity} szabad hely`}
+          {event.capacity !== undefined && (
+            <span className="rounded-full bg-earth/10 px-3 py-1 text-[10px] font-semibold tracking-widest uppercase text-earth/60">
+              Max. {event.capacity} fő
             </span>
           )}
           {event.price && (
