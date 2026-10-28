@@ -19,6 +19,7 @@ import {
   ArrowUpRight,
   ArrowRight,
   Quote,
+  X,
 } from "lucide-react";
 
 import EventRegistrationModal, { EventInfo } from "@/components/EventRegistrationModal";
@@ -36,7 +37,6 @@ import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 
-const YOUTUBE_URL = "https://www.youtube.com/@soulritual";
 const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
 const services = [
@@ -76,27 +76,286 @@ const testimonials = [
   },
 ];
 
-const posts = [
+interface BlogSection {
+  heading?: string;
+  paragraphs: string[];
+  questions?: string[];
+}
+
+interface BlogPost {
+  id: string;
+  img: string;
+  tag: string;
+  title: string;
+  subtitle: string;
+  excerpt: string;
+  sections: BlogSection[];
+  closingQuestion?: string;
+  closingText?: string[];
+}
+
+const posts: BlogPost[] = [
   {
+    id: "lelassulas-muveszete",
     img: blogSlowLiving,
-    tag: "Vlog",
+    tag: "Blog",
     title: "A lelassulás művészete a hétköznapokban",
-    excerpt: "Öt apró rituálé, amit már ma bevezethetsz — és amitől megváltozik a napod ritmusa.",
-    href: YOUTUBE_URL,
+    subtitle: "Öt apró rituálé, amit már ma bevezethetsz az életedbe",
+    excerpt:
+      "Öt apró rituálé, amit már ma bevezethetsz — és amitől megváltozik a napod ritmusa.",
+    sections: [
+      {
+        paragraphs: [
+          "Van az a pillanat, amikor még el sem kezdődött igazán a nap, de te már fejben ezerfelé jársz. Mi mindent kell elintézni, kinek kell visszaírni, mit nem szabad elfelejteni, és vajon mindenre jut-e időd.",
+          "Aztán este lefekszel, és rájössz, hogy bár rengeteg mindent csináltál, valahogy mégsem voltál igazán jelen a saját napodban.",
+          "Ismerős?",
+          "Sokszor azt gondoljuk, hogy majd akkor pihenhetünk meg, amikor minden feladatunkkal végeztünk. Csakhogy a feladatok ritkán fogynak el. Mindig érkezik valami új, valami sürgős, valami, amit még meg kellene oldanunk.",
+          "És közben észrevétlenül elfelejtünk megérkezni a saját életünkbe.",
+          "Pedig a lelassulás nem feltétlenül azt jelenti, hogy szabadságra mész, elvonulsz a hegyek közé, vagy mindent magad mögött hagysz. Néha egészen apró dolgokon múlik.",
+          "Azon, hogy hogyan indítod a reggeledet. Hogy iszol meg egy csésze teát. Hogy észreveszed-e a levegőt, amely átjárja a testedet.",
+          "Hoztam neked öt apró rituálét, amelyeket különösebb előkészület nélkül beépíthetsz a hétköznapjaidba.",
+        ],
+      },
+      {
+        heading: "1. Reggeli csend – mielőtt elkezdődik a világ",
+        paragraphs: [
+          "Próbáld ki, hogy ébredés után nem nyúlsz azonnal a telefonodért. Adj magadnak öt percet, mielőtt beengednéd a külvilágot a figyelmedbe.",
+          "Ülj le kényelmesen, figyeld meg a légzésedet, és tedd fel magadnak a kérdést:",
+        ],
+        questions: ["Hogyan vagyok ma valójában?"],
+      },
+      {
+        paragraphs: [
+          "Ne azt keresd, hogy hogyan kellene lenned. Ne próbáld rögtön megoldani azt sem, ami nehéznek tűnik. Csak figyeld meg, mi van benned.",
+          "Lehet, hogy fáradt vagy. Lehet, hogy izgatottan várod a napot. Lehet, hogy semmi különöset nem érzel. Minden rendben van.",
+          "Nem kell minden reggel motiváltnak és hálásnak lenned. Néha már az is sokat jelent, ha őszintén kapcsolódsz ahhoz, ahogyan éppen vagy.",
+        ],
+      },
+      {
+        heading: "2. Tudatos légzés – egy pillanat, ami mindig veled van",
+        paragraphs: [
+          "Napközben, amikor úgy érzed, hogy túl sok minden történik egyszerre, állj meg egy pillanatra. Nem kell hozzá meditációs párna, csendes szoba vagy különleges technika.",
+          "Helyezkedj el kényelmesen, engedd le a válladat, és figyeld meg, ahogy a levegő beáramlik, majd távozik a testedből. Vegyél néhány nyugodt, természetes lélegzetet.",
+          "Ha közben elkalandoznak a gondolataid, nincs semmi baj. Egyszerűen térj vissza a légzésedhez.",
+          "A cél nem az, hogy kiürítsd az elmédet, hanem hogy néhány pillanatra ne kelljen minden gondolatodat követned. Néha egyetlen tudatos megállás is segíthet abban, hogy ne automatikusan reagálj mindenre, ami történik körülötted.",
+        ],
+      },
+      {
+        heading: "3. Egy csésze tea teljes figyelemmel",
+        paragraphs: [
+          "Készíts magadnak egy teát. Ne közben válaszolj az üzenetekre, ne intézz el még gyorsan valamit, és ne tervezd a következő három órát. Csak készítsd el, és figyelj rá.",
+          "Érezd az illatát. Figyeld meg a meleg bögrét a kezedben. Kóstold meg lassan az első kortyot.",
+          "Engedd meg magadnak, hogy ez az öt perc ne legyen hasznos semmilyen más értelemben. Nem kell belőle tanulnod. Nem kell fejlődnöd általa. Nem kell kipipálnod a napod újabb feladatát.",
+          "Lehet, hogy elsőre furcsa lesz csak ülni és teát inni. Különösen akkor, ha hozzászoktál ahhoz, hogy mindig csinálsz valamit. De éppen ez benne a lényeg.",
+          "Nem minden pillanatnak kell valamilyen célt szolgálnia ahhoz, hogy értékes legyen.",
+        ],
+      },
+      {
+        heading: "4. Kapcsolódás a természethez – vissza az érzékeidhez",
+        paragraphs: [
+          "Menj ki néhány percre a szabadba. Nem kell hosszú túrát tervezned. Elég egy rövid séta, néhány perc a kertben, vagy az, hogy tudatosan megállsz egy fa mellett.",
+          "Figyeld meg a fényeket, a levelek mozgását, a levegő hőmérsékletét. Hallgasd meg, milyen hangok vesznek körül.",
+          "Ha sétálsz, próbálj meg néhány percig nem a következő feladatodra gondolni. Érezd a talajt a lábad alatt. Figyeld meg, hogyan mozog a tested.",
+          "A természet nem siettet bennünket, és nem kér számon rajtunk semmit. A jelenléte lehetőséget adhat arra, hogy mi is egy kicsit más ritmusba kerüljünk. Nem kell különleges élményt átélned. Elég, ha valóban ott vagy.",
+        ],
+      },
+      {
+        heading: "5. Esti elengedés – nem kell mindent magaddal vinned holnapra",
+        paragraphs: [
+          "A nap végén gyakran éppen akkor kezdünk el gondolkodni mindenen, amikor végre pihenhetnénk. Újra lejátsszuk a beszélgetéseket, végiggondoljuk, mit kellett volna másképp csinálnunk, és már a holnapi feladatainkon jár az eszünk.",
+          "Próbálj ki egy egyszerű esti rituálét. Lefekvés előtt szánj néhány percet arra, hogy felteszel magadnak három kérdést:",
+        ],
+        questions: [
+          "Mi volt ma az a pillanat, amiért hálás vagyok?",
+          "Mit tanultam ma magamról?",
+          "Mit szeretnék most elengedni, és nem továbbvinni a holnapi napomba?",
+        ],
+      },
+      {
+        paragraphs: [
+          "Nem kell hosszú naplót írnod. Akár egyetlen mondat is elegendő. És ha valamire nem tudod a választ, hagyd nyitva a kérdést. Nem kell mindent megoldanod ahhoz, hogy megpihenhess.",
+        ],
+      },
+      {
+        heading: "A lelassulás nem egy újabb elvárás",
+        paragraphs: [
+          "Fontos, hogy ezek a rituálék ne váljanak újabb feladatokká, amelyek miatt rosszul érzed magad, ha egy nap kimaradnak. Nem kell mind az ötöt minden egyes nap elvégezned.",
+          "Válassz ki egyet, amelyik most a legközelebb áll hozzád. Próbáld ki néhány napon keresztül, és figyeld meg, hogyan érzed magad közben.",
+          "A lelassulás nem verseny, és nincs benne teljesítendő szint. Számomra inkább annak az emlékeztetője, hogy az életünk nemcsak abból áll, amit elvégzünk, amit létrehozunk, vagy amit mások számára adunk. Hanem azokból a pillanatokból is, amikor egyszerűen csak jelen vagyunk.",
+          "Talán nem kell mindig messzebbre mennünk, többet elérnünk vagy újabb válaszokat keresnünk. Néha elég megállni, és észrevenni azt, ami már most is itt van.",
+        ],
+      },
+    ],
+    closingQuestion:
+      "Mikor engedted meg magadnak utoljára, hogy ne akarj semmit elérni, megoldani vagy bizonyítani? Csak legyél.",
+    closingText: [
+      "Ha jól esne egy kicsit lelassulni, és időt adni magadnak a befelé figyelésre, szeretettel várlak a Soul Ritual világában.",
+    ],
   },
   {
+    id: "kakao-szertartas",
     img: blogCacao,
-    tag: "Vlog",
+    tag: "Blog",
     title: "Mi történik egy kakaó szertartáson?",
-    excerpt: "A ceremoniális kakaó nem trend, hanem évezredes szív-nyitó gyakorlat. Bemutatjuk.",
-    href: YOUTUBE_URL,
+    subtitle: "Amikor nem kell mást tenned, csak megérkezned",
+    excerpt:
+      "A kakaó szertartás nem pusztán az italról szól, hanem arról a figyelemről, amelyet magunknak és a jelen pillanatnak adunk.",
+    sections: [
+      {
+        paragraphs: [
+          "Képzelj el egy csendes teret. Meleg fények, kényelmes párnák, halk zene. Előtted egy bögre meleg kakaó, körülötted néhány ember, akik ugyanúgy szeretnének egy kicsit kiszakadni a hétköznapokból, mint te.",
+          "Nem kell sehová sietned. Nem vár rád feladat, és senkinek nem kell megfelelned.",
+          "Csak leülsz, a kezedbe veszed a bögrét, és megengeded magadnak, hogy megérkezz.",
+          "Talán elsőre egyszerűnek hangzik. Hiszen mi lehet különleges abban, ha megiszunk egy kakaót?",
+          "A kakaó szertartás azonban nem pusztán az italról szól. Sokkal inkább arról a figyelemről, amelyet magunknak, az érzéseinknek és a jelen pillanatnak adunk.",
+        ],
+      },
+      {
+        heading: "Mi az a ceremoniális kakaó?",
+        paragraphs: [
+          "A kakaónak hosszú kulturális és történelmi múltja van. Közép-Amerika és Mezoamerika különböző népei már évezredekkel ezelőtt készítettek kakaóitalokat, amelyeknek társadalmi, gazdasági és egyes közösségekben rituális jelentőségük is volt.",
+          "A kakaóhoz kapcsolódó hagyományok azonban nem voltak mindenhol egyformák, és a mai kakaóceremóniák sem tekinthetők egyetlen változatlan, ősi szertartás folytatásának.",
+          "A napjainkban tartott kakaóceremóniák sokféle formát ölthetnek. Gyakran ötvözik a tudatos jelenlétet, a meditációt, a légzőgyakorlatokat, a zenét és az önismereti munkát.",
+          "A ceremoniális kakaó általában kevésbé feldolgozott kakaótermékből készül, és sokszor fűszerekkel, például fahéjjal vagy chilivel ízesítik.",
+          "A kakaó természetes módon tartalmaz teobromint és kisebb mennyiségű koffeint is, ezért élénkítő hatása lehet. Nem csodaszer, és önmagában nem garantál semmilyen különleges lelki élményt.",
+          "A lényeg sokkal inkább az, hogy milyen keretet teremtünk az elfogyasztásához.",
+        ],
+      },
+      {
+        heading: "Hogyan zajlik egy kakaó szertartás?",
+        paragraphs: [
+          "Nincs egyetlen kötelező forgatókönyv. Minden kísérő és közösség a saját szemlélete szerint alakítja az alkalmat.",
+          "Egy ilyen együttlét gyakran a megérkezéssel kezdődik. Leülünk, elhelyezkedünk, és néhány percig figyelünk a légzésünkre. Lassan magunk mögött hagyjuk a nap eseményeit, a feladatokat és azokat a gondolatokat, amelyekkel érkeztünk.",
+          "Ezután következhet a kakaó elfogyasztása. Megfigyelhetjük az illatát, az ízét, a hőmérsékletét. Nem kell közben mással foglalkoznunk.",
+          "Az alkalom része lehet vezetett meditáció, finom légzőgyakorlat, zene, közös éneklés, önismereti kérdések vagy egy megosztókör is.",
+          "Van, aki csendben szeretne maradni. Másnak jól esik megosztania, mi foglalkoztatja. Egyik sem jobb a másiknál.",
+          "Nem kell beszélned, ha nem szeretnél. Nem kell különleges érzéseket átélned, és nem kell semmilyen elvárásnak megfelelned. Az élményed lehet egészen egyszerű: néhány nyugodt perc, amelyben végre nem kell mással foglalkoznod.",
+        ],
+      },
+      {
+        heading: "Miért lehet jóleső a közös befelé figyelés?",
+        paragraphs: [
+          "A hétköznapokban gyakran akkor figyelünk magunkra, amikor valami már nehézzé vált. Amikor feszültek vagyunk, elfáradtunk, vagy úgy érezzük, túl sok minden történik körülöttünk. Ritkábban teremtünk időt arra, hogy egyszerűen csak megfigyeljük, mi zajlik bennünk.",
+          "Egy szertartás lehetőséget adhat arra, hogy tudatosan kijelöljünk erre egy időszakot. Nem azért, mert néhány óra alatt minden problémánkra választ kapunk, hanem mert a figyelem önmagában is értékes.",
+          "Amikor nem kell rögtön reagálnunk, magyarázkodnunk vagy megoldanunk valamit, talán könnyebben észrevesszük a saját érzéseinket és szükségleteinket.",
+          "Lehet, hogy felismerünk valamit. Lehet, hogy egyszerűen csak jól esik együtt lenni másokkal. És az is rendben van, ha nem történik semmi rendkívüli.",
+        ],
+      },
+      {
+        heading: "Mit érdemes tudnod, mielőtt részt veszel?",
+        paragraphs: [
+          "Egy kakaó szertartás nem terápia, és nem helyettesíti a szükséges orvosi vagy pszichológiai segítséget.",
+          "Ha érzékeny vagy a koffeinre, várandós vagy, bizonyos gyógyszereket szedsz, vagy egészségügyi okból korlátoznod kell a kakaófogyasztást, érdemes előzetesen egyeztetned egészségügyi szakemberrel, illetve tájékozódnod a kakaó összetételéről és adagjáról.",
+          "A részvételhez pedig nem kell semmilyen előzetes tapasztalat. Elég, ha nyitott vagy arra, hogy adj magadnak egy kis időt.",
+        ],
+      },
+      {
+        heading: "Egy bögre kakaó, egy kérdés önmagadhoz",
+        paragraphs: [
+          "Talán éppen ez az egész legfontosabb része. Nem kell megváltoznod a szertartás kedvéért. Nem kell jobb emberré válnod, feldolgoznod mindent, vagy megtalálnod életed nagy válaszát.",
+          "Néha elég megengedned magadnak, hogy megállj. Hogy észrevedd, mire vágysz, mi hiányzik, vagy egyszerűen csak hogyan érzed magad most.",
+          "A kakaó lehet ennek az együttlétnek a része. A valódi értéket azonban az a figyelem adja, amelyet közben önmagadnak és a körülötted lévőknek szentelsz.",
+        ],
+      },
+    ],
+    closingQuestion:
+      "Ha most leülnél egy csendes térben egy meleg kakaóval, mit kérdeznél meg önmagadtól?",
+    closingText: [
+      "Talán ez az a kérdés, amellyel érdemes elkezdened.",
+      "Fedezd fel a Soul Ritual programjait, és találj egy alkalmat, amikor egy kicsit magadra is figyelhetsz.",
+    ],
   },
   {
+    id: "biztonsagos-terek",
     img: blogSafeSpace,
-    tag: "Vlog",
+    tag: "Blog",
     title: "Miért van szükségünk biztonságos terekre?",
-    excerpt: "A modern élet elszakít önmagunktól. A jurta emlékeztet, hogyan találjunk vissza.",
-    href: YOUTUBE_URL,
+    subtitle: "Egy hely, ahol nem kell másnak lenned, mint aki vagy",
+    excerpt:
+      "A modern élet elszakít önmagunktól. A jurta emlékeztet, hogyan találjunk vissza.",
+    sections: [
+      {
+        paragraphs: [
+          "Van az a pillanat, amikor belépsz valahová, és szinte észrevétlenül megváltozik benned valami.",
+          "Leenged a vállad. Mélyebbet lélegzel. Nem érzed szükségét annak, hogy azonnal megszólalj, megmagyarázz valamit, vagy megmutasd, mennyire vagy jól.",
+          "Egyszerűen csak megérkezel.",
+          "Talán egy barátod mellett érzed ezt. Talán a természetben, egy csendes szobában, vagy egy olyan közösségben, ahol nem kell mindenáron megfelelned.",
+          "Az ilyen pillanatok emlékeztethetnek bennünket arra, mennyire fontos, hogy legyen az életünkben helye a megpihenésnek és az őszinteségnek.",
+        ],
+      },
+      {
+        heading: "Hányféle szerepet viszünk magunkkal nap mint nap?",
+        paragraphs: [
+          "Dolgozunk, gondoskodunk, szervezünk, döntéseket hozunk. Valakinek a gyermekei vagyunk, valakinek a társai, szülei, barátai vagy munkatársai.",
+          "Ezek a szerepek önmagukban nem jelentenek problémát. Sokszor éppen ezek adják az életünk legfontosabb kapcsolatait.",
+          "A nehézség akkor kezdődhet, amikor már nem tudjuk, kik vagyunk a szerepeinken túl.",
+          "Amikor annyira megszokjuk, hogy erősnek kell lennünk, hogy észre sem vesszük a saját fáradtságunkat. Amikor mindenki más szükségleteire figyelünk, de a sajátjainkat mindig későbbre halasztjuk. Amikor attól tartunk, hogy ha őszintén elmondjuk, mit érzünk, csalódást okozunk valakinek.",
+          "Ilyenkor különösen sokat jelenthet egy olyan hely vagy kapcsolat, amelyben nem kell folyamatosan fenntartanunk egy rólunk kialakult képet.",
+        ],
+      },
+      {
+        heading: "Mitől válik egy tér biztonságossá?",
+        paragraphs: [
+          "A biztonságos tér nem feltétlenül egy különleges épület, és nem is azt jelenti, hogy ott soha nem érhet bennünket kellemetlenség.",
+          "Sokkal inkább egy olyan közeg, amelyben tiszteletben tartják az emberi méltóságot, a személyes határokat és az egyéni különbségeket.",
+          "Ahol lehet kérdezni, bizonytalannak lenni, nemet mondani vagy időt kérni. Ahol nem kell megosztanod olyasmit, amiről még nem szeretnél beszélni. Ahol nem az a cél, hogy mindenki ugyanúgy gondolkodjon, hanem az, hogy képesek legyünk tisztelettel jelen lenni egymás mellett.",
+          "A valódi biztonság nem azt jelenti, hogy mindig egyetértünk. Hanem azt, hogy a különbözőségeink mellett is törekedhetünk a tiszteletre. És talán azt is, hogy nem kell tökéletesnek lennünk ahhoz, hogy helyünk legyen egy közösségben.",
+        ],
+      },
+      {
+        heading: "Miért segíthet, ha néha kilépünk a megszokott környezetünkből?",
+        paragraphs: [
+          "A mindennapi környezetünk sokszor észrevétlenül visszaterel a megszokott működésünkbe.",
+          "Otthon előkerülnek a feladatok. A munkahelyen a teljesítmény kerül előtérbe. A régi kapcsolatainkban pedig könnyen visszacsúszhatunk azokba a szerepekbe, amelyeket már régóta betöltünk.",
+          "Amikor időt töltünk egy másik környezetben, lehetőséget kaphatunk arra, hogy egy kicsit kívülről tekintsünk a saját életünkre.",
+          "Egy erdei séta, egy csendes meditáció vagy egy közös önismereti alkalom nem old meg automatikusan mindent. De teremthet olyan körülményeket, amelyekben könnyebb megállni és megfigyelni önmagunkat.",
+        ],
+        questions: [
+          "Mit érzek valójában?",
+          "Mire lenne most szükségem?",
+          "Mi az, amit megszokásból csinálok, és mi az, amit valóban szeretnék?",
+        ],
+      },
+      {
+        paragraphs: [
+          "Ezekre a kérdésekre nem mindig találunk azonnal választ. Néha már az is fontos lépés, hogy egyáltalán megengedjük magunknak a kérdezést.",
+        ],
+      },
+      {
+        heading: "A jurta mint a megérkezés tere",
+        paragraphs: [
+          "A jurta számomra egy különleges lehetőség arra, hogy egy kicsit más ritmusba kerüljünk.",
+          "A körkörös tér, a természetes anyagok, a puha párnák és a külvilágtól eltérő hangulat mind hozzájárulhatnak ahhoz, hogy néhány percre félretegyük a megszokott napi tempót.",
+          "Leülhetünk, figyelhetünk a légzésünkre, vagy egyszerűen csak csendben maradhatunk. Nem kell hozzá különleges hitrendszer, és nem kell tudnunk meditálni sem.",
+          "Nem szükséges, hogy minden gondolatunk elcsendesedjen, vagy hogy valamilyen rendkívüli élményben legyen részünk. Elég, ha teret adunk annak, hogy észrevegyük, hogyan vagyunk.",
+          "A természet közelsége és a tudatosan kialakított környezet támogathatja ezt a folyamatot, de a biztonságot végső soron nem maga az épület teremti meg. Ahhoz a jelenlévő emberek, a tisztelet és a világos keretek is hozzátartoznak.",
+        ],
+      },
+      {
+        heading: "Nem kell mindent megosztanod ahhoz, hogy kapcsolódj",
+        paragraphs: [
+          "Sokszor azt gondoljuk, hogy a mély kapcsolódáshoz fel kell tárnunk a legfájdalmasabb történeteinket. Pedig a kapcsolódásnak sokféle formája van.",
+          "Néha egy őszinte beszélgetés segít. Máskor az, ha valaki figyelmesen meghallgat bennünket, anélkül hogy rögtön tanácsot adna. És néha egyszerűen csak jó együtt lenni másokkal, beszélgetés nélkül.",
+          "Egy biztonságos közösségben nem kell siettetni a bizalmat. Nem kell többet adnunk magunkból, mint amennyit valóban szeretnénk.",
+          "A saját határaink tisztelete nem a kapcsolódás akadálya. Éppen ellenkezőleg: segíthet abban, hogy őszintébben és szabadabban legyünk jelen benne.",
+        ],
+      },
+      {
+        heading: "Hol lehetsz önmagad?",
+        paragraphs: [
+          "Talán nem egy újabb módszerre van szükségünk, hanem több olyan pillanatra, amikor nem kell bizonyítanunk az értékünket.",
+          "Ahol nem a teljesítményünk, a szerepeink vagy a mások által rólunk kialakított kép határozza meg, hogy mennyire érezzük magunkat elfogadhatónak. Ahol lehetünk fáradtak, bizonytalanok, lelkesek, csendesek vagy éppen tele kérdésekkel.",
+          "Nem azért, mert minden nehézség megszűnik, hanem mert nem kell egyedül, folyamatosan védekezve jelen lennünk benne.",
+          "A biztonságos tér nem old meg helyettünk mindent. De emlékeztethet arra, hogy nem kell mindig készen lennünk, és nem kell minden kérdésre azonnal választ találnunk. Néha az első lépés egyszerűen az, hogy megengedjük magunknak a megérkezést.",
+        ],
+      },
+    ],
+    closingQuestion:
+      "Hol van az a hely az életedben, ahol nem kell erősnek mutatnod magad, ahol nem kell megfelelned, és ahol egyszerűen csak önmagad lehetsz?",
+    closingText: [
+      "Ha most nem jut eszedbe ilyen hely, talán érdemes elkezdened megteremteni. Lassan, a saját tempódban, olyan emberekkel és olyan környezetben, ahol a jelenléted önmagában is érték.",
+      "Találj időt a megérkezésre, a csendre és az önmagaddal való kapcsolódásra a Soul Ritual világában.",
+    ],
   },
 ];
 
@@ -780,6 +1039,19 @@ function Testimonials() {
 }
 
 function Blog() {
+  const [activePost, setActivePost] = useState<BlogPost | null>(null);
+
+  useEffect(() => {
+    if (!activePost) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setActivePost(null);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [activePost]);
+
   return (
     <section id="blog" className="bg-cream px-6 py-28 lg:py-40">
       <div className="mx-auto max-w-6xl">
@@ -788,31 +1060,22 @@ function Blog() {
           data-reveal
         >
           <div className="max-w-xl">
-            <p className="eyebrow">Vlog</p>
+            <p className="eyebrow">Blog</p>
             <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
               Gondolatok az <em className="italic text-gold">útról</em>.
             </h2>
           </div>
-          <a
-            href={YOUTUBE_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] tracking-[0.28em] uppercase text-earth underline decoration-gold underline-offset-8 hover:decoration-earth"
-          >
-            YouTube csatorna →
-          </a>
         </div>
 
         <div className="mt-16 grid gap-12 lg:grid-cols-3">
           {posts.map((p, i) => (
-            <a
-              key={p.title}
-              href={p.href}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => setActivePost(p)}
               data-reveal
               style={{ transitionDelay: `${i * 80}ms` }}
-              className="group block"
+              className="group block text-left cursor-pointer"
             >
               <div className="aspect-[4/3] overflow-hidden">
                 <img
@@ -828,12 +1091,131 @@ function Blog() {
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-earth/65">{p.excerpt}</p>
               <span className="mt-4 inline-flex items-center gap-2 text-[11px] tracking-[0.28em] uppercase text-gold">
-                Megnézem <ArrowUpRight className="h-3.5 w-3.5" />
+                Elolvasom <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
               </span>
-            </a>
+            </button>
           ))}
         </div>
       </div>
+
+      {/* Blog Article Reader Modal */}
+      {activePost && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="blog-modal-title"
+          className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-0 sm:p-6"
+        >
+          <div
+            onClick={() => setActivePost(null)}
+            className="fixed inset-0 bg-earth/75 backdrop-blur-md transition-opacity"
+          />
+
+          <article className="relative z-10 w-full max-w-3xl max-h-[94vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-gold/25 bg-cream shadow-2xl text-earth">
+            {/* Hero image */}
+            <div className="relative h-64 sm:h-80 w-full overflow-hidden">
+              <img
+                src={activePost.img}
+                alt={activePost.title}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-earth/70 via-earth/20 to-transparent" />
+              <button
+                type="button"
+                onClick={() => setActivePost(null)}
+                aria-label="Bezárás"
+                className="fixed sm:absolute right-5 top-5 z-20 grid h-10 w-10 place-items-center rounded-full bg-cream/90 text-earth shadow-md transition hover:bg-gold hover:text-cream cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <div className="absolute bottom-6 left-6 right-6 sm:left-10 sm:right-10">
+                <p className="eyebrow text-gold-soft">Gondolatok az útról</p>
+                <h2
+                  id="blog-modal-title"
+                  className="mt-2 font-display text-2xl sm:text-4xl leading-tight text-cream"
+                >
+                  {activePost.title}
+                </h2>
+              </div>
+            </div>
+
+            {/* Article body */}
+            <div className="px-6 py-8 sm:px-12 sm:py-12 space-y-8">
+              <p className="font-display text-xl sm:text-2xl italic text-gold border-b border-gold/20 pb-6">
+                {activePost.subtitle}
+              </p>
+
+              {activePost.sections.map((sec, idx) => (
+                <div key={idx} className="space-y-4">
+                  {sec.heading && (
+                    <h3 className="pt-2 font-display text-2xl leading-snug text-earth">
+                      {sec.heading}
+                    </h3>
+                  )}
+                  {sec.paragraphs.map((para, pIdx) => (
+                    <p
+                      key={pIdx}
+                      className="text-base leading-relaxed text-earth/80"
+                    >
+                      {para}
+                    </p>
+                  ))}
+                  {sec.questions && sec.questions.length > 0 && (
+                    <div className="my-4 rounded-2xl border-l-2 border-gold bg-linen/80 px-6 py-4 space-y-2">
+                      {sec.questions.map((q, qIdx) => (
+                        <p
+                          key={qIdx}
+                          className="font-display text-lg italic text-earth"
+                        >
+                          „{q}”
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {(activePost.closingQuestion || activePost.closingText) && (
+                <div className="mt-10 rounded-2xl border border-gold/30 bg-linen p-6 sm:p-8 space-y-4">
+                  {activePost.closingQuestion && (
+                    <>
+                      <p className="text-xs font-semibold tracking-widest uppercase text-gold">
+                        És most hadd kérdezzek valamit:
+                      </p>
+                      <p className="font-display text-xl sm:text-2xl italic leading-relaxed text-earth">
+                        {activePost.closingQuestion}
+                      </p>
+                    </>
+                  )}
+                  {activePost.closingText?.map((ct, cIdx) => (
+                    <p key={cIdx} className="text-sm sm:text-base leading-relaxed text-earth/75">
+                      {ct}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              <div className="pt-6 border-t border-earth/10 flex flex-wrap items-center justify-between gap-4">
+                <a
+                  href="#events"
+                  onClick={() => setActivePost(null)}
+                  className="inline-flex items-center gap-2 rounded-full bg-earth px-7 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-cream transition hover:bg-gold"
+                >
+                  Programok & Események
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setActivePost(null)}
+                  className="inline-flex items-center justify-center rounded-full border border-earth/25 px-7 py-3.5 text-xs tracking-[0.2em] uppercase text-earth/70 transition hover:border-gold hover:text-earth cursor-pointer"
+                >
+                  Bezárom
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      )}
     </section>
   );
 }
