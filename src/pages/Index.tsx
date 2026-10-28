@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { createElement, useEffect, useRef, useState } from "react";
 import {
   Flower2,
   Heart,
@@ -541,6 +541,9 @@ function Why() {
 }
 
 // ─── Events ──────────────────────────────────────────────────────────────────
+const STRIPE_PUBLISHABLE_KEY =
+  "pk_live_51TuujmV05iqq8bsGEcHVCXqFKMY0AxcMuwOwl5qe5TvQjDsGHeim19TM3GD0052Ou0iGQVf8ekIiA5Qlue28GEx600agL81W3h";
+
 const EVENTS: EventInfo[] = [
   {
     id: "budapest-yoga",
@@ -556,9 +559,11 @@ const EVENTS: EventInfo[] = [
     title: "Csütörtöki jóga a jurtában",
     subtitle: "Heti rendszerességgel",
     date: "Minden csütörtökön",
-    time: "10:00-tól",
+    time: "10:00–11:15",
     location: "Soul Ritual Jurta, Tök",
     capacity: 8,
+    price: "3 800 Ft / fő",
+    stripeBuyButtonId: "buy_btn_1UVVb0V05iqq8bsGQ4d23T9e",
     color: "earth",
   },
   {
@@ -568,6 +573,8 @@ const EVENTS: EventInfo[] = [
     date: "2026. november 12. (csütörtök)",
     time: "10:00–13:00",
     location: "Soul Ritual Jurta, Tök",
+    price: "9 000 Ft / fő",
+    stripeBuyButtonId: "buy_btn_1UVVcCV05iqq8bsGWNmLygrW",
     color: "earth",
   },
 ];
@@ -642,6 +649,11 @@ function EventCard({
               {spotsLeft === 0 ? "Megtelt" : `${spotsLeft}/${event.capacity} szabad hely`}
             </span>
           )}
+          {event.price && (
+            <span className="rounded-full bg-gold/15 border border-gold/30 px-3 py-1 text-[10px] font-semibold tracking-widest uppercase text-earth">
+              {event.price}
+            </span>
+          )}
         </div>
 
         {/* Title */}
@@ -668,6 +680,12 @@ function EventCard({
             <svg className="h-4 w-4 shrink-0" style={{ color: accent }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2"/></svg>
             {event.location}
           </li>
+          {event.price && (
+            <li className="flex items-center gap-2.5 font-medium text-earth">
+              <svg className="h-4 w-4 shrink-0" style={{ color: accent }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              Részvételi díj: {event.price}
+            </li>
+          )}
         </ul>
 
         {/* CTA */}
@@ -685,6 +703,13 @@ function EventCard({
             Megnézem a stúdiót
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
+        ) : event.stripeBuyButtonId ? (
+          <div className="mt-2 flex w-full justify-center">
+            {createElement("stripe-buy-button", {
+              "buy-button-id": event.stripeBuyButtonId,
+              "publishable-key": STRIPE_PUBLISHABLE_KEY,
+            })}
+          </div>
         ) : (
           <button
             type="button"

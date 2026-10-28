@@ -29,6 +29,8 @@ export interface EventInfo {
   location: string;
   capacity?: number; // undefined = no limit shown
   price?: string;
+  stripeBuyButtonId?: string;
+  stripePaymentUrl?: string;
   color?: "earth" | "gold"; // accent colour for modal header
 }
 
@@ -401,7 +403,7 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
                     )}
                   </button>
                   <p className="text-center text-[11px] text-earth/40">
-                    Ingyenes · Visszaigazolás e-mailben · Adataid védve
+                    {event.price ? `${event.price} · ` : ""}Visszaigazolás e-mailben · Adataid védve
                   </p>
                 </>
               )}
