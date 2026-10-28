@@ -96,7 +96,20 @@ export default function YogaSignup() {
       registeredAt: new Date().toISOString(),
     };
 
-    // Send notification email via Formsubmit
+    // Send notification email — mailto fallback (aktiválás nélkül mindig működik)
+    const emailSubject = encodeURIComponent(
+      `Új jóga bejelentkezés: ${record.name} (${FIRST_CLASS_DATE})`
+    );
+    const emailBody = encodeURIComponent(
+      [
+        `Név: ${record.name}`,
+        `E-mail: ${record.email}`,
+        `Esemény: Női jóga — csütörtöki óra`,
+        `Első óra: ${FIRST_CLASS_DATE}`,
+        `Bejelentkezés időpontja: ${new Date().toLocaleString("hu-HU")}`,
+      ].join("\n")
+    );
+
     try {
       await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(TARGET_EMAIL)}`, {
         method: "POST",
@@ -112,8 +125,12 @@ export default function YogaSignup() {
           "Bejelentkezés időpontja": new Date().toLocaleString("hu-HU"),
         }),
       });
-    } catch (err) {
-      console.warn("E-mail küldési hiba:", err);
+    } catch {
+      // Fallback: mailto link megnyitása
+      window.open(
+        `mailto:${TARGET_EMAIL}?subject=${emailSubject}&body=${emailBody}`,
+        "_blank"
+      );
     } finally {
       const updated = addRegistration(record);
       setRegistrations(updated);

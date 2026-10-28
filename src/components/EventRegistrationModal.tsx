@@ -162,29 +162,46 @@ export default function EventRegistrationModal({
     saveRegistration(record);
     setSavedList(getSavedRegistrations());
 
-    // 2. Automatikus e-mail küldés az info@soulritual.hu címre (Formsubmit AJAX)
+    // 2. E-mail értesítés — mailto: link (aktiválás nélkül mindig működik)
+    const targetEmail = event.email || "info@soulritual.hu";
+    const emailSubject = encodeURIComponent(
+      `Új feliratkozás: Soul Ritual — ${name.trim()}`
+    );
+    const emailBody = encodeURIComponent(
+      [
+        `Feliratkozó neve: ${name.trim()}`,
+        `E-mail címe: ${email.trim()}`,
+        `Telefonszáma: ${phone.trim() || "Nem adott meg"}`,
+        `Megjegyzés: ${note.trim() || "Nincs külön megjegyzés"}`,
+        `Hozzájárulás: Elfogadva — feliratkozás a Soul Ritual hírlevelére + ingyenes PDF`,
+        `Feliratkozás időpontja: ${new Date().toLocaleString("hu-HU")}`,
+      ].join("\n")
+    );
+
+    // Elsőként EmailJS-t próbálunk (ha aktiválva van)
     try {
-      const targetEmail = event.email || "info@soulritual.hu";
-      await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: name.trim(),
+          from_email: email.trim(),
+          to_email: targetEmail,
+          reply_to: email.trim(),
+          phone: phone.trim() || "Nem adott meg",
+          message: note.trim() || "Nincs külön megjegyzés",
+          subject: `Új feliratkozás: Soul Ritual — ${name.trim()}`,
+          submitted_at: new Date().toLocaleString("hu-HU"),
         },
-        body: JSON.stringify({
-          _subject: `Új feliratkozás: Soul Ritual közösség — ${name.trim()}`,
-          _template: "table",
-          _captcha: "false",
-          "Feliratkozó neve": name.trim(),
-          "E-mail címe": email.trim(),
-          Telefonszáma: phone.trim() || "Nem adott meg",
-          "Megjegyzés / Gondolat": note.trim() || "Nincs külön megjegyzés",
-          "Hozzájárulás": "Elfogadva — feliratkozás a Soul Ritual hírlevelére + ingyenes PDF elküldése",
-          "Feliratkozás időpontja": new Date().toLocaleString("hu-HU"),
-        }),
-      });
-    } catch (err) {
-      console.warn("Értesítő e-mail küldési hiba (helyi mentés sikeres):", err);
+        EMAILJS_PUBLIC_KEY
+      );
+    } catch (emailjsErr) {
+      console.warn("EmailJS nem elérhető, mailto fallback-re váltás:", emailjsErr);
+      // Fallback: mailto link megnyitása (mindig működik)
+      window.open(
+        `mailto:${targetEmail}?subject=${emailSubject}&body=${emailBody}`,
+        "_blank"
+      );
     } finally {
       setIsSubmitting(false);
       setIsSubmitted(true);
