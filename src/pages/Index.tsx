@@ -36,7 +36,6 @@ import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 
-const SKOOL_URL = "https://www.skool.com/soul-ritual-academy-6258";
 const YOUTUBE_URL = "https://www.youtube.com/@soulritual";
 const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
@@ -108,7 +107,7 @@ const faqs = [
   },
   {
     q: "Mit vigyek magammal egy alkalomra?",
-    a: "Kényelmes ruhát, egy meleg réteget, vizet és nyitott szívet. A jóga- és meditációs kellékeket biztosítjuk.",
+    a: "Kényelmes ruhát, egy meleg réteget, vizet, nyitott szívet és a jógaszőnyegedet.",
   },
   {
     q: "Hol található a jurta?",
@@ -229,14 +228,6 @@ function Header() {
           >
             Időpontfoglalás
           </a>
-          <a
-            href={SKOOL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-cream/80 whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.12em] uppercase text-cream transition hover:bg-cream hover:text-earth"
-          >
-            Csatlakozom
-          </a>
         </div>
         <button
           onClick={() => setOpen(!open)}
@@ -283,15 +274,6 @@ function Header() {
               className="mt-2.5 rounded-full bg-cream py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream"
             >
               Időpontfoglalás
-            </a>
-            <a
-              href={SKOOL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
-              className="mt-2.5 rounded-full border border-cream/80 py-3 text-center text-[11px] tracking-[0.28em] uppercase text-cream transition hover:bg-cream hover:text-earth"
-            >
-              Csatlakozom
             </a>
           </nav>
         </div>
@@ -913,8 +895,8 @@ function Contact() {
             Írj, <em className="italic text-gold">érkezz meg</em>.
           </h2>
           <p className="mt-6 max-w-md text-earth/70">
-            Csatlakozz a Soul Ritual közösséghez, ahol minden fontos hír, esemény és tudás egy
-            helyen elérhető — vagy keress meg közvetlenül.
+            Kérdésed van a foglalkozásokkal, egyéni alkalmakkal vagy a jurtás eseményekkel
+            kapcsolatban? Keress meg közvetlenül, szívesen válaszolok.
           </p>
 
           <ul className="mt-12 space-y-5 text-earth/80">
@@ -956,21 +938,22 @@ function Contact() {
 
         <div className="flex flex-col justify-center lg:col-span-7" data-reveal>
           <div className="border border-gold/40 bg-linen p-10 text-center lg:p-14">
-            <p className="eyebrow">Soul Ritual közösség</p>
+            <p className="eyebrow">Egyéni & Csoportos alkalmak</p>
             <h3 className="mt-6 font-display text-3xl leading-snug text-earth sm:text-4xl">
-              Csatlakozz hozzánk a <em className="italic text-gold">Skool</em> közösségben.
+              Foglald le a <em className="italic text-gold">helyed</em>.
             </h3>
             <p className="mx-auto mt-6 max-w-md text-earth/70">
-              Élő alkalmak, felvételek, közös gyakorlás és egy elfogadó közösség — mindez egy
-              helyen. Foglald le a helyed, és lépj be a Soul Ritual világába.
+              Egyéni konzultációra, Access Bars vagy Theta Healing folyamatra online tudsz
+              időpontot foglalni, a csoportos jurtás eseményekre pedig az eseménynaptárban
+              jelentkezhetsz.
             </p>
             <a
-              href={SKOOL_URL}
+              href="https://app.minup.io/book/soulritual"
               target="_blank"
               rel="noopener noreferrer"
               className="group mt-10 inline-flex items-center gap-3 rounded-full bg-earth px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-cream transition hover:bg-gold"
             >
-              Belépek a közösségbe
+              Időpontot foglalok
               <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
@@ -992,18 +975,18 @@ function Footer() {
         </div>
 
         <div className="lg:col-span-4">
-          <p className="eyebrow text-gold-soft">Közösség</p>
+          <p className="eyebrow text-gold-soft">Időpontfoglalás</p>
           <p className="mt-4 text-sm text-cream/70">
-            Csatlakozz a Soul Ritual közösséghez a Skoolon — élő alkalmak, felvételek és kapcsolódás
-            egy helyen.
+            Foglalj időpontot egyéni folyamatra online, vagy csatlakozz a jurtás csoportos
+            alkalmakhoz.
           </p>
           <a
-            href={SKOOL_URL}
+            href="https://app.minup.io/book/soulritual"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-6 inline-flex items-center gap-2 text-[11px] tracking-[0.28em] uppercase text-gold-soft hover:text-cream"
           >
-            Csatlakozom <ArrowUpRight className="h-3.5 w-3.5" />
+            Időpontot foglalok <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
 
