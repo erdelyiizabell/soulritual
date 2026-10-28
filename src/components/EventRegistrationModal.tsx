@@ -1,674 +1,454 @@
-import React, { useState, useEffect } from "react";
-import emailjs from "@emailjs/browser";
+import React, { useState, useEffect, useRef } from "react";
 import {
   X,
   Check,
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
   Mail,
   Phone,
   Sparkles,
   AlertCircle,
-  CalendarCheck,
   ArrowRight,
-  ShieldCheck,
-  Download,
-  Trash2,
+  Users,
+  Calendar,
+  Clock,
+  MapPin,
 } from "lucide-react";
 
+// ─── EmailJS (used if configured) ────────────────────────────────────────────
 const EMAILJS_SERVICE_ID = "service_b3x3vph";
 const EMAILJS_TEMPLATE_ID = "template_r3jdl0r";
 const EMAILJS_PUBLIC_KEY = "0hiWiCqQxp86EdGXi";
+const NOTIFY_EMAIL = "info@soulritual.hu";
 
-export interface EventDetails {
+// ─── Types ────────────────────────────────────────────────────────────────────
+export interface EventInfo {
   id: string;
   title: string;
+  subtitle?: string;
   date: string;
-  time?: string;
-  location?: string;
-  desc?: string;
+  time: string;
+  location: string;
+  capacity?: number; // undefined = no limit shown
   price?: string;
-  capacity?: string;
-  facilitator?: string;
-  email?: string;
+  color?: "earth" | "gold"; // accent colour for modal header
 }
 
-export interface RegistrationRecord {
+// ─── Storage helpers ──────────────────────────────────────────────────────────
+const STORAGE_KEY = "soulritual_event_regs_v2";
+
+interface Reg {
   id: string;
   eventId: string;
-  eventTitle: string;
-  eventDate: string;
   name: string;
   email: string;
   phone?: string;
-  note?: string;
-  committed: boolean;
-  cancellationAccepted: boolean;
   createdAt: string;
 }
 
-interface EventRegistrationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  event: EventDetails;
-}
-
-const STORAGE_KEY = "soulritual_event_registrations";
-
-function getSavedRegistrations(): RegistrationRecord[] {
+function getRegs(eventId: string): Reg[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const all: Reg[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return all.filter((r) => r.eventId === eventId);
   } catch {
     return [];
   }
 }
 
-function saveRegistration(record: RegistrationRecord) {
+function saveReg(r: Reg) {
   try {
-    const current = getSavedRegistrations();
-    const updated = [record, ...current];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  } catch (err) {
-    console.error("Hiba a mentéskor:", err);
-  }
+    const all: Reg[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([r, ...all]));
+  } catch {}
 }
 
-export default function EventRegistrationModal({
-  isOpen,
-  onClose,
-  event,
-}: EventRegistrationModalProps) {
+function alreadyRegistered(eventId: string, email: string): boolean {
+  return getRegs(eventId).some(
+    (r) => r.email.toLowerCase() === email.toLowerCase()
+  );
+}
+
+// ─── Props ────────────────────────────────────────────────────────────────────
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  event: EventInfo;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+export default function EventRegistrationModal({ isOpen, onClose, event }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [note, setNote] = useState("");
-  const [committed, setCommitted] = useState(false);
-  const [cancellationAccepted, setCancellationAccepted] = useState(false);
+  const [gdpr, setGdpr] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const regs = getRegs(event.id);
+  const spotsLeft =
+    event.capacity !== undefined
+      ? Math.max(0, event.capacity - regs.length)
+      : null;
+  const isFull = spotsLeft === 0;
 
-  const [showAdminList, setShowAdminList] = useState(false);
-  const [savedList, setSavedList] = useState<RegistrationRecord[]>([]);
-
-  // ESC key to close
+  // ESC + body lock
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
-    };
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-      setSavedList(getSavedRegistrations());
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    setTimeout(() => nameRef.current?.focus(), 80);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && reset();
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keydown", onKey);
     };
-  }, [isOpen, onClose]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const validate = () => {
-    const errs: { [key: string]: string } = {};
-    if (!name.trim()) {
-      errs.name = "Kérjük, add meg a teljes nevedet.";
-    }
-    if (!email.trim()) {
-      errs.email = "Kérjük, add meg az e-mail címedet.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      errs.email = "Kérjük, érvényes e-mail címet adj meg.";
-    }
-    if (!committed) {
-      errs.committed = "Kérjük, jelöld be a részvételi szándékot.";
-    }
-    if (!cancellationAccepted) {
-      errs.cancellationAccepted =
-        "Kérjük, fogadd el a lemondási feltételt (legkésőbb 2 nappal előtte).";
-    }
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    setIsSubmitting(true);
-
-    const record: RegistrationRecord = {
-      id: window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-      eventId: event.id,
-      eventTitle: event.title,
-      eventDate: event.date,
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim() || undefined,
-      note: note.trim() || undefined,
-      committed,
-      cancellationAccepted,
-      createdAt: new Date().toISOString(),
-    };
-
-    // 1. Mentés a böngésző helyi tárhelyébe
-    saveRegistration(record);
-    setSavedList(getSavedRegistrations());
-
-    // 2. E-mail értesítés — mailto: link (aktiválás nélkül mindig működik)
-    const targetEmail = event.email || "info@soulritual.hu";
-    const emailSubject = encodeURIComponent(
-      `Új feliratkozás: Soul Ritual — ${name.trim()}`
-    );
-    const emailBody = encodeURIComponent(
-      [
-        `Feliratkozó neve: ${name.trim()}`,
-        `E-mail címe: ${email.trim()}`,
-        `Telefonszáma: ${phone.trim() || "Nem adott meg"}`,
-        `Megjegyzés: ${note.trim() || "Nincs külön megjegyzés"}`,
-        `Hozzájárulás: Elfogadva — feliratkozás a Soul Ritual hírlevelére + ingyenes PDF`,
-        `Feliratkozás időpontja: ${new Date().toLocaleString("hu-HU")}`,
-      ].join("\n")
-    );
-
-    // Elsőként EmailJS-t próbálunk (ha aktiválva van)
-    try {
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          from_name: name.trim(),
-          from_email: email.trim(),
-          to_email: targetEmail,
-          reply_to: email.trim(),
-          phone: phone.trim() || "Nem adott meg",
-          message: note.trim() || "Nincs külön megjegyzés",
-          subject: `Új feliratkozás: Soul Ritual — ${name.trim()}`,
-          submitted_at: new Date().toLocaleString("hu-HU"),
-        },
-        EMAILJS_PUBLIC_KEY
-      );
-    } catch (emailjsErr) {
-      console.warn("EmailJS nem elérhető, mailto fallback-re váltás:", emailjsErr);
-      // Fallback: mailto link megnyitása (mindig működik)
-      window.open(
-        `mailto:${targetEmail}?subject=${emailSubject}&body=${emailBody}`,
-        "_blank"
-      );
-    } finally {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }
-  };
-
-  const handleResetAndClose = () => {
-    setIsSubmitted(false);
+  function reset() {
     setName("");
     setEmail("");
     setPhone("");
-    setNote("");
-    setCommitted(false);
-    setCancellationAccepted(false);
+    setGdpr(false);
     setErrors({});
-    setShowAdminList(false);
+    setDone(false);
     onClose();
-  };
+  }
 
-  // Google Calendar Link generator
-  const getGoogleCalendarUrl = () => {
-    // 2026-10-24 10:00 to 17:00 CEST (UTC+2) -> 08:00Z to 15:00Z
-    const startDate = "20261024T080000Z";
-    const endDate = "20261024T150000Z";
-    const title = encodeURIComponent(`${event.title} — Soul Ritual`);
-    const details = encodeURIComponent(
-      `Soul Ritual workshop Izabellával.\n\nHelyszín: Soul Ritual Jurta\nIdőpont: ${event.date} (${event.time || "10:00 - 17:00"})\n\nFontos tudnivaló: Ha mégsem tudsz eljönni, kérünk, legkésőbb 2 nappal az esemény előtt jelezd az info@soulritual.hu címen vagy a +36 30 407 85 83 telefonszámon!`,
-    );
-    const location = encodeURIComponent("Soul Ritual Jurta, természetközeli helyszín");
-    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
-  };
+  function validate() {
+    const e: Record<string, string> = {};
+    if (!name.trim()) e.name = "Kérjük, add meg a nevedet.";
+    if (!email.trim()) e.email = "Kérjük, add meg az e-mail címedet.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      e.email = "Érvényes e-mail cím szükséges.";
+    else if (alreadyRegistered(event.id, email.trim()))
+      e.email = "Ezzel az e-mail címmel már van jelentkezés.";
+    if (!gdpr) e.gdpr = "Az adatkezelési hozzájárulás szükséges.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
 
-  const handleExportCsv = () => {
-    const list = getSavedRegistrations();
-    if (list.length === 0) return;
-    const header = "Név,E-mail,Telefon,Esemény,Dátum,Megjegyzés,Regisztráció ideje\n";
-    const rows = list
-      .map(
-        (r) =>
-          `"${r.name.replace(/"/g, '""')}","${r.email}","${r.phone || ""}","${r.eventTitle}","${r.eventDate}","${(r.note || "").replace(/"/g, '""')}","${r.createdAt}"`,
-      )
-      .join("\n");
-    const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `soulritual-jelentkezesek-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  async function handleSubmit(ev: React.FormEvent) {
+    ev.preventDefault();
+    if (isFull || !validate()) return;
+    setSubmitting(true);
 
-  const handleClearList = () => {
-    if (
-      window.confirm(
-        "Biztosan törölni szeretnéd a mentett jelentkezési előzményeket a böngészőből?",
-      )
-    ) {
-      localStorage.removeItem(STORAGE_KEY);
-      setSavedList([]);
+    const rec: Reg = {
+      id: crypto.randomUUID?.() ?? String(Date.now()),
+      eventId: event.id,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim() || undefined,
+      createdAt: new Date().toISOString(),
+    };
+
+    saveReg(rec);
+
+    const templateParams = {
+      from_name: rec.name,
+      from_email: rec.email,
+      phone: rec.phone || "–",
+      event_title: event.title,
+      event_date: event.date,
+      event_time: event.time,
+      event_location: event.location,
+      submitted_at: new Date().toLocaleString("hu-HU"),
+      reply_to: rec.email,
+    };
+
+    try {
+      // Dynamic import so bundle stays lean when emailjs is unused
+      const emailjs = await import("@emailjs/browser");
+      await emailjs.default.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+    } catch {
+      // Fallback: formsubmit.co (no account needed)
+      try {
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            _subject: `Új jelentkezés: ${event.title} — ${rec.name}`,
+            _template: "table",
+            _captcha: "false",
+            Név: rec.name,
+            "E-mail": rec.email,
+            Telefon: rec.phone || "–",
+            Esemény: event.title,
+            Időpont: `${event.date} ${event.time}`,
+            Helyszín: event.location,
+            Beküldve: new Date().toLocaleString("hu-HU"),
+          }),
+        });
+      } catch {
+        // Last resort: open mailto
+        const sub = encodeURIComponent(`Új jelentkezés: ${event.title} — ${rec.name}`);
+        const body = encodeURIComponent(
+          `Név: ${rec.name}\nE-mail: ${rec.email}\nTelefon: ${rec.phone || "–"}\nEsemény: ${event.title}\nIdőpont: ${event.date} ${event.time}`
+        );
+        window.open(`mailto:${NOTIFY_EMAIL}?subject=${sub}&body=${body}`, "_blank");
+      }
+    } finally {
+      setSubmitting(false);
+      setDone(true);
     }
-  };
+  }
+
+  const accent = event.color === "gold" ? "var(--gold)" : "var(--earth)";
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-0 sm:p-6"
     >
       {/* Backdrop */}
       <div
-        onClick={handleResetAndClose}
-        className="fixed inset-0 bg-earth/75 backdrop-blur-md transition-opacity animate-in fade-in duration-300"
+        onClick={reset}
+        className="fixed inset-0 bg-earth/70 backdrop-blur-md"
+        style={{ animation: "fadeIn .25s ease both" }}
       />
 
-      {/* Modal Dialog Container */}
-      <div className="relative z-10 w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-3xl border border-gold/30 bg-cream shadow-2xl text-earth p-6 sm:p-8 animate-in zoom-in-95 duration-200">
-        {/* Close Button */}
-        <button
-          onClick={handleResetAndClose}
-          aria-label="Ablak bezárása"
-          className="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full border border-earth/15 text-earth/70 transition hover:border-gold hover:text-earth hover:bg-linen"
+      {/* Panel */}
+      <div
+        className="relative z-10 w-full max-w-lg max-h-[96vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-gold/25 bg-cream shadow-2xl text-earth"
+        style={{ animation: "slideUp .3s cubic-bezier(.22,1,.36,1) both" }}
+      >
+        {/* ── Coloured header strip ── */}
+        <div
+          className="px-7 pt-8 pb-6 rounded-t-3xl sm:rounded-t-3xl"
+          style={{ background: `color-mix(in oklab, ${accent} 10%, var(--cream))` }}
         >
-          <X className="h-5 w-5" />
-        </button>
-
-        {!isSubmitted ? (
-          <div>
-            {/* Header */}
-            <div className="pr-8">
-              <span className="eyebrow block">Soul Ritual feliratkozás</span>
-              <h2
-                id="modal-title"
-                className="mt-2 font-display text-2xl sm:text-3xl text-earth leading-tight"
-              >
-                Csatlakozz — és kapd meg az ingyenes útmutatót 🤎
-              </h2>
-
-              {/* Badges */}
-              <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs text-earth/80">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1 font-medium text-earth">
-                  <Sparkles className="h-3.5 w-3.5 text-gold" />
-                  Ingyenes PDF ajándékként
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-sand/60 px-3 py-1 font-medium text-earth">
-                  <Mail className="h-3.5 w-3.5 text-gold" />
-                  Hírlevelek, tartalmak, új anyagok
-                </span>
-              </div>
-
-              <p className="mt-4 text-sm leading-relaxed text-earth/75 border-b border-earth/10 pb-4">
-                Iratkozz fel a Soul Ritual közösségbe — első ajándékként azonnal megkapod az ingyenes önismereti útmutatót. Ezután értesítünk az új anyagokról, eseményekről és exkluzív tartalmakról is.
-              </p>
-            </div>
-
-            {/* Registration Form */}
-            <form onSubmit={handleSubmit} className="mt-6 space-y-5" noValidate>
-              {/* Name field */}
-              <div>
-                <label
-                  htmlFor="reg-name"
-                  className="block text-xs font-semibold tracking-wider uppercase text-earth/90 mb-1.5"
-                >
-                  Teljes név <span className="text-destructive">*</span>
-                </label>
-                <input
-                  id="reg-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    if (errors.name) setErrors({ ...errors, name: "" });
-                  }}
-                  placeholder="pl. Horváth Eszter"
-                  className={`w-full rounded-xl border bg-linen/70 px-4 py-3 text-sm text-earth placeholder:text-earth/40 focus:border-gold focus:bg-cream focus:outline-none transition ${
-                    errors.name ? "border-destructive ring-1 ring-destructive" : "border-earth/20"
-                  }`}
-                />
-                {errors.name && (
-                  <p className="mt-1 text-xs text-destructive flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" /> {errors.name}
-                  </p>
-                )}
-              </div>
-
-              {/* Email field */}
-              <div>
-                <label
-                  htmlFor="reg-email"
-                  className="block text-xs font-semibold tracking-wider uppercase text-earth/90 mb-1.5"
-                >
-                  E-mail cím <span className="text-destructive">*</span>
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-earth/40" />
-                  <input
-                    id="reg-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (errors.email) setErrors({ ...errors, email: "" });
-                    }}
-                    placeholder="pl. eszter@pelda.hu"
-                    className={`w-full rounded-xl border bg-linen/70 pl-10 pr-4 py-3 text-sm text-earth placeholder:text-earth/40 focus:border-gold focus:bg-cream focus:outline-none transition ${
-                      errors.email
-                        ? "border-destructive ring-1 ring-destructive"
-                        : "border-earth/20"
-                    }`}
-                  />
-                </div>
-                {errors.email ? (
-                  <p className="mt-1 text-xs text-destructive flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" /> {errors.email}
-                  </p>
-                ) : (
-                  <p className="mt-1 text-[11px] text-earth/55">
-                    Erre a címre küldjük az ingyenes PDF-et és a jövőbeni Soul Ritual tartalmakat.
-                  </p>
-                )}
-              </div>
-
-              {/* Phone field - optional */}
-              <div>
-                <label
-                  htmlFor="reg-phone"
-                  className="block text-xs font-semibold tracking-wider uppercase text-earth/90 mb-1.5"
-                >
-                  Telefonszám{" "}
-                  <span className="text-earth/40 text-[10px] font-normal lowercase">
-                    (opcionális)
-                  </span>
-                </label>
-                <div className="relative">
-                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-earth/40" />
-                  <input
-                    id="reg-phone"
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+36 30 123 4567"
-                    className="w-full rounded-xl border border-earth/20 bg-linen/70 pl-10 pr-4 py-3 text-sm text-earth placeholder:text-earth/40 focus:border-gold focus:bg-cream focus:outline-none transition"
-                  />
-                </div>
-                <p className="mt-1 text-[11px] text-earth/55">
-                  Csak ha szeretnél személyes kapcsolatot — teljesen opcionális.
-                </p>
-              </div>
-
-              {/* Optional Note / Intention */}
-              <div>
-                <label
-                  htmlFor="reg-note"
-                  className="block text-xs font-semibold tracking-wider uppercase text-earth/90 mb-1.5"
-                >
-                  Megosztanál valamit Izabellával?{" "}
-                  <span className="text-earth/40 text-[10px] font-normal lowercase">
-                    (opcionális)
-                  </span>
-                </label>
-                <textarea
-                  id="reg-note"
-                  rows={2}
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="Hol tartasz most? Mi az, amin változtatnál? Bármit szívesen olvasok..."
-                  className="w-full rounded-xl border border-earth/20 bg-linen/70 px-4 py-2.5 text-sm text-earth placeholder:text-earth/40 focus:border-gold focus:bg-cream focus:outline-none transition resize-none"
-                />
-              </div>
-
-              {/* Checkboxes container */}
-              <div className="space-y-3 rounded-2xl bg-sand/35 p-4 border border-gold/25">
-                {/* Checkbox 1: Feliratkozás */}
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <div className="relative flex items-center pt-0.5">
-                    <input
-                      type="checkbox"
-                      checked={committed}
-                      onChange={(e) => {
-                        setCommitted(e.target.checked);
-                        if (errors.committed) setErrors({ ...errors, committed: "" });
-                      }}
-                      className="sr-only"
-                    />
-                    <div
-                      className={`h-5 w-5 rounded-md border flex items-center justify-center transition ${
-                        committed ? "bg-earth border-earth text-cream" : "border-earth/40 bg-cream"
-                      }`}
-                    >
-                      {committed && <Check className="h-3.5 w-3.5 stroke-[3]" />}
-                    </div>
-                  </div>
-                  <span className="text-xs sm:text-sm font-medium leading-relaxed text-earth">
-                    <span className="text-gold font-serif mr-1">✦</span>
-                    <strong>Feliratkozom a Soul Ritual hírlevélre</strong> — értesítést kérek az új anyagokról, eseményekről és tartalmakról, és szeretném megkapni az ingyenes önismereti útmutatót.
-                  </span>
-                </label>
-                {errors.committed && (
-                  <p className="ml-8 text-xs text-destructive flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" /> {errors.committed}
-                  </p>
-                )}
-
-                {/* Checkbox 2: Adatkezelés */}
-                <label className="flex items-start gap-3 cursor-pointer select-none pt-2 border-t border-earth/10">
-                  <div className="relative flex items-center pt-0.5">
-                    <input
-                      type="checkbox"
-                      checked={cancellationAccepted}
-                      onChange={(e) => {
-                        setCancellationAccepted(e.target.checked);
-                        if (errors.cancellationAccepted)
-                          setErrors({ ...errors, cancellationAccepted: "" });
-                      }}
-                      className="sr-only"
-                    />
-                    <div
-                      className={`h-5 w-5 rounded-md border flex items-center justify-center transition ${
-                        cancellationAccepted
-                          ? "bg-earth border-earth text-cream"
-                          : "border-earth/40 bg-cream"
-                      }`}
-                    >
-                      {cancellationAccepted && <Check className="h-3.5 w-3.5 stroke-[3]" />}
-                    </div>
-                  </div>
-                  <span className="text-xs sm:text-sm leading-relaxed text-earth/85">
-                    Elfogadom, hogy az adataimat a Soul Ritual{" "}
-                    <strong>kizárólag hírlevél küldéséhez</strong>{" "}
-                    használja fel, és bármikor leiratkozhatok a{" "}
-                    {event.email ? `${event.email}` : "info@soulritual.hu"} címen.
-                  </span>
-                </label>
-                {errors.cancellationAccepted && (
-                  <p className="ml-8 text-xs text-destructive flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" /> {errors.cancellationAccepted}
-                  </p>
-                )}
-              </div>
-
-              {/* Submit CTA Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full group inline-flex items-center justify-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.25em] uppercase text-cream transition hover:bg-gold hover:text-earth disabled:opacity-60 cursor-pointer shadow-md"
-                >
-                  {isSubmitting ? (
-                    <span>Feliratkozás...</span>
-                  ) : (
-                    <>
-                      <span>Feliratkozom + megkapom a PDF-et</span>
-                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                    </>
-                  )}
-                </button>
-                <p className="mt-2 text-center text-[11px] text-earth/50">
-                  Ingyenes · Bármikor leiratkozhatsz · Biztonságos adatkezelés
-                </p>
-              </div>
-            </form>
-          </div>
-        ) : (
-          /* Success Screen */
-          <div className="py-4 text-center">
-            <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gold/20 text-gold mb-5">
-              <Sparkles className="h-8 w-8 animate-pulse" />
-            </div>
-
-            <span className="eyebrow block">Sikeres feliratkozás</span>
-            <h2 className="mt-2 font-display text-3xl text-earth">
-              Üdvözlünk a Soul Ritual közösségben! 🌿
-            </h2>
-            <p className="mt-3 text-base text-earth/80">
-              Kedves <strong>{name}</strong>, feliratkozásod rögzítettük —{" "}
-              az ingyenes önismereti útmutató hamarosan megérkezik a megadott e-mail címre.
-            </p>
-
-            {/* Summary Card */}
-            <div className="mt-6 rounded-2xl bg-linen p-5 text-left border border-gold/30 space-y-2.5 text-sm">
-              <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-gold shrink-0" />
-                <span>
-                  <strong>Küldési cím:</strong> <u>{email}</u>
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Sparkles className="h-4 w-4 text-gold shrink-0" />
-                <span>
-                  <strong>Anyag:</strong> Ingyenes Önismereti útmutató — az elengedéshez, az újrakezdéshez és önmagadhoz való visszataláláshoz
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="h-4 w-4 text-gold shrink-0" />
-                <span>
-                  <strong>Értesítve:</strong> Izabella is értesítést kapott a kérésedről ({event.email || "info@soulritual.hu"})
-                </span>
-              </div>
-            </div>
-
-            {/* Note */}
-            <div className="mt-4 rounded-xl bg-sand/40 p-4 text-left border border-earth/15 flex items-start gap-3">
-              <ShieldCheck className="h-5 w-5 text-gold shrink-0 mt-0.5" />
-              <div className="text-xs leading-relaxed text-earth/80">
-                <strong className="block text-earth font-medium mb-0.5">
-                  Ha nem érkezik meg az e-mail:
-                </strong>
-                Nézd meg a spam/levélszemét mappádat, vagy írj nekünk a{" "}
-                <a
-                  href={`mailto:${event.email || "info@soulritual.hu"}`}
-                  className="underline font-medium hover:text-gold"
-                >
-                  {event.email || "info@soulritual.hu"}
-                </a>{" "}
-                címre — örömmel segítünk!
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={handleResetAndClose}
-                className="w-full sm:w-auto inline-flex items-center justify-center rounded-full bg-earth px-8 py-3 text-xs tracking-wider uppercase font-semibold text-cream transition hover:bg-gold hover:text-earth cursor-pointer"
-              >
-                Köszönöm, bezárom!
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Small admin helper link at bottom for Izabella / Testing */}
-        <div className="mt-6 pt-4 border-t border-earth/10 flex items-center justify-between text-[11px] text-earth/45">
-          <span>Soul Ritual · Jurta események</span>
           <button
-            type="button"
-            onClick={() => setShowAdminList(!showAdminList)}
-            className="hover:text-gold underline cursor-pointer"
+            onClick={reset}
+            aria-label="Bezárás"
+            className="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full border border-earth/15 text-earth/60 transition hover:border-gold hover:text-earth hover:bg-white/60"
           >
-            {showAdminList ? "Elrejtés" : `Regisztrációk megtekintése (${savedList.length})`}
+            <X className="h-4.5 w-4.5" />
           </button>
+
+          <p className="eyebrow" style={{ color: accent }}>
+            Jelentkezés
+          </p>
+          <h2
+            id="modal-title"
+            className="mt-2 font-display text-2xl sm:text-3xl leading-tight text-earth"
+          >
+            {event.title}
+          </h2>
+
+          {/* Meta pills */}
+          <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/60 border border-earth/10 px-3 py-1 text-earth/80">
+              <Calendar className="h-3 w-3" style={{ color: accent }} />
+              {event.date}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/60 border border-earth/10 px-3 py-1 text-earth/80">
+              <Clock className="h-3 w-3" style={{ color: accent }} />
+              {event.time}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/60 border border-earth/10 px-3 py-1 text-earth/80">
+              <MapPin className="h-3 w-3" style={{ color: accent }} />
+              {event.location}
+            </span>
+            {spotsLeft !== null && (
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium border ${
+                  isFull
+                    ? "bg-destructive/10 border-destructive/30 text-destructive"
+                    : spotsLeft <= 3
+                    ? "bg-gold/15 border-gold/30 text-earth"
+                    : "bg-white/60 border-earth/10 text-earth/80"
+                }`}
+              >
+                <Users className="h-3 w-3" />
+                {isFull ? "Megtelt" : `${spotsLeft} szabad hely`}
+              </span>
+            )}
+            {event.price && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/60 border border-earth/10 px-3 py-1 text-earth/80">
+                {event.price}
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* Admin drawer for viewing saved submissions */}
-        {showAdminList && (
-          <div className="mt-4 rounded-xl bg-linen p-4 text-left border border-earth/20 text-xs">
-            <div className="flex items-center justify-between mb-3">
-              <span className="font-semibold text-earth flex items-center gap-1.5">
-                <Users className="h-3.5 w-3.5 text-gold" />
-                Helyi regisztrációk ({savedList.length} db)
-              </span>
-              <div className="flex items-center gap-2">
-                {savedList.length > 0 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handleExportCsv}
-                      title="Letöltés CSV formátumban"
-                      className="p-1 hover:text-gold flex items-center gap-1 text-[11px] cursor-pointer"
-                    >
-                      <Download className="h-3.5 w-3.5" /> CSV letöltés
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleClearList}
-                      title="Lista törlése"
-                      className="p-1 hover:text-destructive text-[11px] cursor-pointer"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {savedList.length === 0 ? (
-              <p className="text-earth/60 italic">
-                Még nem érkezett jelentkezés ezen a készüléken.
-              </p>
-            ) : (
-              <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
-                {savedList.map((item) => (
-                  <div key={item.id} className="rounded-lg bg-cream p-2.5 border border-earth/10">
-                    <div className="flex justify-between items-start">
-                      <strong className="text-earth">{item.name}</strong>
-                      <span className="text-[10px] text-earth/50">
-                        {new Date(item.createdAt).toLocaleDateString("hu-HU")}
-                      </span>
-                    </div>
-                    <div className="text-earth/70 text-[11px] mt-0.5">
-                      {item.email} {item.phone ? `· ${item.phone}` : ""}
-                    </div>
-                    <div className="text-[10px] text-gold mt-0.5 font-medium">
-                      {item.eventTitle} ({item.eventDate})
-                    </div>
-                    {item.note && (
-                      <p className="text-[11px] text-earth/60 italic mt-1 border-t border-earth/10 pt-1">
-                        „{item.note}”
+        <div className="px-7 pb-8">
+          {!done ? (
+            /* ── Form ── */
+            <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-4">
+              {isFull ? (
+                <p className="rounded-2xl bg-linen border border-gold/30 p-5 text-center text-sm text-earth/80">
+                  Ez az alkalom sajnos már megtelt.<br />
+                  Érdeklődj a <a href="mailto:info@soulritual.hu" className="font-medium text-gold underline-offset-2 underline">várólistára</a> kerülésről!
+                </p>
+              ) : (
+                <>
+                  {/* Name */}
+                  <div>
+                    <label htmlFor="er-name" className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5">
+                      Teljes név <span className="text-destructive">*</span>
+                    </label>
+                    <input
+                      ref={nameRef}
+                      id="er-name"
+                      type="text"
+                      value={name}
+                      autoComplete="name"
+                      placeholder="pl. Nagy Kata"
+                      onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: "" })); }}
+                      className={`w-full rounded-xl border bg-linen/60 px-4 py-3 text-sm text-earth placeholder:text-earth/35 focus:border-gold focus:outline-none transition ${
+                        errors.name ? "border-destructive ring-1 ring-destructive" : "border-earth/20"
+                      }`}
+                    />
+                    {errors.name && (
+                      <p className="mt-1 text-xs text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" /> {errors.name}
                       </p>
                     )}
                   </div>
-                ))}
+
+                  {/* Email */}
+                  <div>
+                    <label htmlFor="er-email" className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5">
+                      E-mail cím <span className="text-destructive">*</span>
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-earth/35" />
+                      <input
+                        id="er-email"
+                        type="email"
+                        value={email}
+                        autoComplete="email"
+                        placeholder="pl. kata@pelda.hu"
+                        onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: "" })); }}
+                        className={`w-full rounded-xl border bg-linen/60 pl-10 pr-4 py-3 text-sm text-earth placeholder:text-earth/35 focus:border-gold focus:outline-none transition ${
+                          errors.email ? "border-destructive ring-1 ring-destructive" : "border-earth/20"
+                        }`}
+                      />
+                    </div>
+                    {errors.email && (
+                      <p className="mt-1 text-xs text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" /> {errors.email}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Phone */}
+                  <div>
+                    <label htmlFor="er-phone" className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5">
+                      Telefonszám <span className="text-earth/35 font-normal normal-case text-[10px]">(nem kötelező)</span>
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-earth/35" />
+                      <input
+                        id="er-phone"
+                        type="tel"
+                        value={phone}
+                        autoComplete="tel"
+                        placeholder="+36 30 123 4567"
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full rounded-xl border border-earth/20 bg-linen/60 pl-10 pr-4 py-3 text-sm text-earth placeholder:text-earth/35 focus:border-gold focus:outline-none transition"
+                      />
+                    </div>
+                  </div>
+
+                  {/* GDPR checkbox */}
+                  <label className={`flex items-start gap-3 cursor-pointer select-none rounded-2xl p-4 border transition ${errors.gdpr ? "border-destructive/40 bg-destructive/5" : "border-earth/10 bg-linen/50"}`}>
+                    <div className="mt-0.5 shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={gdpr}
+                        onChange={(e) => { setGdpr(e.target.checked); setErrors((p) => ({ ...p, gdpr: "" })); }}
+                        className="sr-only"
+                      />
+                      <div className={`h-5 w-5 rounded-md border flex items-center justify-center transition ${gdpr ? "bg-earth border-earth text-cream" : "border-earth/30 bg-cream"}`}>
+                        {gdpr && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                      </div>
+                    </div>
+                    <span className="text-xs leading-relaxed text-earth/80">
+                      Hozzájárulok, hogy az adataimat a Soul Ritual a jelentkezésem visszaigazolásához felhasználja. Adataimat harmadik félnek nem adják át, és bármikor kérhetem törlésüket.
+                    </span>
+                  </label>
+                  {errors.gdpr && (
+                    <p className="text-xs text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" /> {errors.gdpr}
+                    </p>
+                  )}
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="mt-2 w-full inline-flex items-center justify-center gap-2.5 rounded-full px-8 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream transition shadow-md disabled:opacity-60 cursor-pointer"
+                    style={{ background: accent }}
+                  >
+                    {submitting ? (
+                      <span>Küldés...</span>
+                    ) : (
+                      <>
+                        <Check className="h-4 w-4" />
+                        <span>Jelentkezem</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                  <p className="text-center text-[11px] text-earth/40">
+                    Ingyenes · Visszaigazolás e-mailben · Adataid védve
+                  </p>
+                </>
+              )}
+            </form>
+          ) : (
+            /* ── Success ── */
+            <div className="mt-6 text-center py-4">
+              <div
+                className="mx-auto grid h-16 w-16 place-items-center rounded-full mb-5"
+                style={{ background: `color-mix(in oklab, ${accent} 15%, transparent)` }}
+              >
+                <Sparkles className="h-8 w-8 animate-pulse" style={{ color: accent }} />
               </div>
-            )}
-          </div>
-        )}
+              <p className="eyebrow" style={{ color: accent }}>Sikeresen elküldve</p>
+              <h3 className="mt-2 font-display text-2xl text-earth">Jelentkezésed rögzítettük! ✦</h3>
+              <p className="mt-3 text-sm leading-relaxed text-earth/70 max-w-sm mx-auto">
+                Kedves <strong>{name}</strong>, hamarosan visszaigazolót küldünk a{" "}
+                <strong>{email}</strong> e-mail címre.
+              </p>
+
+              <div className="mt-6 rounded-2xl bg-linen border border-gold/25 p-5 text-left text-sm space-y-2">
+                <div className="flex items-center gap-3 text-earth/75">
+                  <Calendar className="h-4 w-4 shrink-0 text-gold" />
+                  <span><strong>{event.date}</strong> · {event.time}</span>
+                </div>
+                <div className="flex items-center gap-3 text-earth/75">
+                  <MapPin className="h-4 w-4 shrink-0 text-gold" />
+                  <span>{event.location}</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={reset}
+                className="mt-8 inline-flex items-center justify-center rounded-full border border-earth/20 px-8 py-3 text-xs tracking-[0.22em] uppercase text-earth/70 transition hover:border-gold hover:text-earth cursor-pointer"
+              >
+                Bezárom
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+
+      <style>{`
+        @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+        @keyframes slideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:none } }
+      `}</style>
     </div>
   );
 }

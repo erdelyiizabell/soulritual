@@ -21,8 +21,7 @@ import {
   Quote,
 } from "lucide-react";
 
-import EventRegistrationModal, { EventDetails } from "@/components/EventRegistrationModal";
-import YogaSignup from "@/components/YogaSignup";
+import EventRegistrationModal, { EventInfo } from "@/components/EventRegistrationModal";
 
 import jurtaHero from "@/assets/jurta-hero.jpg";
 import kezTermeszet from "@/assets/kez-termeszet.jpg";
@@ -33,13 +32,13 @@ import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
 import jurtaInterior from "@/assets/jurta-interior.jpg";
 import whyLavender from "@/assets/why-lavender.jpg";
 import eventIntimitas from "@/assets/event-intimitas-tere.jpg";
-import onismereti from "@/assets/onismereti-utmutato.png";
 import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 
 const SKOOL_URL = "https://www.skool.com/soul-ritual-academy-6258";
 const YOUTUBE_URL = "https://www.youtube.com/@soulritual";
+const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
 const services = [
   { icon: Flower2, name: "Jóga", desc: "Tudatos mozgás, légzés és jelenlét." },
@@ -61,31 +60,6 @@ const reasons = [
   "Biztonságos, elfogadó közeg",
   "Kezdők számára is",
   "A hétköznapokban is alkalmazható módszerek",
-];
-
-const events = [
-  {
-    img: onismereti,
-    date: "Ingyenes · Azonnal letölthető",
-    location: "PDF útmutató · Digitális anyag",
-    title: "Ingyenes Önismereti útmutató — Az elengedéshez, az újrakezdéshez és önmagadhoz való visszataláláshoz",
-    desc: "Van, amikor tudod, hogy valaminek változnia kell. De azt még nem, hogyan tovább. 🌿 Lehet, hogy egy ideje már érzed, hogy nem vagy a helyeden. Hogy valami megváltozott benned. Hogy a régi már nem az igazi, de az új még csak körvonalazódik. Ilyenkor könnyű elbizonytalanodni — és épp ilyenkor segít ez az útmutató.",
-    topics: [
-      "Önismereti kérdések, amelyek segítenek tisztábban látni, merre szeretnél továbbindulni",
-      "7 napos gyakorlatsor — apró, de hatékony napi feladatok",
-      "Saját újrakezdési terv, amelyet kitölthetsz és megtarthatsz magadnak",
-      "Bátorítás és lágy iránymutatás a változás első lépéseihez",
-      "Önmagadhoz való visszatalálás — a félelem és a bizonytalanság ellenére is",
-    ],
-    pillars:
-      "Önismereti kérdések · 7 napos gyakorlatsor · Személyes újrakezdési terv · Megértés és elfogadás.",
-    goal: "Az újrakezdéshez nem kell minden választ ismerned. És nem kell félelem nélkül elindulnod. Néha az első lépés csupán annyi, hogy megállsz, őszintén magadra figyelsz, és megengeded magadnak a változást. 🤎 A bátorság ott kezdődik, ahol a régi véget ér.",
-    price: "",
-    capacity: "",
-    facilitator: "Izabella — Soul Ritual alapítója",
-    email: "info@soulritual.hu",
-    href: "",
-  },
 ];
 
 const testimonials = [
@@ -163,7 +137,6 @@ function useScrolled(threshold = 40) {
 
 function useReveal() {
   useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -175,19 +148,34 @@ function useReveal() {
       },
       { threshold: 0.12 },
     );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    const observe = () => {
+      document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-visible)").forEach((el) =>
+        io.observe(el)
+      );
+    };
+
+    observe();
+
+    // Watch for newly mounted data-reveal elements (e.g. lazy components)
+    const mo = new MutationObserver(observe);
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
   }, []);
 }
 
-function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
+function Header() {
   const scrolled = useScrolled(60);
   const [open, setOpen] = useState(false);
   const nav = [
     ["Bemutatkozás", "#about"],
     ["Szolgáltatások", "#services"],
-    ["A jurta", "#jurta"],
     ["Események", "#events"],
+    ["A jurta", "#jurta"],
     ["Blog", "#blog"],
     ["Kapcsolat", "#contact"],
   ] as const;
@@ -200,8 +188,8 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
           : "bg-gradient-to-b from-earth/50 to-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-        <a href="#top" className="flex items-center gap-3">
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-6 py-4 lg:px-10">
+        <a href="#top" className="flex shrink-0 items-center gap-3">
           <img
             src={logoUrl}
             alt="Soul Ritual"
@@ -212,30 +200,32 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             }}
           />
         </a>
-        <nav className="hidden items-center gap-9 lg:flex">
+        <nav className="hidden items-center gap-5 2xl:flex">
           {nav.map(([label, href]) => (
             <a
               key={href}
               href={href}
-              className="text-sm font-medium tracking-[0.18em] uppercase text-cream transition hover:text-gold-soft"
+              className="whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-cream transition hover:text-gold-soft"
             >
               {label}
             </a>
           ))}
-        </nav>
-        <div className="hidden items-center gap-3 lg:flex">
-          <button
-            type="button"
-            onClick={onOpenRegistration}
-            className="rounded-full bg-gold px-5 py-2.5 text-xs font-semibold tracking-[0.2em] uppercase text-earth transition hover:bg-cream cursor-pointer shadow-sm"
+          <a
+            href={BUDAPEST_YOGA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
           >
-            Ingyenes útmutató
-          </button>
+            Budapesti jógaóráim
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
+        </nav>
+        <div className="hidden shrink-0 items-center gap-2 2xl:flex">
           <a
             href="https://app.minup.io/book/soulritual"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-cream px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-earth transition hover:bg-gold hover:text-cream"
+            className="rounded-full bg-cream whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.12em] uppercase text-earth transition hover:bg-gold hover:text-cream"
           >
             Időpontfoglalás
           </a>
@@ -243,14 +233,14 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
             href={SKOOL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-cream/80 px-6 py-2.5 text-xs font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-cream hover:text-earth"
+            className="rounded-full border border-cream/80 whitespace-nowrap px-4 py-2.5 text-[11px] font-medium tracking-[0.12em] uppercase text-cream transition hover:bg-cream hover:text-earth"
           >
             Csatlakozom
           </a>
         </div>
         <button
           onClick={() => setOpen(!open)}
-          className="flex flex-col gap-1.5 p-2 lg:hidden"
+          className="flex flex-col gap-1.5 p-2 2xl:hidden"
           aria-label="Menü"
         >
           <span
@@ -263,7 +253,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
         </button>
       </div>
       {open && (
-        <div className="border-t border-cream/20 bg-earth/95 backdrop-blur-md lg:hidden">
+        <div className="border-t border-cream/20 bg-earth/95 backdrop-blur-md 2xl:hidden">
           <nav className="flex flex-col gap-1 px-6 py-4">
             {nav.map(([label, href]) => (
               <a
@@ -275,16 +265,16 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
                 {label}
               </a>
             ))}
-            <button
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                onOpenRegistration();
-              }}
-              className="mt-4 w-full rounded-full bg-gold py-3 text-center text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-cream cursor-pointer font-semibold shadow-sm"
+            <a
+              href={BUDAPEST_YOGA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-1.5 border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-gold-soft"
             >
-              Ingyenes útmutató
-            </button>
+              Budapesti jógaóráim
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
             <a
               href="https://app.minup.io/book/soulritual"
               target="_blank"
@@ -310,7 +300,7 @@ function Header({ onOpenRegistration }: { onOpenRegistration: () => void }) {
   );
 }
 
-function Hero({ onOpenRegistration }: { onOpenRegistration: () => void }) {
+function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -358,19 +348,14 @@ function Hero({ onOpenRegistration }: { onOpenRegistration: () => void }) {
           className="fade-up mt-12 flex flex-col items-center gap-4 sm:flex-row"
           style={{ animationDelay: "0.75s" }}
         >
-          <button
-            type="button"
-            onClick={onOpenRegistration}
-            className="inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream cursor-pointer shadow-lg"
-          >
-            <span>Kérem az ingyenes PDF-et</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </button>
           <a
-            href="#events"
-            className="inline-flex items-center gap-2 rounded-full border border-cream/80 px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-cream transition hover:bg-cream hover:text-earth"
+            href="https://app.minup.io/book/soulritual"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-[11px] tracking-[0.28em] uppercase text-earth transition hover:bg-gold hover:text-cream shadow-lg"
           >
-            Közelgő események
+            <span>Időpontot foglalok</span>
+            <ArrowRight className="h-3.5 w-3.5" />
           </a>
         </div>
       </div>
@@ -555,134 +540,201 @@ function Why() {
   );
 }
 
-function Events({ onOpenRegistration }: { onOpenRegistration: (ev: (typeof events)[0]) => void }) {
+// ─── Events ──────────────────────────────────────────────────────────────────
+const EVENTS: EventInfo[] = [
+  {
+    id: "budapest-yoga",
+    title: "Budapesti jógaórák",
+    subtitle: "Szerdánként · Studio Passion",
+    date: "Minden szerdán",
+    time: "10:00-tól",
+    location: "Studio Passion, Budapest",
+    color: "gold",
+  },
+  {
+    id: "jurta-yoga-thursday",
+    title: "Csütörtöki jóga a jurtában",
+    subtitle: "Heti rendszerességgel",
+    date: "Minden csütörtökön",
+    time: "10:00-tól",
+    location: "Soul Ritual Jurta, Tök",
+    capacity: 8,
+    color: "earth",
+  },
+  {
+    id: "onismereti-workshop-nov12",
+    title: "Ki vagyok én a hozott mintáimon túl?",
+    subtitle: "Önismereti workshop · 3 óra",
+    date: "2026. november 12. (csütörtök)",
+    time: "10:00–13:00",
+    location: "Soul Ritual Jurta, Tök",
+    color: "earth",
+  },
+];
+
+const EVENT_DESCRIPTIONS: Record<string, string> = {
+  "budapest-yoga":
+    "Rendszeres jóga Budapesten, a Studio Passion stúdióban. Minden szinten fogadlak — kezdőként és haladóként egyaránt.",
+  "jurta-yoga-thursday":
+    "Kis létszámú, személyes légkörű jóga a természetben. Maximum 8 főnek — hogy mindenkire jusson figyelem.",
+  "onismereti-workshop-nov12":
+    "3 órás mélymerülés önmagadba: feltérképezzük a hozott mintákat, és megkeressük, ki vagy te azokon túl.",
+};
+
+function EventCard({
+  event,
+  onRegister,
+}: {
+  event: EventInfo;
+  onRegister: (e: EventInfo) => void;
+}) {
+  const isExternal = event.id === "budapest-yoga";
+  const accent = event.color === "gold" ? "var(--gold)" : "var(--earth)";
+
+  // Live capacity from localStorage
+  const [spotsLeft, setSpotsLeft] = useState<number | null>(null);
+  useEffect(() => {
+    if (event.capacity === undefined) return;
+    try {
+      const all = JSON.parse(localStorage.getItem("soulritual_event_regs_v2") || "[]");
+      const count = all.filter((r: { eventId: string }) => r.eventId === event.id).length;
+      setSpotsLeft(Math.max(0, event.capacity - count));
+    } catch {
+      setSpotsLeft(event.capacity);
+    }
+  }, [event.id, event.capacity]);
+
   return (
-    <section id="events" className="bg-linen px-6 py-28 lg:py-40">
-      <div className="mx-auto max-w-6xl">
-        <div
-          className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end"
-          data-reveal
-        >
-          <div className="max-w-xl">
-            <p className="eyebrow">Ingyenes anyag</p>
-            <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
-              Egy lépés <em className="italic text-gold">önmagad felé</em>.
-            </h2>
-          </div>
-          <a
-            href={SKOOL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] tracking-[0.28em] uppercase text-earth underline decoration-gold underline-offset-8 hover:decoration-earth"
-          >
-            Soul Ritual közösség →
-          </a>
+    <article
+      data-reveal
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-earth/10 bg-cream shadow-sm transition duration-500 hover:shadow-lg hover:-translate-y-1"
+    >
+      {/* Accent line top */}
+      <div
+        className="h-1 w-full"
+        style={{ background: `linear-gradient(to right, ${accent}, color-mix(in oklab, ${accent} 40%, transparent))` }}
+      />
+
+      <div className="flex flex-1 flex-col gap-5 p-7 lg:p-8">
+        {/* Badge row */}
+        <div className="flex flex-wrap items-center gap-2">
+          {event.subtitle && (
+            <span
+              className="rounded-full px-3 py-1 text-[10px] font-semibold tracking-widest uppercase"
+              style={{
+                background: `color-mix(in oklab, ${accent} 12%, transparent)`,
+                color: accent,
+              }}
+            >
+              {event.subtitle}
+            </span>
+          )}
+          {spotsLeft !== null && (
+            <span
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold tracking-widest uppercase ${
+                spotsLeft === 0
+                  ? "bg-destructive/10 text-destructive"
+                  : spotsLeft <= 3
+                  ? "bg-gold/15 text-gold"
+                  : "bg-earth/10 text-earth/60"
+              }`}
+            >
+              {spotsLeft === 0 ? "Megtelt" : `${spotsLeft}/${event.capacity} szabad hely`}
+            </span>
+          )}
         </div>
 
-        <div className="mt-16 flex flex-col gap-16">
-          {events.map((e) => (
-            <article
-              key={e.title}
-              data-reveal
-              className="group grid gap-10 md:grid-cols-2 lg:gap-16"
-            >
-              <div
-                onClick={() => onOpenRegistration(e)}
-                className="relative block aspect-[5/4] overflow-hidden md:sticky md:top-28 md:self-start rounded-2xl cursor-pointer group/img shadow-md"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(ev) => {
-                  if (ev.key === "Enter" || ev.key === " ") {
-                    ev.preventDefault();
-                    onOpenRegistration(e);
-                  }
-                }}
-                aria-label={`PDF kérése: ${e.title}`}
-              >
-                <img
-                  src={e.img}
-                  alt={e.title}
-                  className="h-full w-full object-cover transition duration-[1200ms] group-hover:scale-105"
-                />
-                <div className="absolute left-4 top-4 bg-gold px-3 py-1.5 text-[10px] tracking-[0.24em] uppercase text-earth font-semibold shadow-sm">
-                  Ingyenes PDF
-                </div>
-                <div className="absolute bottom-4 right-4 bg-earth/90 backdrop-blur-sm px-4 py-2 text-[10px] tracking-[0.2em] uppercase text-cream rounded-full transition group-hover/img:bg-gold group-hover/img:text-earth flex items-center gap-1.5 shadow-lg">
-                  <Sparkles className="h-3 w-3 text-gold-soft group-hover/img:text-earth" />
-                  Kattints a letöltéshez
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-[11px] tracking-[0.28em] uppercase text-gold">{e.location}</p>
-                <h3 className="mt-4 text-3xl leading-snug sm:text-4xl">{e.title}</h3>
-                <p className="mt-6 text-sm leading-relaxed text-earth/65">{e.desc}</p>
+        {/* Title */}
+        <h3 className="font-display text-2xl leading-snug text-earth lg:text-3xl">
+          {event.title}
+        </h3>
 
-                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">Az útmutatóban találsz</p>
-                <ul className="mt-4 space-y-2 text-sm leading-relaxed text-earth/65">
-                  {e.topics.map((t) => (
-                    <li key={t} className="flex gap-3">
-                      <span className="mt-2 h-px w-4 shrink-0 bg-gold" />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
+        {/* Description */}
+        <p className="flex-1 text-sm leading-relaxed text-earth/65">
+          {EVENT_DESCRIPTIONS[event.id]}
+        </p>
 
-                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">
-                  Az útmutató pillérei
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-earth/65">{e.pillars}</p>
+        {/* Meta */}
+        <ul className="space-y-2 text-sm text-earth/70">
+          <li className="flex items-center gap-2.5">
+            <svg className="h-4 w-4 shrink-0" style={{ color: accent }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            {event.date}
+          </li>
+          <li className="flex items-center gap-2.5">
+            <svg className="h-4 w-4 shrink-0" style={{ color: accent }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            {event.time}
+          </li>
+          <li className="flex items-center gap-2.5">
+            <svg className="h-4 w-4 shrink-0" style={{ color: accent }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2"/></svg>
+            {event.location}
+          </li>
+        </ul>
 
-                <p className="mt-8 text-[11px] tracking-[0.28em] uppercase text-earth">
-                  Miért készítettem
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-earth/65">{e.goal}</p>
+        {/* CTA */}
+        {isExternal ? (
+          <a
+            href="https://www.studiopassion.hu/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full border-2 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase transition"
+            style={{
+              borderColor: accent,
+              color: accent,
+            }}
+          >
+            Megnézem a stúdiót
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled={spotsLeft === 0}
+            onClick={() => onRegister(event)}
+            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-cream transition disabled:opacity-40 cursor-pointer"
+            style={{ background: accent }}
+          >
+            {spotsLeft === 0 ? "Megtelt" : "Bejelentkezem"}
+            {spotsLeft !== 0 && <ArrowRight className="h-3.5 w-3.5" />}
+          </button>
+        )}
+      </div>
+    </article>
+  );
+}
 
-                <div className="mt-10 border-t border-earth/15 pt-8">
-                  <div className="flex items-center gap-3">
-                    <span className="font-display text-3xl italic text-gold">🤎</span>
-                    <div>
-                      <p className="text-[10px] tracking-[0.24em] uppercase text-earth/50">Összeállította</p>
-                      <p className="mt-1 text-earth/80">{e.facilitator}</p>
-                    </div>
-                  </div>
-                </div>
+function Events() {
+  const [activeEvent, setActiveEvent] = useState<EventInfo | null>(null);
 
-                {/* Prominent CTA Card */}
-                <div className="mt-8 rounded-2xl bg-cream/90 p-6 border border-gold/40 shadow-sm">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-                    <div>
-                      <span className="eyebrow block">Ingyenes letöltés</span>
-                      <h4 className="mt-1 font-display text-xl text-earth">
-                        Kérem az ingyenes önismereti PDF-et
-                      </h4>
-                      <p className="mt-1 text-xs text-earth/70">
-                        Teljesen ingyenes · E-mailben küldjük el neked
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => onOpenRegistration(e)}
-                      className="group inline-flex items-center justify-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream transition hover:bg-gold hover:text-earth cursor-pointer shadow-md shrink-0"
-                    >
-                      <span>Megkapom a PDF-et</span>
-                      <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                    </button>
-                  </div>
-                </div>
+  return (
+    <section id="events" className="relative bg-linen px-6 py-28 lg:py-40">
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-2xl" data-reveal>
+          <p className="eyebrow">Programok & Eseménynaptár</p>
+          <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
+            Csatlakozz <em className="italic text-gold">hozzánk</em>.
+          </h2>
+          <p className="mt-6 text-earth/70 sm:text-lg">
+            Hetente, a természetben és a városban — válaszd azt, ami most illeszkedik az életedbe.
+          </p>
+        </div>
 
-                <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-earth/70">
-                  <a
-                    href={`mailto:${e.email}`}
-                    className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.24em] uppercase text-earth/70 hover:text-gold"
-                  >
-                    Kérdésed van? {e.email}
-                  </a>
-                </div>
-              </div>
-            </article>
+        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {EVENTS.map((e, i) => (
+            <div key={e.id} style={{ transitionDelay: `${i * 80}ms` }}>
+              <EventCard event={e} onRegister={setActiveEvent} />
+            </div>
           ))}
         </div>
       </div>
+
+      {/* Registration Modal */}
+      {activeEvent && (
+        <EventRegistrationModal
+          isOpen={!!activeEvent}
+          onClose={() => setActiveEvent(null)}
+          event={activeEvent}
+        />
+      )}
     </section>
   );
 }
@@ -969,6 +1021,16 @@ function Footer() {
                 Kapcsolat
               </a>
             </li>
+            <li>
+              <a
+                href={BUDAPEST_YOGA_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-gold-soft hover:text-gold"
+              >
+                Budapesti jógaóráim <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -999,60 +1061,23 @@ function RevealStyles() {
 
 export default function Index() {
   useReveal();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<EventDetails>({
-    id: "ingyenes-onismereti-utmutato",
-    title: events[0].title,
-    date: events[0].date,
-    time: "",
-    location: events[0].location,
-    desc: events[0].desc,
-    price: events[0].price,
-    capacity: events[0].capacity,
-    facilitator: events[0].facilitator,
-    email: events[0].email,
-  });
-
-  const handleOpenRegistration = (ev?: (typeof events)[0]) => {
-    const target = ev || events[0];
-    setSelectedEvent({
-      id: "ingyenes-onismereti-utmutato",
-      title: target.title,
-      date: target.date,
-      time: "",
-      location: target.location,
-      desc: target.desc,
-      price: target.price,
-      capacity: target.capacity,
-      facilitator: target.facilitator,
-      email: target.email,
-    });
-    setIsModalOpen(true);
-  };
-
   return (
     <div className="bg-cream">
       <RevealStyles />
-      <Header onOpenRegistration={() => handleOpenRegistration(events[0])} />
+      <Header />
       <main>
-        <Hero onOpenRegistration={() => handleOpenRegistration(events[0])} />
+        <Hero />
         <About />
         <Services />
         <Jurta />
         <Why />
-        <Events onOpenRegistration={handleOpenRegistration} />
-        <YogaSignup />
+        <Events />
         <Testimonials />
         <Blog />
         <FAQ />
         <Contact />
       </main>
       <Footer />
-      <EventRegistrationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        event={selectedEvent}
-      />
     </div>
   );
 }
