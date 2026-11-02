@@ -1,4 +1,5 @@
 import { createElement, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Flower2,
   Heart,
@@ -36,6 +37,7 @@ import eventIntimitas from "@/assets/event-intimitas-tere.jpg";
 import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
+import workbookCover from "@/assets/munkafuzet-hatarok.jpg";
 
 const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
@@ -468,6 +470,12 @@ function Header() {
               {label}
             </a>
           ))}
+          <Link
+            to="/munkafuzet"
+            className="whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
+          >
+            Munkafüzet
+          </Link>
           <a
             href={BUDAPEST_YOGA_URL}
             target="_blank"
@@ -515,6 +523,13 @@ function Header() {
                 {label}
               </a>
             ))}
+            <Link
+              to="/munkafuzet"
+              onClick={() => setOpen(false)}
+              className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-gold-soft"
+            >
+              Munkafüzet
+            </Link>
             <a
               href={BUDAPEST_YOGA_URL}
               target="_blank"
@@ -1401,6 +1416,11 @@ function Footer() {
               </a>
             </li>
             <li>
+              <Link to="/munkafuzet" className="text-gold-soft hover:text-gold">
+                Önismereti munkafüzet
+              </Link>
+            </li>
+            <li>
               <a
                 href={BUDAPEST_YOGA_URL}
                 target="_blank"
@@ -1429,6 +1449,45 @@ function Footer() {
   );
 }
 
+function WorkbookPromo() {
+  return (
+    <section className="bg-cream px-6 py-24 lg:py-32">
+      <div className="mx-auto max-w-6xl rounded-3xl border border-gold/30 bg-linen p-8 sm:p-12 lg:p-16">
+        <div className="grid items-center gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-5" data-reveal>
+            <Link to="/munkafuzet" className="block mx-auto max-w-xs overflow-hidden rounded-2xl border border-gold/30 shadow-xl transition hover:scale-[1.02]">
+              <img
+                src={workbookCover}
+                alt="Határok — Önismereti munkafüzet"
+                className="w-full h-auto object-cover"
+              />
+            </Link>
+          </div>
+          <div className="lg:col-span-7" data-reveal>
+            <p className="eyebrow">Digitális kiadvány · Önismereti munkafüzet</p>
+            <h2 className="mt-4 font-display text-3xl leading-tight text-earth sm:text-5xl">
+              Határok — <em className="italic text-gold">A saját szükségleteim felismerése és képviselete</em>
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-earth/75 sm:text-lg">
+              Egy önállóan feldolgozható önismereti munkafüzet azoknak, akik szeretnének kiállni
+              önmagukért anélkül, hogy közben elveszítenék a másokkal való kapcsolódást.
+            </p>
+            <div className="mt-8">
+              <Link
+                to="/munkafuzet"
+                className="inline-flex items-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream transition hover:bg-gold shadow-md"
+              >
+                <span>Megnézem a munkafüzetet</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function RevealStyles() {
   return (
     <style>{`
@@ -1451,6 +1510,7 @@ export default function Index() {
         <Jurta />
         <Why />
         <Events />
+        <WorkbookPromo />
         <Testimonials />
         <Blog />
         <FAQ />
