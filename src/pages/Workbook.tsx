@@ -146,6 +146,10 @@ const workbookFaqs = [
     q: "Helyettesíti a munkafüzet a terápiát?",
     a: "Nem. Ez egy önállóan feldolgozható önismereti és önreflexiós eszköz, amely segít tisztábban látni a saját működésedet és szükségleteidet a hétköznapi kapcsolataidban.",
   },
+  {
+    q: "Hogyan működik a pénzvisszafizetési garancia?",
+    a: "Ha a vásárlástól számított 14 napon belül úgy érzed, hogy a munkafüzet nem nyújtotta számodra azt, amire számítottál, írj egy e-mailt az info@soulritual.hu címre, és kérdés nélkül visszatérítem a teljes vételárat.",
+  },
 ];
 
 export default function Workbook() {
@@ -250,6 +254,9 @@ export default function Workbook() {
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-earth/15 bg-white/70 px-3.5 py-1.5">
                   <Check className="h-3.5 w-3.5 text-gold" /> Önismereti gyakorlatok & táblázatok
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1.5 font-medium text-earth">
+                  <ShieldCheck className="h-3.5 w-3.5 text-gold" /> 100% pénzvisszafizetési garancia
                 </span>
               </div>
 
@@ -505,6 +512,10 @@ export default function Workbook() {
                     <Check className="h-4 w-4 shrink-0 text-gold" />
                     Letölthető és otthon is nyomtatható PDF formátum
                   </li>
+                  <li className="flex items-center gap-3 font-medium text-earth">
+                    <ShieldCheck className="h-4 w-4 shrink-0 text-gold" />
+                    14 napos, 100%-os pénzvisszafizetési garancia
+                  </li>
                 </ul>
 
                 <div className="mt-8">
@@ -530,8 +541,34 @@ export default function Workbook() {
 
                 <p className="mt-4 flex items-center gap-2 text-xs text-earth/55">
                   <ShieldCheck className="h-4 w-4 text-gold" />
-                  Fizetés után azonnal letölthető PDF formátumban
+                  Fizetés után azonnal letölthető · Kockázatmentes vásárlás
                 </p>
+              </div>
+            </div>
+
+            {/* ── Pénzvisszafizetési garancia blokk ── */}
+            <div className="mt-10 border-t border-gold/25 pt-8">
+              <div className="flex flex-col items-center gap-5 rounded-2xl border border-gold/30 bg-linen/70 p-6 text-center sm:flex-row sm:text-left">
+                <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-gold/15 text-gold">
+                  <ShieldCheck className="h-7 w-7" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl text-earth">
+                    100%-os elégedettségi és pénzvisszafizetési garancia
+                  </h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-earth/75">
+                    Szeretném, ha teljesen nyugodt szívvel vágnál bele. Ha a vásárlástól
+                    számított 14 napon belül úgy érzed, hogy a munkafüzet nem adott neked
+                    valódi értéket, csak írj egy e-mailt az{" "}
+                    <a
+                      href="mailto:info@soulritual.hu"
+                      className="font-medium text-earth underline decoration-gold underline-offset-2"
+                    >
+                      info@soulritual.hu
+                    </a>{" "}
+                    címre, és kérdés nélkül visszautalom a teljes összeget.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
