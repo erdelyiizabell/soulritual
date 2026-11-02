@@ -25,7 +25,8 @@ const STRIPE_PUBLISHABLE_KEY =
 const WORKBOOK_STRIPE_BUY_BUTTON_ID = "";
 const WORKBOOK_STRIPE_PAYMENT_URL = "https://buy.stripe.com/6oU4gCfiqdIT4XQ2LQ48002";
 const WORKBOOK_PRICE = "4 900 Ft";
-const WORKBOOK_PDF_URL = "/downloads/soul-ritual-hatarok-munkafuzet.pdf";
+const WORKBOOK_PDF_URL = "/downloads/sr-hatarok-9f8a7c6b5e4d.pdf";
+const WORKBOOK_SECRET_KEY = "sr9x7k4m2p8q";
 
 const boundaryAreas = [
   {
@@ -155,11 +156,19 @@ const workbookFaqs = [
 export default function Workbook() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [searchParams] = useSearchParams();
-  const isSuccess = searchParams.get("sikeres") === "1";
+  const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    const key = searchParams.get("k");
+    const sessionId = searchParams.get("session_id") ?? "";
+    // Csak akkor oldjuk fel, ha a titkos kulcs stimmel ÉS a Stripe behelyettesítette a cs_... session_id-t
+    if (key === WORKBOOK_SECRET_KEY && sessionId.startsWith("cs_") && sessionId.length > 20) {
+      setUnlocked(true);
+      // Eltüntetjük a titkos paramétert a böngésző címsorából, hogy ne lehessen kimásolni/továbbküldeni
+      window.history.replaceState({}, "", "/munkafuzet");
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-cream text-earth">
@@ -188,8 +197,8 @@ export default function Workbook() {
       </header>
 
       <main>
-        {/* ── Sikeres fizetés utáni letöltő sáv (?sikeres=1) ── */}
-        {isSuccess && (
+        {/* ── Sikeres fizetés utáni védett letöltő sáv ── */}
+        {unlocked && (
           <section className="bg-earth px-6 py-12 text-cream border-b border-gold/30">
             <div className="mx-auto max-w-3xl rounded-3xl border border-gold/40 bg-cream/10 p-8 text-center">
               <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-full bg-gold/25 text-gold-soft">
