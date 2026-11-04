@@ -33,7 +33,7 @@ export const WORKBOOKS: WorkbookCatalogItem[] = [
     title: "Határok",
     subtitle: "A saját szükségleteim felismerése és képviselete",
     tag: "Önismereti munkafüzet",
-    pages: "14 oldal · PDF",
+    pages: "13 oldal · PDF",
     price: "4 900 Ft",
     cover: workbookHatarokCover,
     excerpt:

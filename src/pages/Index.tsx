@@ -19,7 +19,10 @@ import {
   Facebook,
   ArrowUpRight,
   ArrowRight,
+  BookOpen,
+  Check,
   Quote,
+  ShoppingBag,
   X,
 } from "lucide-react";
 
@@ -434,6 +437,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   const nav = [
     ["Bemutatkozás", "#about"],
+    ["Munkafüzetek", "#webshop-promo"],
     ["Szolgáltatások", "#services"],
     ["Események", "#events"],
     ["A jurta", "#jurta"],
@@ -461,33 +465,34 @@ function Header() {
             }}
           />
         </a>
-        <nav className="hidden items-center gap-5 2xl:flex">
+        <nav className="hidden items-center gap-4 xl:flex 2xl:gap-5">
           {nav.map(([label, href]) => (
             <a
               key={href}
               href={href}
-              className="whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-cream transition hover:text-gold-soft"
+              className="whitespace-nowrap text-[12px] 2xl:text-[13px] font-medium tracking-[0.1em] uppercase text-cream transition hover:text-gold-soft"
             >
               {label}
             </a>
           ))}
-          <Link
-            to="/webshop"
-            className="whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
-          >
-            Webshop
-          </Link>
           <a
             href={BUDAPEST_YOGA_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
+            className="inline-flex items-center gap-1 whitespace-nowrap text-[12px] 2xl:text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
           >
             Budapesti jógaóráim
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </nav>
-        <div className="hidden shrink-0 items-center gap-2 2xl:flex">
+        <div className="hidden shrink-0 items-center gap-2.5 xl:flex">
+          <Link
+            to="/webshop"
+            className="inline-flex items-center gap-2 rounded-full border border-gold-soft/70 bg-gold/25 backdrop-blur-sm whitespace-nowrap px-4 py-2.5 text-[11px] font-semibold tracking-[0.14em] uppercase text-cream shadow-sm transition hover:bg-gold hover:border-gold hover:text-cream"
+          >
+            <ShoppingBag className="h-3.5 w-3.5 text-gold-soft" />
+            <span>Webshop</span>
+          </Link>
           <a
             href="https://app.minup.io/book/soulritual"
             target="_blank"
@@ -497,22 +502,31 @@ function Header() {
             Időpontfoglalás
           </a>
         </div>
-        <button
-          onClick={() => setOpen(!open)}
-          className="flex flex-col gap-1.5 p-2 2xl:hidden"
-          aria-label="Menü"
-        >
-          <span
-            className={`h-px w-6 bg-cream transition ${open ? "translate-y-2 rotate-45" : ""}`}
-          />
-          <span className={`h-px w-6 bg-cream transition ${open ? "opacity-0" : ""}`} />
-          <span
-            className={`h-px w-6 bg-cream transition ${open ? "-translate-y-2 -rotate-45" : ""}`}
-          />
-        </button>
+        <div className="flex items-center gap-2.5 xl:hidden">
+          <Link
+            to="/webshop"
+            className="inline-flex items-center gap-1.5 rounded-full border border-gold-soft/70 bg-gold/30 backdrop-blur-sm px-3.5 py-2 text-[10px] font-semibold tracking-[0.16em] uppercase text-cream shadow-sm transition hover:bg-gold"
+          >
+            <ShoppingBag className="h-3.5 w-3.5 text-gold-soft" />
+            <span>Webshop</span>
+          </Link>
+          <button
+            onClick={() => setOpen(!open)}
+            className="flex flex-col gap-1.5 p-2"
+            aria-label="Menü"
+          >
+            <span
+              className={`h-px w-6 bg-cream transition ${open ? "translate-y-2 rotate-45" : ""}`}
+            />
+            <span className={`h-px w-6 bg-cream transition ${open ? "opacity-0" : ""}`} />
+            <span
+              className={`h-px w-6 bg-cream transition ${open ? "-translate-y-2 -rotate-45" : ""}`}
+            />
+          </button>
+        </div>
       </div>
       {open && (
-        <div className="border-t border-cream/20 bg-earth/95 backdrop-blur-md 2xl:hidden">
+        <div className="border-t border-cream/20 bg-earth/95 backdrop-blur-md xl:hidden">
           <nav className="flex flex-col gap-1 px-6 py-4">
             {nav.map(([label, href]) => (
               <a
@@ -527,9 +541,10 @@ function Header() {
             <Link
               to="/webshop"
               onClick={() => setOpen(false)}
-              className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-gold-soft"
+              className="flex items-center gap-2 border-b border-cream/15 py-3 text-sm font-semibold tracking-widest uppercase text-gold-soft"
             >
-              Webshop
+              <ShoppingBag className="h-4 w-4" />
+              <span>Webshop — Önismereti munkafüzetek</span>
             </Link>
             <a
               href={BUDAPEST_YOGA_URL}
@@ -614,6 +629,14 @@ function Hero() {
             <span>Időpontot foglalok</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </a>
+          <Link
+            to="/webshop"
+            className="inline-flex items-center gap-3 rounded-full border border-gold-soft/80 bg-earth/65 backdrop-blur-md px-8 py-4 text-[11px] font-medium tracking-[0.24em] uppercase text-cream transition hover:bg-gold hover:border-gold hover:text-cream shadow-lg"
+          >
+            <BookOpen className="h-4 w-4 text-gold-soft" />
+            <span>Webshop · Munkafüzetek</span>
+            <ArrowRight className="h-3.5 w-3.5 text-gold-soft" />
+          </Link>
         </div>
       </div>
 
@@ -1452,78 +1475,158 @@ function Footer() {
 
 function WorkbookPromo() {
   return (
-    <section className="bg-cream px-6 py-24 lg:py-32">
-      <div className="mx-auto max-w-6xl rounded-3xl border border-gold/30 bg-linen p-8 sm:p-12 lg:p-16">
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end" data-reveal>
+    <section
+      id="webshop-promo"
+      className="relative overflow-hidden bg-earth px-6 py-24 text-cream lg:py-32"
+    >
+      {/* Subtle decorative radial glow */}
+      <div
+        className="pointer-events-none absolute -top-32 right-0 h-96 w-96 rounded-full opacity-20 blur-3xl"
+        style={{ background: "var(--gold)" }}
+      />
+      <div
+        className="pointer-events-none absolute -bottom-32 left-0 h-96 w-96 rounded-full opacity-15 blur-3xl"
+        style={{ background: "var(--gold)" }}
+      />
+
+      <div className="relative mx-auto max-w-6xl">
+        <div
+          className="flex flex-col items-start justify-between gap-6 border-b border-cream/15 pb-10 lg:flex-row lg:items-end"
+          data-reveal
+        >
           <div className="max-w-2xl">
-            <p className="eyebrow">Soul Ritual Webshop · Digitális kiadványok</p>
-            <h2 className="mt-4 font-display text-3xl leading-tight text-earth sm:text-5xl">
-              Önismereti <em className="italic text-gold">munkafüzetek</em> otthonra
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold-soft/40 bg-gold/15 px-4 py-1.5 text-[11px] font-semibold tracking-[0.22em] uppercase text-gold-soft">
+              <ShoppingBag className="h-3.5 w-3.5" />
+              <span>Soul Ritual Webshop · Digitális kiadványok</span>
+            </div>
+            <h2 className="mt-5 font-display text-4xl leading-tight text-cream sm:text-5xl lg:text-6xl">
+              Önismereti <em className="italic text-gold-soft">munkafüzetek</em> otthonra
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-earth/75 sm:text-lg">
-              Saját tempóban feldolgozható, nyomtatható önismereti munkafüzetek a határhúzás,
-              a családi örökségek és a párkapcsolati minták tisztább megértéséhez.
+            <p className="mt-4 text-base leading-relaxed text-cream/80 sm:text-lg">
+              Saját tempóban feldolgozható, otthon is nyomtatható önismereti munkafüzetek a
+              határhúzás, a családi örökségek és a párkapcsolati minták tisztább megértéséhez.
             </p>
           </div>
           <Link
             to="/webshop"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-earth px-7 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-cream transition hover:bg-gold shadow-md"
+            className="inline-flex shrink-0 items-center gap-3 rounded-full bg-gold px-8 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream shadow-lg transition hover:bg-cream hover:text-earth"
           >
-            <span>Irány a Webshop</span>
+            <ShoppingBag className="h-4 w-4" />
+            <span>Belépés a Webshopba</span>
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2" data-reveal>
-          <Link
-            to="/munkafuzet"
-            className="group flex flex-col sm:flex-row items-center gap-6 rounded-2xl border border-gold/25 bg-cream p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-          >
-            <img
-              src={workbookCover}
-              alt="Határok — Önismereti munkafüzet"
-              className="h-44 w-auto shrink-0 rounded-lg border border-gold/25 object-cover shadow-md transition group-hover:scale-[1.03]"
-            />
-            <div>
-              <span className="text-[10px] font-semibold tracking-widest uppercase text-gold">
-                14 oldal · PDF
-              </span>
-              <h3 className="mt-1 font-display text-2xl text-earth group-hover:text-gold transition">
-                Határok
-              </h3>
-              <p className="mt-1 text-xs italic text-earth/65">
-                A saját szükségleteim felismerése és képviselete
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.18em] uppercase text-earth">
-                Megnézem <ArrowRight className="h-3.5 w-3.5 text-gold" />
-              </span>
+        <div className="mt-12 grid gap-8 lg:grid-cols-2" data-reveal>
+          {/* Card 1: Határok */}
+          <article className="group flex flex-col justify-between rounded-3xl border border-gold/35 bg-cream p-6 text-earth shadow-xl transition duration-500 hover:-translate-y-1.5 hover:shadow-2xl sm:p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+              <Link to="/munkafuzet" className="mx-auto shrink-0 sm:mx-0">
+                <img
+                  src={workbookCover}
+                  alt="Határok — Önismereti munkafüzet"
+                  className="h-56 w-auto rounded-xl border border-gold/30 object-cover shadow-lg transition duration-500 group-hover:scale-[1.03]"
+                />
+              </Link>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="rounded-full bg-gold/15 border border-gold/30 px-3 py-1 text-[10px] font-semibold tracking-widest uppercase text-earth">
+                    13 oldal · PDF
+                  </span>
+                  <span className="font-display text-2xl font-semibold text-gold">4 900 Ft</span>
+                </div>
+                <Link to="/munkafuzet" className="block mt-3">
+                  <h3 className="font-display text-3xl text-earth transition group-hover:text-gold">
+                    Határok
+                  </h3>
+                </Link>
+                <p className="mt-1 font-display text-sm italic text-earth/70">
+                  A saját szükségleteim felismerése és képviselete
+                </p>
+                <ul className="mt-4 space-y-2 text-xs sm:text-sm text-earth/80">
+                  <li className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <span>17 határterület hétköznapi példákkal</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <span>Saját határok védelme & mások határainak tisztelete</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <span>Segítő táblázatok és önismereti gyakorlatok</span>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </Link>
+            <div className="mt-6 border-t border-earth/10 pt-5 flex items-center justify-between gap-4">
+              <span className="text-[11px] uppercase tracking-widest text-earth/60">
+                Azonnali PDF letöltés
+              </span>
+              <Link
+                to="/munkafuzet"
+                className="inline-flex items-center gap-2 rounded-full bg-earth px-6 py-3 text-[11px] font-semibold tracking-[0.2em] uppercase text-cream transition hover:bg-gold"
+              >
+                <span>Részletek & Megrendelés</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </article>
 
-          <Link
-            to="/kapcsolati-mintaim"
-            className="group flex flex-col sm:flex-row items-center gap-6 rounded-2xl border border-gold/25 bg-cream p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-          >
-            <img
-              src={relationshipCover}
-              alt="A kapcsolati mintáim nyomában — Vezetett önismereti munkafüzet"
-              className="h-44 w-auto shrink-0 rounded-lg border border-gold/25 object-cover shadow-md transition group-hover:scale-[1.03]"
-            />
-            <div>
-              <span className="text-[10px] font-semibold tracking-widest uppercase text-gold">
-                30 oldal · 8 fejezet · PDF
-              </span>
-              <h3 className="mt-1 font-display text-2xl text-earth group-hover:text-gold transition">
-                A kapcsolati mintáim nyomában
-              </h3>
-              <p className="mt-1 text-xs italic text-earth/65">
-                Családi örökség, párkapcsolati dinamika és önismereti feltárás
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.18em] uppercase text-earth">
-                Megnézem <ArrowRight className="h-3.5 w-3.5 text-gold" />
-              </span>
+          {/* Card 2: A kapcsolati mintáim nyomában */}
+          <article className="group flex flex-col justify-between rounded-3xl border border-gold/35 bg-cream p-6 text-earth shadow-xl transition duration-500 hover:-translate-y-1.5 hover:shadow-2xl sm:p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+              <Link to="/kapcsolati-mintaim" className="mx-auto shrink-0 sm:mx-0">
+                <img
+                  src={relationshipCover}
+                  alt="A kapcsolati mintáim nyomában — Vezetett önismereti munkafüzet"
+                  className="h-56 w-auto rounded-xl border border-gold/30 object-cover shadow-lg transition duration-500 group-hover:scale-[1.03]"
+                />
+              </Link>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="rounded-full bg-gold/15 border border-gold/30 px-3 py-1 text-[10px] font-semibold tracking-widest uppercase text-earth">
+                    30 oldal · 8 fejezet · PDF
+                  </span>
+                  <span className="font-display text-2xl font-semibold text-gold">8 900 Ft</span>
+                </div>
+                <Link to="/kapcsolati-mintaim" className="block mt-3">
+                  <h3 className="font-display text-2xl sm:text-3xl text-earth transition group-hover:text-gold">
+                    A kapcsolati mintáim nyomában
+                  </h3>
+                </Link>
+                <p className="mt-1 font-display text-sm italic text-earth/70">
+                  Családi örökség, párkapcsolati dinamika és önismereti feltárás
+                </p>
+                <ul className="mt-4 space-y-2 text-xs sm:text-sm text-earth/80">
+                  <li className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <span>Többgenerációs családi térkép (genogram)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <span>Konfliktuskör térkép és trigger-napló</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                    <span>11 strukturált, kitölthető önismereti munkalap</span>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </Link>
+            <div className="mt-6 border-t border-earth/10 pt-5 flex items-center justify-between gap-4">
+              <span className="text-[11px] uppercase tracking-widest text-earth/60">
+                Azonnali PDF letöltés
+              </span>
+              <Link
+                to="/kapcsolati-mintaim"
+                className="inline-flex items-center gap-2 rounded-full bg-earth px-6 py-3 text-[11px] font-semibold tracking-[0.2em] uppercase text-cream transition hover:bg-gold"
+              >
+                <span>Részletek & Megrendelés</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -1548,11 +1651,11 @@ export default function Index() {
       <main>
         <Hero />
         <About />
+        <WorkbookPromo />
         <Services />
         <Jurta />
         <Why />
         <Events />
-        <WorkbookPromo />
         <Testimonials />
         <Blog />
         <FAQ />
