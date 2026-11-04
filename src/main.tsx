@@ -3,7 +3,9 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Index from "./pages/Index";
+import Webshop from "./pages/Webshop";
 import Workbook from "./pages/Workbook";
+import RelationshipWorkbook from "./pages/RelationshipWorkbook";
 import NotFound from "./pages/NotFound";
 import "./styles.css";
 
@@ -12,7 +14,9 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/webshop" element={<Webshop />} />
         <Route path="/munkafuzet" element={<Workbook />} />
+        <Route path="/kapcsolati-mintaim" element={<RelationshipWorkbook />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

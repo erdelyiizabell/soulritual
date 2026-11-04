@@ -38,6 +38,7 @@ import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 import workbookCover from "@/assets/munkafuzet-hatarok.jpg";
+import relationshipCover from "@/assets/munkafuzet-kapcsolati-mintaim.jpg";
 
 const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
@@ -471,10 +472,10 @@ function Header() {
             </a>
           ))}
           <Link
-            to="/munkafuzet"
+            to="/webshop"
             className="whitespace-nowrap text-[13px] font-medium tracking-[0.1em] uppercase text-gold-soft transition hover:text-cream"
           >
-            Munkafüzet
+            Webshop
           </Link>
           <a
             href={BUDAPEST_YOGA_URL}
@@ -524,11 +525,11 @@ function Header() {
               </a>
             ))}
             <Link
-              to="/munkafuzet"
+              to="/webshop"
               onClick={() => setOpen(false)}
               className="border-b border-cream/15 py-3 text-sm tracking-widest uppercase text-gold-soft"
             >
-              Munkafüzet
+              Webshop
             </Link>
             <a
               href={BUDAPEST_YOGA_URL}
@@ -1416,8 +1417,8 @@ function Footer() {
               </a>
             </li>
             <li>
-              <Link to="/munkafuzet" className="text-gold-soft hover:text-gold">
-                Önismereti munkafüzet
+              <Link to="/webshop" className="text-gold-soft hover:text-gold">
+                Webshop (Munkafüzetek)
               </Link>
             </li>
             <li>
@@ -1453,35 +1454,76 @@ function WorkbookPromo() {
   return (
     <section className="bg-cream px-6 py-24 lg:py-32">
       <div className="mx-auto max-w-6xl rounded-3xl border border-gold/30 bg-linen p-8 sm:p-12 lg:p-16">
-        <div className="grid items-center gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5" data-reveal>
-            <Link to="/munkafuzet" className="block mx-auto max-w-xs overflow-hidden rounded-2xl border border-gold/30 shadow-xl transition hover:scale-[1.02]">
-              <img
-                src={workbookCover}
-                alt="Határok — Önismereti munkafüzet"
-                className="w-full h-auto object-cover"
-              />
-            </Link>
-          </div>
-          <div className="lg:col-span-7" data-reveal>
-            <p className="eyebrow">Digitális kiadvány · Önismereti munkafüzet</p>
+        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end" data-reveal>
+          <div className="max-w-2xl">
+            <p className="eyebrow">Soul Ritual Webshop · Digitális kiadványok</p>
             <h2 className="mt-4 font-display text-3xl leading-tight text-earth sm:text-5xl">
-              Határok — <em className="italic text-gold">A saját szükségleteim felismerése és képviselete</em>
+              Önismereti <em className="italic text-gold">munkafüzetek</em> otthonra
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-earth/75 sm:text-lg">
-              Egy önállóan feldolgozható önismereti munkafüzet azoknak, akik szeretnének kiállni
-              önmagukért anélkül, hogy közben elveszítenék a másokkal való kapcsolódást.
+            <p className="mt-4 text-base leading-relaxed text-earth/75 sm:text-lg">
+              Saját tempóban feldolgozható, nyomtatható önismereti munkafüzetek a határhúzás,
+              a családi örökségek és a párkapcsolati minták tisztább megértéséhez.
             </p>
-            <div className="mt-8">
-              <Link
-                to="/munkafuzet"
-                className="inline-flex items-center gap-3 rounded-full bg-earth px-8 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream transition hover:bg-gold shadow-md"
-              >
-                <span>Megnézem a munkafüzetet</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
           </div>
+          <Link
+            to="/webshop"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-earth px-7 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-cream transition hover:bg-gold shadow-md"
+          >
+            <span>Irány a Webshop</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="mt-12 grid gap-8 sm:grid-cols-2" data-reveal>
+          <Link
+            to="/munkafuzet"
+            className="group flex flex-col sm:flex-row items-center gap-6 rounded-2xl border border-gold/25 bg-cream p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+          >
+            <img
+              src={workbookCover}
+              alt="Határok — Önismereti munkafüzet"
+              className="h-44 w-auto shrink-0 rounded-lg border border-gold/25 object-cover shadow-md transition group-hover:scale-[1.03]"
+            />
+            <div>
+              <span className="text-[10px] font-semibold tracking-widest uppercase text-gold">
+                14 oldal · PDF
+              </span>
+              <h3 className="mt-1 font-display text-2xl text-earth group-hover:text-gold transition">
+                Határok
+              </h3>
+              <p className="mt-1 text-xs italic text-earth/65">
+                A saját szükségleteim felismerése és képviselete
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.18em] uppercase text-earth">
+                Megnézem <ArrowRight className="h-3.5 w-3.5 text-gold" />
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            to="/kapcsolati-mintaim"
+            className="group flex flex-col sm:flex-row items-center gap-6 rounded-2xl border border-gold/25 bg-cream p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+          >
+            <img
+              src={relationshipCover}
+              alt="A kapcsolati mintáim nyomában — Vezetett önismereti munkafüzet"
+              className="h-44 w-auto shrink-0 rounded-lg border border-gold/25 object-cover shadow-md transition group-hover:scale-[1.03]"
+            />
+            <div>
+              <span className="text-[10px] font-semibold tracking-widest uppercase text-gold">
+                30 oldal · 8 fejezet · PDF
+              </span>
+              <h3 className="mt-1 font-display text-2xl text-earth group-hover:text-gold transition">
+                A kapcsolati mintáim nyomában
+              </h3>
+              <p className="mt-1 text-xs italic text-earth/65">
+                Családi örökség, párkapcsolati dinamika és önismereti feltárás
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.18em] uppercase text-earth">
+                Megnézem <ArrowRight className="h-3.5 w-3.5 text-gold" />
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
     </section>

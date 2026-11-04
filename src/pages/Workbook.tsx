@@ -176,11 +176,11 @@ export default function Workbook() {
       <header className="sticky top-0 z-40 border-b border-earth/10 bg-cream/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link
-            to="/"
+            to="/webshop"
             className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.18em] uppercase text-earth/75 transition hover:text-gold"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Vissza a főoldalra</span>
+            <span>Vissza a Webshopba</span>
           </Link>
 
           <Link to="/" className="flex items-center">
@@ -626,8 +626,8 @@ export default function Workbook() {
       <footer className="bg-earth px-6 py-12 text-center text-xs text-cream/60">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
           <span>© {new Date().getFullYear()} Soul Ritual · Erdélyi Izabella · Minden jog fenntartva</span>
-          <Link to="/" className="text-gold-soft hover:text-cream uppercase tracking-widest">
-            ← Vissza a Soul Ritual főoldalára
+          <Link to="/webshop" className="text-gold-soft hover:text-cream uppercase tracking-widest">
+            ← Vissza a Soul Ritual Webshopba
           </Link>
         </div>
       </footer>
