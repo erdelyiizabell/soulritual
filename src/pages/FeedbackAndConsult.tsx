@@ -127,8 +127,9 @@ export default function FeedbackAndConsult() {
                 Hogy tetszett a PDF betekintő?
               </h1>
               <p className="mt-2 text-center text-sm leading-relaxed text-earth/75">
-                Írd meg pár mondatban a visszajelzésedet, és máris megkapod a{" "}
-                <strong>2 000 Ft-os ajándék kuponodat</strong> a teljes munkafüzetekhez!
+                Írd meg pár mondatban a visszajelzésedet, és a beküldés után{" "}
+                <strong>azonnal megjelenik</strong> a{" "}
+                <strong>2 000 Ft-os ajándék kuponkódod</strong> a teljes munkafüzetekhez!
               </p>
 
               <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-4">
@@ -231,8 +232,8 @@ export default function FeedbackAndConsult() {
                 Hálásan köszönöm a visszajelzésedet! ✦
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-earth/75 max-w-md mx-auto">
-                Elküldtem az e-mail címedre (<strong>{email}</strong>) is, és itt azonnal ki
-                is másolhatod a <strong>2 000 Ft-os ajándék kuponkódodat</strong>:
+                Íme a <strong>2 000 Ft-os ajándék kuponkódod</strong>, amit a munkafüzet
+                megrendelésénél tudsz beváltani:
               </p>
 
               <div className="mt-5 rounded-2xl bg-earth p-5 text-cream">

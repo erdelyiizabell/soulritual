@@ -107,7 +107,14 @@ export default function ExitIntentModal() {
       localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(record));
     } catch {}
 
-    // 1. Küldés a Google Táblázat + Gmail automatának (mindkét telepített végpontra)
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "generate_lead", {
+        event_category: "lead_magnet",
+        event_label: "Ingyenes_PDF_betekinto",
+      });
+    }
+
+    // 1. Küldés a Google Táblázatnak
     const payload = JSON.stringify({
       type: "lead",
       name: record.name,
