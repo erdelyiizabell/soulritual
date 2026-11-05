@@ -6,7 +6,12 @@ import hatarokCover from "@/assets/munkafuzet-hatarok.jpg";
 import kapcsolatCover from "@/assets/munkafuzet-kapcsolati-mintaim.jpg";
 
 export const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxAYJBGkm6gWNt2UZ8T2wm8_HEV2vuKlcHg7ZQmT2VQ7d2UgqW1Js0rTjGdYXScr5wg/exec";
+  "https://script.google.com/macros/s/AKfycbwlCkLgtx_vq1xk_ZEHYIKkzbGh0_nN8bhJ9SDW24_bPpNcaCHYecRXKufLSH2hG15W/exec";
+
+const EMAILJS_SERVICE_ID = "service_b3x3vph";
+const EMAILJS_TEMPLATE_ID = "template_r3jdl0r";
+const EMAILJS_PUBLIC_KEY = "0hiWiCqQxp86EdGXi";
+const NOTIFY_EMAIL = "info@soulritual.hu";
 
 const LEAD_STORAGE_KEY = "soulritual_lead_magnet_v2";
 const DISMISSED_SESSION_KEY = "soulritual_exit_dismissed_v2";
@@ -88,6 +93,7 @@ export default function ExitIntentModal() {
 
     setSubmitting(true);
     const now = new Date();
+    const due = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("hu-HU");
 
     const record: LeadRecord = {
       name: name.trim(),
@@ -99,19 +105,50 @@ export default function ExitIntentModal() {
       localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(record));
     } catch {}
 
+    // 1. Küldés a Google Táblázat + Gmail automatának
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        type: "lead",
+        name: record.name,
+        email: record.email,
+      }),
+    }).catch(() => {});
+
+    // 2. Biztonsági küldés EmailJS / FormSubmit segítségével is
     try {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          type: "lead",
-          name: record.name,
-          email: record.email,
-        }),
-      });
+      const emailjs = await import("@emailjs/browser");
+      await emailjs.default.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: record.name,
+          from_email: record.email,
+          phone: `1 hét múlva (${due}) emlékeztető esedékes`,
+          event_title: "Ajándék PDF betekintő letöltés",
+          event_date: due,
+          event_time: "Visszajelzésért 2 000 Ft kupon",
+          event_location: "https://soulritual.hu/visszajelzes",
+          submitted_at: now.toLocaleString("hu-HU"),
+          reply_to: record.email,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
     } catch {
-      // Fallback ha offline lenne
+      try {
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            _subject: `🎁 Ajándék PDF betekintő letöltés: ${record.name}`,
+            Név: record.name,
+            "E-mail": record.email,
+            "1 hét múlva emlékeztető": due,
+          }),
+        });
+      } catch {}
     } finally {
       setSubmitting(false);
       setDone(true);
@@ -120,7 +157,6 @@ export default function ExitIntentModal() {
 
   return (
     <>
-      {/* Finom, diszkrét gomb a bal alsó sarokban: ha már letöltötte a PDF-et, egyből a visszajelzésre viszi! */}
       {!isOpen && (
         <div className="fixed bottom-5 left-5 z-40">
           {!getSavedLead() ? (
@@ -251,9 +287,8 @@ export default function ExitIntentModal() {
                   Kedves {name}, itt a betekintőd! ✦
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm leading-relaxed text-earth/75">
-                  Töltsd le lent (és elküldtem az e-mail címedre is)! Ha elolvastad és megírod a
-                  visszajelzésedet, a rendszerünk <strong>automatikusan elküldi</strong> neked
-                  e-mailben a <strong>2 000 Ft-os ajándék kuponodat</strong>.
+                  Kattints a gombra a letöltéshez! Ha elolvastad és megírod a visszajelzésedet,
+                  megkapod a <strong>2 000 Ft-os ajándék kuponodat</strong>.
                 </p>
 
                 <a

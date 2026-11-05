@@ -136,6 +136,20 @@ export default function RelationshipWorkbook() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [searchParams] = useSearchParams();
   const [unlocked, setUnlocked] = useState(false);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState("");
+
+  function handleApplyCoupon(e: React.FormEvent) {
+    e.preventDefault();
+    if (couponInput.trim().toUpperCase() === "SOUL2000") {
+      setCouponApplied(true);
+      setCouponError("");
+    } else {
+      setCouponApplied(false);
+      setCouponError("Érvénytelen kuponkód.");
+    }
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -450,11 +464,57 @@ export default function RelationshipWorkbook() {
                 </p>
 
                 <div className="mt-6 flex items-baseline gap-3">
-                  <span className="font-display text-4xl text-earth">{WORKBOOK_PRICE}</span>
-                  <span className="text-xs uppercase tracking-widest text-earth/50">
-                    egyszeri díj · azonnali letöltés
-                  </span>
+                  {couponApplied ? (
+                    <>
+                      <span className="font-display text-2xl line-through text-earth/40">
+                        {WORKBOOK_PRICE}
+                      </span>
+                      <span className="font-display text-4xl text-gold font-semibold">
+                        6 900 Ft
+                      </span>
+                      <span className="rounded-full bg-gold/15 px-3 py-1 text-[11px] font-semibold text-earth">
+                        −2 000 Ft kupon
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-display text-4xl text-earth">{WORKBOOK_PRICE}</span>
+                      <span className="text-xs uppercase tracking-widest text-earth/50">
+                        egyszeri díj · azonnali letöltés
+                      </span>
+                    </>
+                  )}
                 </div>
+
+                {/* Kuponkód beváltó mező */}
+                <form onSubmit={handleApplyCoupon} className="mt-5 max-w-sm">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponInput}
+                      onChange={(e) => {
+                        setCouponInput(e.target.value);
+                        setCouponError("");
+                      }}
+                      placeholder="Kuponkód megadása"
+                      className="w-full rounded-xl border border-earth/20 bg-white px-4 py-2.5 text-xs uppercase tracking-wider text-earth placeholder:normal-case placeholder:tracking-normal placeholder:text-earth/40 focus:border-gold focus:outline-none"
+                    />
+                    <button
+                      type="submit"
+                      className="shrink-0 rounded-xl border border-gold/50 bg-gold/15 px-4 py-2.5 text-xs font-semibold tracking-wider uppercase text-earth transition hover:bg-gold hover:text-cream cursor-pointer"
+                    >
+                      Beváltás
+                    </button>
+                  </div>
+                  {couponApplied && (
+                    <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-gold">
+                      <Check className="h-3.5 w-3.5" /> A 2 000 Ft-os kedvezményt érvényesítettük!
+                    </p>
+                  )}
+                  {couponError && (
+                    <p className="mt-1.5 text-xs text-destructive">{couponError}</p>
+                  )}
+                </form>
 
                 <ul className="mt-6 space-y-3 text-sm text-earth/80">
                   <li className="flex items-center gap-3">
@@ -485,12 +545,20 @@ export default function RelationshipWorkbook() {
                     </div>
                   ) : WORKBOOK_STRIPE_PAYMENT_URL ? (
                     <a
-                      href={WORKBOOK_STRIPE_PAYMENT_URL}
+                      href={
+                        couponApplied
+                          ? `${WORKBOOK_STRIPE_PAYMENT_URL}?prefilled_promo_code=SOUL2000`
+                          : WORKBOOK_STRIPE_PAYMENT_URL
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex w-full sm:w-auto items-center justify-center gap-3 rounded-full bg-earth px-9 py-4 text-xs font-semibold tracking-[0.22em] uppercase text-cream shadow-md transition hover:bg-gold"
                     >
-                      <span>Megvásárlom a munkafüzetet</span>
+                      <span>
+                        {couponApplied
+                          ? "Megvásárlom kedvezménnyel (6 900 Ft)"
+                          : "Megvásárlom a munkafüzetet"}
+                      </span>
                       <ArrowRight className="h-4 w-4" />
                     </a>
                   ) : (

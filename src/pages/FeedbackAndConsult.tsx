@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, Calendar, Sparkles, Star } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Calendar, Check, Copy, Sparkles, Star } from "lucide-react";
 
 import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
 import { GOOGLE_SCRIPT_URL, getSavedLead } from "@/components/ExitIntentModal";
 
 const BOOKING_URL = "https://app.minup.io/book/soulritual";
+const EMAILJS_SERVICE_ID = "service_b3x3vph";
+const EMAILJS_TEMPLATE_ID = "template_r3jdl0r";
+const EMAILJS_PUBLIC_KEY = "0hiWiCqQxp86EdGXi";
+const NOTIFY_EMAIL = "info@soulritual.hu";
+const COUPON_REWARD = "SOUL2000";
 
 export default function FeedbackAndConsult() {
   const savedLead = getSavedLead();
@@ -17,11 +22,12 @@ export default function FeedbackAndConsult() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setError("Kérlek, add meg a nevedet és az e-mail címedet, ahová a 2 000 Ft-os kupont küldhetem.");
+      setError("Kérlek, add meg a nevedet és az e-mail címedet.");
       return;
     }
     if (feedback.trim().length < 5) {
@@ -30,22 +36,56 @@ export default function FeedbackAndConsult() {
     }
 
     setSubmitting(true);
+    const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+    const nowStr = new Date().toLocaleString("hu-HU");
 
+    // 1. Küldés a Google Táblázat + Gmail automatának
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        type: "feedback",
+        name: name.trim(),
+        email: email.trim(),
+        rating,
+        feedback: feedback.trim(),
+      }),
+    }).catch(() => {});
+
+    // 2. Biztonsági küldés EmailJS / FormSubmit segítségével is
     try {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          type: "feedback",
-          name: name.trim(),
-          email: email.trim(),
-          rating,
-          feedback: feedback.trim(),
-        }),
-      });
+      const emailjs = await import("@emailjs/browser");
+      await emailjs.default.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: name.trim(),
+          from_email: email.trim(),
+          phone: `${rating}/5 (${stars})`,
+          event_title: "MUNKAFÜZET VISSZAJELZÉS",
+          event_date: nowStr,
+          event_time: `Kupon: ${COUPON_REWARD}`,
+          event_location: feedback.trim(),
+          submitted_at: nowStr,
+          reply_to: email.trim(),
+        },
+        EMAILJS_PUBLIC_KEY
+      );
     } catch {
-      // Fallback ha offline lenne
+      try {
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            _subject: `⭐ Új Munkafüzet Visszajelzés (${rating}/5): ${name.trim()}`,
+            Név: name.trim(),
+            "E-mail": email.trim(),
+            Értékelés: `${rating}/5`,
+            Vélemény: feedback.trim(),
+          }),
+        });
+      } catch {}
     } finally {
       setSubmitting(false);
       setDone(true);
@@ -84,8 +124,7 @@ export default function FeedbackAndConsult() {
                 Hogy tetszett a PDF betekintő?
               </h1>
               <p className="mt-2 text-center text-sm leading-relaxed text-earth/75">
-                Írd meg pár mondatban a visszajelzésedet, és a rendszerünk{" "}
-                <strong>azonnal, automatikusan elküldi az e-mail címedre</strong> a{" "}
+                Írd meg pár mondatban a visszajelzésedet, és máris megkapod a{" "}
                 <strong>2 000 Ft-os ajándék kuponodat</strong> a teljes munkafüzetekhez!
               </p>
 
@@ -129,7 +168,7 @@ export default function FeedbackAndConsult() {
                       setEmail(e.target.value);
                       setError("");
                     }}
-                    placeholder="E-mail címed (ide megy a kupon) *"
+                    placeholder="E-mail címed *"
                     className="w-full rounded-xl border border-earth/20 bg-linen/50 px-4 py-2.5 text-sm text-earth focus:border-gold focus:outline-none"
                   />
                 </div>
@@ -155,7 +194,7 @@ export default function FeedbackAndConsult() {
                 >
                   {submitting
                     ? "Küldés..."
-                    : "Elküldöm a visszajelzést & Kérem e-mailben a 2 000 Ft kupont"}
+                    : "Elküldöm a visszajelzést & Kérem a 2 000 Ft-os kupont"}
                 </button>
               </form>
 
@@ -181,21 +220,40 @@ export default function FeedbackAndConsult() {
               </div>
             </>
           ) : (
-            <div className="text-center py-6">
-              <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-full bg-gold/20 text-gold">
+            <div className="text-center py-4">
+              <div className="mx-auto mb-3 grid h-14 w-14 place-items-center rounded-full bg-gold/20 text-gold">
                 <Sparkles className="h-7 w-7" />
               </div>
               <h2 className="font-display text-3xl text-earth">
                 Hálásan köszönöm a visszajelzésedet! ✦
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-earth/75 max-w-md mx-auto">
-                A rendszerünk <strong>már el is küldte</strong> a{" "}
-                <strong>{email}</strong> e-mail címedre a{" "}
-                <strong>2 000 Ft-os ajándék kuponkódodat</strong>! Nézd meg a bejövő
-                leveleidet (vagy a Promóciók mappát).
+              <p className="mt-2 text-sm leading-relaxed text-earth/75 max-w-md mx-auto">
+                Elküldtem az e-mail címedre (<strong>{email}</strong>) is, és itt azonnal ki
+                is másolhatod a <strong>2 000 Ft-os ajándék kuponkódodat</strong>:
               </p>
 
-              <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <div className="mt-5 rounded-2xl bg-earth p-5 text-cream">
+                <p className="text-[10px] tracking-[0.2em] uppercase text-gold-soft">
+                  2 000 Ft-os ajándék kuponkódod
+                </p>
+                <div className="mt-1.5 font-display text-3xl tracking-widest">
+                  {COUPON_REWARD}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard?.writeText(COUPON_REWARD);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="mt-3 inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2 text-xs font-semibold uppercase tracking-wider text-cream hover:bg-cream hover:text-earth cursor-pointer"
+                >
+                  {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  <span>{copied ? "Kimásolva!" : "Kód másolása"}</span>
+                </button>
+              </div>
+
+              <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
                   to="/webshop"
                   className="inline-block rounded-full bg-earth px-7 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-cream hover:bg-gold transition"
