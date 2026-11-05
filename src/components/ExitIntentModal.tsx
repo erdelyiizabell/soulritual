@@ -6,6 +6,8 @@ import hatarokCover from "@/assets/munkafuzet-hatarok.jpg";
 import kapcsolatCover from "@/assets/munkafuzet-kapcsolati-mintaim.jpg";
 
 export const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxAYJBGkm6gWNt2UZ8T2wm8_HEV2vuKlcHg7ZQmT2VQ7d2UgqW1Js0rTjGdYXScr5wg/exec";
+export const GOOGLE_SCRIPT_URL_ALT =
   "https://script.google.com/macros/s/AKfycbwlCkLgtx_vq1xk_ZEHYIKkzbGh0_nN8bhJ9SDW24_bPpNcaCHYecRXKufLSH2hG15W/exec";
 
 const EMAILJS_SERVICE_ID = "service_b3x3vph";
@@ -105,17 +107,20 @@ export default function ExitIntentModal() {
       localStorage.setItem(LEAD_STORAGE_KEY, JSON.stringify(record));
     } catch {}
 
-    // 1. Küldés a Google Táblázat + Gmail automatának
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        type: "lead",
-        name: record.name,
-        email: record.email,
-      }),
-    }).catch(() => {});
+    // 1. Küldés a Google Táblázat + Gmail automatának (mindkét telepített végpontra)
+    const payload = JSON.stringify({
+      type: "lead",
+      name: record.name,
+      email: record.email,
+    });
+    for (const url of [GOOGLE_SCRIPT_URL, GOOGLE_SCRIPT_URL_ALT]) {
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: payload,
+      }).catch(() => {});
+    }
 
     // 2. Biztonsági küldés EmailJS / FormSubmit segítségével is
     try {

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, Calendar, Check, Copy, Sparkles, Star } from "lucide-react";
 
 import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
-import { GOOGLE_SCRIPT_URL, getSavedLead } from "@/components/ExitIntentModal";
+import { GOOGLE_SCRIPT_URL, GOOGLE_SCRIPT_URL_ALT, getSavedLead } from "@/components/ExitIntentModal";
 
 const BOOKING_URL = "https://app.minup.io/book/soulritual";
 const EMAILJS_SERVICE_ID = "service_b3x3vph";
@@ -39,19 +39,22 @@ export default function FeedbackAndConsult() {
     const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
     const nowStr = new Date().toLocaleString("hu-HU");
 
-    // 1. Küldés a Google Táblázat + Gmail automatának
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        type: "feedback",
-        name: name.trim(),
-        email: email.trim(),
-        rating,
-        feedback: feedback.trim(),
-      }),
-    }).catch(() => {});
+    // 1. Küldés a Google Táblázat + Gmail automatának (mindkét telepített végpontra)
+    const payload = JSON.stringify({
+      type: "feedback",
+      name: name.trim(),
+      email: email.trim(),
+      rating,
+      feedback: feedback.trim(),
+    });
+    for (const url of [GOOGLE_SCRIPT_URL, GOOGLE_SCRIPT_URL_ALT]) {
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: payload,
+      }).catch(() => {});
+    }
 
     // 2. Biztonsági küldés EmailJS / FormSubmit segítségével is
     try {
