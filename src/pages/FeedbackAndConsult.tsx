@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Mail, Sparkles, Star, Video } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Calendar, Sparkles, Star } from "lucide-react";
 
 import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
-import { getSavedLead } from "@/components/ExitIntentModal";
+import { GOOGLE_SCRIPT_URL, getSavedLead } from "@/components/ExitIntentModal";
 
-const EMAILJS_SERVICE_ID = "service_b3x3vph";
-const EMAILJS_TEMPLATE_ID = "template_r3jdl0r";
-const EMAILJS_PUBLIC_KEY = "0hiWiCqQxp86EdGXi";
-const NOTIFY_EMAIL = "info@soulritual.hu";
+const BOOKING_URL = "https://app.minup.io/book/soulritual";
 
 export default function FeedbackAndConsult() {
   const savedLead = getSavedLead();
@@ -17,7 +14,6 @@ export default function FeedbackAndConsult() {
   const [name, setName] = useState(savedLead?.name || "");
   const [email, setEmail] = useState(savedLead?.email || "");
   const [feedback, setFeedback] = useState("");
-  const [wantsVideoCall, setWantsVideoCall] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -34,44 +30,22 @@ export default function FeedbackAndConsult() {
     }
 
     setSubmitting(true);
-    const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
-    const nowStr = new Date().toLocaleString("hu-HU");
 
     try {
-      const emailjs = await import("@emailjs/browser");
-      await emailjs.default.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          from_name: name.trim(),
-          from_email: email.trim(),
-          phone: `${rating}/5 (${stars}) | 30p videóhívást kér: ${wantsVideoCall ? "IGEN" : "Nem"}`,
-          event_title: wantsVideoCall
-            ? "VISSZAJELZÉS (2000 Ft kupon küldendő!) + 30P VIDEÓHÍVÁS KÉRÉS"
-            : "VISSZAJELZÉS (2000 Ft kupon küldendő!)",
-          event_date: nowStr,
-          event_time: "Küldd el neki válaszban a 2 000 Ft-os kuponkódot!",
-          event_location: feedback.trim(),
-          submitted_at: nowStr,
-          reply_to: email.trim(),
-        },
-        EMAILJS_PUBLIC_KEY
-      );
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          type: "feedback",
+          name: name.trim(),
+          email: email.trim(),
+          rating,
+          feedback: feedback.trim(),
+        }),
+      });
     } catch {
-      try {
-        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            _subject: `⭐ Visszajelzés érkezett (2 000 Ft kupon küldendő!): ${name.trim()}`,
-            Név: name.trim(),
-            "E-mail (ide küldd a kupont)": email.trim(),
-            Értékelés: `${rating}/5`,
-            Vélemény: feedback.trim(),
-            "30 perces online videóhívást kér?": wantsVideoCall ? "IGEN" : "Nem",
-          }),
-        });
-      } catch {}
+      // Fallback ha offline lenne
     } finally {
       setSubmitting(false);
       setDone(true);
@@ -110,8 +84,8 @@ export default function FeedbackAndConsult() {
                 Hogy tetszett a PDF betekintő?
               </h1>
               <p className="mt-2 text-center text-sm leading-relaxed text-earth/75">
-                Ha kipróbáltad a gyakorlatot és megírod pár mondatban a visszajelzésedet,
-                köszönetképpen elküldöm az e-mail címedre a{" "}
+                Írd meg pár mondatban a visszajelzésedet, és a rendszerünk{" "}
+                <strong>azonnal, automatikusan elküldi az e-mail címedre</strong> a{" "}
                 <strong>2 000 Ft-os ajándék kuponodat</strong> a teljes munkafüzetekhez!
               </p>
 
@@ -168,26 +142,9 @@ export default function FeedbackAndConsult() {
                     setFeedback(e.target.value);
                     setError("");
                   }}
-                  placeholder="Írd meg pár mondatban, milyen volt kitölteni a betekintőt, melyik kérdés érintett meg a legjobban... *"
+                  placeholder="Írd meg pár mondatban, milyen volt elolvasni a betekintőt, melyik gondolat érintett meg a legjobban... *"
                   className="w-full rounded-xl border border-earth/20 bg-linen/50 p-4 text-sm text-earth focus:border-gold focus:outline-none"
                 />
-
-                <label className="flex items-start gap-3 cursor-pointer rounded-2xl border border-gold/35 bg-gold/10 p-4">
-                  <input
-                    type="checkbox"
-                    checked={wantsVideoCall}
-                    onChange={(e) => setWantsVideoCall(e.target.checked)}
-                    className="mt-1 accent-earth"
-                  />
-                  <span className="text-xs leading-relaxed text-earth">
-                    <strong className="flex items-center gap-1.5 text-sm text-earth mb-0.5">
-                      <Video className="h-4 w-4 text-gold" />
-                      Szeretnék egy 1 alkalmas, 30 perces online videóhívást is
-                    </strong>
-                    Szívesen átbeszélném veled online a felmerült gondolataimat (e-mailben
-                    egyeztetünk időpontot).
-                  </span>
-                </label>
 
                 {error && <p className="text-xs text-destructive text-center">{error}</p>}
 
@@ -201,6 +158,27 @@ export default function FeedbackAndConsult() {
                     : "Elküldöm a visszajelzést & Kérem e-mailben a 2 000 Ft kupont"}
                 </button>
               </form>
+
+              {/* Közvetlen időpontfoglalás kártya */}
+              <div className="mt-7 rounded-2xl border border-gold/35 bg-gold/10 p-5 text-center">
+                <p className="font-display text-lg text-earth">
+                  Szeretnéd személyesen vagy online átbeszélni?
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-earth/75">
+                  Ha a munkafüzet mellett szívesen találkoznál velem egyéni konzultáción vagy
+                  30 perces online híváson, foglalj közvetlenül időpontot a naptáramban:
+                </p>
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3.5 inline-flex items-center gap-2 rounded-full border border-earth/30 bg-white px-6 py-2.5 text-xs font-semibold tracking-[0.18em] uppercase text-earth transition hover:border-gold hover:bg-earth hover:text-cream"
+                >
+                  <Calendar className="h-3.5 w-3.5 text-gold" />
+                  <span>Időpontot foglalok</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </>
           ) : (
             <div className="text-center py-6">
@@ -211,25 +189,28 @@ export default function FeedbackAndConsult() {
                 Hálásan köszönöm a visszajelzésedet! ✦
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-earth/75 max-w-md mx-auto">
-                Megkaptam az üzenetedet, és hamarosan küldöm a{" "}
+                A rendszerünk <strong>már el is küldte</strong> a{" "}
                 <strong>{email}</strong> e-mail címedre a{" "}
-                <strong>2 000 Ft-os ajándék kuponkódodat</strong>!
+                <strong>2 000 Ft-os ajándék kuponkódodat</strong>! Nézd meg a bejövő
+                leveleidet (vagy a Promóciók mappát).
               </p>
 
-              {wantsVideoCall && (
-                <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-gold/15 px-4 py-2 text-xs font-medium text-earth">
-                  <Mail className="h-3.5 w-3.5 text-gold" />
-                  <span>A 30 perces online videóhívás időpontjával is keresni foglak!</span>
-                </div>
-              )}
-
-              <div className="mt-7">
+              <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
                   to="/webshop"
-                  className="inline-block rounded-full border border-earth px-7 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-earth hover:bg-earth hover:text-cream transition"
+                  className="inline-block rounded-full bg-earth px-7 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-cream hover:bg-gold transition"
                 >
-                  Vissza a Webshopba →
+                  Irány a Webshop →
                 </Link>
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-earth px-7 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-earth hover:bg-earth hover:text-cream transition"
+                >
+                  <Calendar className="h-3.5 w-3.5 text-gold" />
+                  <span>Időpontfoglalás</span>
+                </a>
               </div>
             </div>
           )}

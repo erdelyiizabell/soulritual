@@ -5,10 +5,8 @@ import { X, Sparkles, Download, Mail, ArrowRight, Star, BookOpen } from "lucide-
 import hatarokCover from "@/assets/munkafuzet-hatarok.jpg";
 import kapcsolatCover from "@/assets/munkafuzet-kapcsolati-mintaim.jpg";
 
-const EMAILJS_SERVICE_ID = "service_b3x3vph";
-const EMAILJS_TEMPLATE_ID = "template_r3jdl0r";
-const EMAILJS_PUBLIC_KEY = "0hiWiCqQxp86EdGXi";
-const NOTIFY_EMAIL = "info@soulritual.hu";
+export const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxAYJBGkm6gWNt2UZ8T2wm8_HEV2vuKlcHg7ZQmT2VQ7d2UgqW1Js0rTjGdYXScr5wg/exec";
 
 const LEAD_STORAGE_KEY = "soulritual_lead_magnet_v2";
 const DISMISSED_SESSION_KEY = "soulritual_exit_dismissed_v2";
@@ -48,7 +46,6 @@ export default function ExitIntentModal() {
     };
 
     const handleMouseOut = (e: MouseEvent) => {
-      // Ha az egér elhagyja az ablakot a felső sáv (böngészőfülek / bezárás) irányába
       if (!e.relatedTarget && e.clientY <= 40) {
         triggerPopup();
       }
@@ -60,13 +57,11 @@ export default function ExitIntentModal() {
       }
     };
 
-    // 1 másodperc után élesítjük a kilépés-figyelést
     const armTimer = window.setTimeout(() => {
       window.addEventListener("mouseout", handleMouseOut);
       document.documentElement.addEventListener("mouseleave", handleMouseLeave);
     }, 1000);
 
-    // Ha 18 másodpercig nézelődik és még nem ugrott fel, finoman megjelenítjük
     const autoTimer = window.setTimeout(() => {
       triggerPopup();
     }, 18000);
@@ -93,7 +88,6 @@ export default function ExitIntentModal() {
 
     setSubmitting(true);
     const now = new Date();
-    const due = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("hu-HU");
 
     const record: LeadRecord = {
       name: name.trim(),
@@ -106,36 +100,18 @@ export default function ExitIntentModal() {
     } catch {}
 
     try {
-      const emailjs = await import("@emailjs/browser");
-      await emailjs.default.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          from_name: record.name,
-          from_email: record.email,
-          phone: `1 hét múlva (${due}) küldendő: értékeléskérő link (https://soulritual.hu/visszajelzes)`,
-          event_title: "Ajándék PDF betekintő letöltés",
-          event_date: due,
-          event_time: "Visszajelzésért 2 000 Ft kupon",
-          event_location: "https://soulritual.hu/visszajelzes",
-          submitted_at: now.toLocaleString("hu-HU"),
-          reply_to: record.email,
-        },
-        EMAILJS_PUBLIC_KEY
-      );
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          type: "lead",
+          name: record.name,
+          email: record.email,
+        }),
+      });
     } catch {
-      try {
-        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            _subject: `🎁 Ajándék PDF betekintő letöltés: ${record.name}`,
-            Név: record.name,
-            "E-mail": record.email,
-            "1 hét múlva értékeléskérő esedékes": due,
-          }),
-        });
-      } catch {}
+      // Fallback ha offline lenne
     } finally {
       setSubmitting(false);
       setDone(true);
@@ -144,16 +120,28 @@ export default function ExitIntentModal() {
 
   return (
     <>
-      {/* Finom, diszkrét gomb a bal alsó sarokban, hogy bármikor (és mobilon is) 1 kattintással megnyitható legyen */}
+      {/* Finom, diszkrét gomb a bal alsó sarokban: ha már letöltötte a PDF-et, egyből a visszajelzésre viszi! */}
       {!isOpen && (
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-5 left-5 z-40 inline-flex items-center gap-2 rounded-full border border-gold/50 bg-earth/95 px-4 py-2.5 text-xs font-medium text-cream shadow-lg backdrop-blur-md transition hover:bg-gold cursor-pointer"
-        >
-          <BookOpen className="h-4 w-4 text-gold-soft" />
-          <span>Ingyenes PDF betekintő</span>
-        </button>
+        <div className="fixed bottom-5 left-5 z-40">
+          {!getSavedLead() ? (
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-gold/50 bg-earth/95 px-4 py-2.5 text-xs font-medium text-cream shadow-lg backdrop-blur-md transition hover:bg-gold cursor-pointer"
+            >
+              <BookOpen className="h-4 w-4 text-gold-soft" />
+              <span>Ingyenes PDF betekintő</span>
+            </button>
+          ) : (
+            <Link
+              to="/visszajelzes"
+              className="inline-flex items-center gap-2 rounded-full border border-gold/50 bg-earth/95 px-4 py-2.5 text-xs font-medium text-cream shadow-lg backdrop-blur-md transition hover:bg-gold"
+            >
+              <Star className="h-4 w-4 text-gold-soft" />
+              <span>Vélemény írása → 2 000 Ft kupon</span>
+            </Link>
+          )}
+        </div>
       )}
 
       {isOpen && (
@@ -239,6 +227,19 @@ export default function ExitIntentModal() {
                     <span>{submitting ? "Küldés..." : "Kérem az ingyenes PDF betekintőt"}</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
+
+                  <div className="pt-2 text-center">
+                    <Link
+                      to="/visszajelzes"
+                      onClick={handleClose}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-gold hover:underline"
+                    >
+                      <Star className="h-3.5 w-3.5" />
+                      <span>
+                        Már elolvastad a betekintőt? Írd meg a véleményed a 2 000 Ft kuponért →
+                      </span>
+                    </Link>
+                  </div>
                 </form>
               </>
             ) : (
@@ -250,9 +251,9 @@ export default function ExitIntentModal() {
                   Kedves {name}, itt a betekintőd! ✦
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm leading-relaxed text-earth/75">
-                  Töltsd le és olvasd el a részleteket a saját tempódban! Ha elkészültél és
-                  megírod a visszajelzésedet, küldöm neked e-mailben a{" "}
-                  <strong>2 000 Ft-os ajándék kuponodat</strong>.
+                  Töltsd le lent (és elküldtem az e-mail címedre is)! Ha elolvastad és megírod a
+                  visszajelzésedet, a rendszerünk <strong>automatikusan elküldi</strong> neked
+                  e-mailben a <strong>2 000 Ft-os ajándék kuponodat</strong>.
                 </p>
 
                 <a
