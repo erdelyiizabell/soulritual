@@ -6,7 +6,9 @@ import Index from "./pages/Index";
 import Webshop from "./pages/Webshop";
 import Workbook from "./pages/Workbook";
 import RelationshipWorkbook from "./pages/RelationshipWorkbook";
+import FeedbackAndConsult from "./pages/FeedbackAndConsult";
 import NotFound from "./pages/NotFound";
+import ExitIntentModal from "./components/ExitIntentModal";
 import "./styles.css";
 
 declare global {
@@ -33,11 +35,13 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AnalyticsTracker />
+      <ExitIntentModal />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/webshop" element={<Webshop />} />
         <Route path="/munkafuzet" element={<Workbook />} />
         <Route path="/kapcsolati-mintaim" element={<RelationshipWorkbook />} />
+        <Route path="/visszajelzes" element={<FeedbackAndConsult />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
