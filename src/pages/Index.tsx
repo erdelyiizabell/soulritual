@@ -1037,15 +1037,34 @@ function Events() {
         {/* ── Kiemelt Workshop + Videó Szekció (Nov. 21.) ── */}
         <div className="mt-14 overflow-hidden rounded-3xl border-2 border-gold/45 bg-cream shadow-xl">
           <div className="grid lg:grid-cols-12">
-            {/* Left: Video Player */}
-            <div className="relative bg-earth/95 lg:col-span-5 flex flex-col justify-center min-h-[360px] sm:min-h-[440px]">
+            {/* Left: Video Player (protected against pop-out & download) */}
+            <div
+              onContextMenu={(e) => e.preventDefault()}
+              className="relative bg-earth/95 lg:col-span-5 flex flex-col justify-center min-h-[360px] sm:min-h-[440px] select-none overflow-hidden"
+            >
               <iframe
                 src="https://drive.google.com/file/d/1OEjJIxJHoeKQXsKIvireLRqqvu7K-URR/preview"
                 title="Ki vagyok a hozott mintáimon túl? — Workshop videó"
+                sandbox="allow-scripts allow-same-origin"
                 allow="autoplay; encrypted-media; fullscreen"
                 allowFullScreen
                 className="h-full w-full min-h-[360px] sm:min-h-[440px] border-0"
               />
+              {/* Top-right shield blocking the Google Drive "open in new tab / download" pop-out icon */}
+              <div
+                aria-hidden="true"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onContextMenu={(e) => e.preventDefault()}
+                className="absolute top-0 right-0 z-20 flex h-16 w-24 items-start justify-end p-3 cursor-default"
+                title="Soul Ritual"
+              >
+                <span className="rounded-full bg-earth/90 backdrop-blur-sm border border-gold/40 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-cream shadow-md">
+                  ✦ Soul Ritual
+                </span>
+              </div>
             </div>
 
             {/* Right: Workshop Details & Early Bird Pricing */}
