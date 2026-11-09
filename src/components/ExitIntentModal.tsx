@@ -230,13 +230,13 @@ export default function ExitIntentModal() {
 
                 <p className="eyebrow text-gold">Mielőtt továbbindulnál</p>
                 <h2 className="mt-1.5 font-display text-2xl sm:text-3xl text-earth">
-                  Ingyenes PDF betekintés a munkafüzetbe
+                  Ingyenes PDF betekintés a munkafüzetekbe
                 </h2>
                 <p className="mt-2 text-xs sm:text-sm leading-relaxed text-earth/75">
                   Add meg az e-mail címedet, és máris letöltheted a{" "}
-                  <strong>3 oldalas ingyenes betekintőt</strong> (részletek a fejezetekből). Ha
-                  pedig elolvastad és megírod, hogy tetszett, ajándékba kapsz egy{" "}
-                  <strong>2 000 Ft-os kupont</strong> a teljes munkafüzetekhez!
+                  <strong>4 oldalas ingyenes betekintőt</strong> (elméleti részletek és kitölthető
+                  önismereti gyakorlatok mindkét munkafüzetből). Ha pedig elolvastad és megírod,
+                  hogy tetszett, ajándékba kapsz egy <strong>2 000 Ft-os kupont</strong>!
                 </p>
 
                 <form onSubmit={handleSubmit} noValidate className="mt-5 space-y-3 text-left">

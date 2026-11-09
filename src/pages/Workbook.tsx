@@ -621,10 +621,10 @@ export default function Workbook() {
                   Fizetés után azonnal letölthető · Kockázatmentes vásárlás
                 </p>
 
-                {/* ── 2 az 1-ben Csomagajánlat (Order Bump) ── */}
+                {/* ── 2 az 1-ben Csomagajánlat ── */}
                 <div className="mt-6 rounded-2xl border border-gold/45 bg-gold/10 p-4 text-left">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
-                    🔥 Visszautasíthatatlan 2 az 1-ben Csomagajánlat
+                    ✦ 2 az 1-ben Csomagajánlat
                   </p>
                   <p className="mt-1 text-xs sm:text-sm leading-relaxed text-earth/85">
                     Kérd mellé <strong>A kapcsolati mintáim nyomában (30 oldal, 8 900 Ft)</strong>{" "}

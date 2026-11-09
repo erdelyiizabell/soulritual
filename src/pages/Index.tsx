@@ -1631,7 +1631,7 @@ function WorkbookPromo() {
           </article>
         </div>
 
-        {/* 🔥 Irresistible 2-in-1 Bundle Banner */}
+        {/* 2-in-1 Bundle Banner */}
         <div
           data-reveal
           className="mt-10 rounded-3xl border-2 border-gold bg-gradient-to-r from-linen via-cream to-linen p-6 text-earth shadow-2xl sm:p-10"
@@ -1640,10 +1640,10 @@ function WorkbookPromo() {
             <div className="lg:col-span-8 space-y-3">
               <div className="flex flex-wrap items-center gap-2.5">
                 <span className="rounded-full bg-gold px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream shadow">
-                  🔥 Visszautasíthatatlan 2 az 1-ben Csomagajánlat
+                  ✦ 2 az 1-ben Csomagajánlat
                 </span>
                 <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-earth">
-                  3 900 Ft megtakarítás + 14 napos garancia
+                  3 900 Ft kedvezmény + 14 napos garancia
                 </span>
               </div>
               <h3 className="font-display text-2xl sm:text-4xl leading-snug text-earth">

@@ -11,15 +11,15 @@ import {
 
 const LADDER_STEPS = [
   {
-    step: "01 · Belépő szint",
-    badge: "0 Ft + 2 000 Ft kupon",
+    step: "01 · Első találkozás",
+    badge: "Ajándék · 0 Ft",
     icon: Download,
-    title: "Ingyenes 3 oldalas PDF betekintő",
-    subtitle: "Kockázat nélküli első találkozás",
+    title: "Ingyenes 4 oldalas PDF betekintő",
+    subtitle: "Kockázat nélküli első lépés",
     description:
-      "Töltsd le azonnal a 3 oldalas önreflexiós ízelítőt, próbáld ki a gyakorlatokat, majd írd meg pár szóban a véleményedet egy azonnali 2 000 Ft-os ajándék kuponért.",
+      "Töltsd le azonnal az önreflexiós ízelítőt mindkét munkafüzet gyakorlataiból, próbáld ki a feladatokat, majd írd meg pár szóban a véleményedet egy 2 000 Ft-os ajándék kuponért.",
     highlights: [
-      "3 valódi oldal a munkafüzetből",
+      "Valódi oldalak és gyakorlatok mindkét munkafüzetből",
       "Azonnali PDF letöltés",
       "2 000 Ft-os ajándék kupon (`SOUL2000`) visszajelzésért",
     ],
@@ -40,7 +40,7 @@ const LADDER_STEPS = [
     highlights: [
       "Határok munkafüzet: 4 900 Ft (kuponnal 2 900 Ft)",
       "Kapcsolati mintáim: 8 900 Ft (kuponnal 6 900 Ft)",
-      "🔥 2 az 1-ben Csomag: 13 800 Ft helyett 9 900 Ft (kuponnal 7 900 Ft!)",
+      "✦ 2 az 1-ben Csomag: 13 800 Ft helyett 9 900 Ft (kuponnal 7 900 Ft)",
     ],
     ctaLabel: "Megnézem a csomagot a Webshopban",
     ctaTo: "/webshop#csomagajanlat",
@@ -50,10 +50,10 @@ const LADDER_STEPS = [
     step: "03 · Élő közösségi tér",
     badge: "3 800 Ft – 9 000 Ft",
     icon: Flame,
-    title: "Csoportos alkalmak a mongol jurtában",
+    title: "Csoportos alkalmak a jurtában",
     subtitle: "Közös lelassulás a természetben",
     description:
-      "Lépj be élőben is a töki Soul Ritual jurtába: csütörtöki kis létszámú jógaórák (max. 8 fő), 3 órás önismereti workshopok, női körök és szívnyitó kakaó szertartások.",
+      "Lépj be élőben is a Soul Ritual jurtába: csütörtöki kis létszámú jógaórák (max. 8 fő), 3 órás önismereti workshopok, női körök és szívnyitó kakaó szertartások.",
     highlights: [
       "Csütörtöki jóga a jurtában (3 800 Ft / fő)",
       "3 órás önismereti workshopok (9 000 Ft / fő)",
@@ -70,11 +70,11 @@ const LADDER_STEPS = [
     title: "Egyéni konzultáció, ThetaHealing & Access Bars",
     subtitle: "100% rád hangolt, biztonságos tér",
     description:
-      "Ha szeretnéd velem személyesen (a jurtában vagy online) átbeszélni a munkafüzetben feltárt mintáidat, vagy mélyebb tudatalatti és energetikai oldásra vágysz.",
+      "Ha szeretnéd velem személyesen a jurtában vagy online átbeszélni a munkafüzetben feltárt mintáidat, vagy mélyebb tudatalatti és energetikai oldásra vágysz.",
     highlights: [
-      "Személyes vagy online egyéni konzultáció",
+      "Személyes (a jurtában) vagy online egyéni konzultáció",
       "ThetaHealing tudatalatti blokkoldás",
-      "Access Bars energetikai kezelés a jurtában",
+      "Access Bars energetikai kezelés",
     ],
     ctaLabel: "Időpontot foglalok hozzád",
     ctaExternal: "https://app.minup.io/book/soulritual",
@@ -90,23 +90,23 @@ export default function ValueLadderSection() {
     >
       <div className="mx-auto max-w-6xl">
         {/* Heading */}
-        <div className="mx-auto max-w-3xl text-center" data-reveal>
+        <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-[11px] font-semibold tracking-[0.22em] uppercase text-earth">
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            <span>A Soul Ritual Értéklépcső · Hogyan indulj el?</span>
+            <span>Hogyan indulhatsz el? · Saját tempóban</span>
           </div>
           <h2 className="mt-6 font-display text-4xl leading-tight text-earth sm:text-5xl lg:text-6xl">
-            A belső megérkezés <em className="italic text-gold">négy lépcsőfoka</em>
+            A belső megérkezés <em className="italic text-gold">négy útja</em>
           </h2>
           <p className="mt-5 text-base leading-relaxed text-earth/75 sm:text-lg">
-            Nem kell azonnal nagy döntést hoznod. Válaszd azt a lépcsőfokot, ahol most a
+            Nem kell azonnal nagy döntést hoznod. Válaszd azt a kapcsolódási formát, ahol most a
             legnagyobb biztonságban érzed magad — az ingyenes otthoni betekintőtől a személyes
-            jurta-élményig.
+            folyamatokig.
           </p>
         </div>
 
         {/* 4 Steps Grid */}
-        <div className="mt-16 grid gap-6 lg:grid-cols-4" data-reveal>
+        <div className="mt-16 grid gap-6 lg:grid-cols-4">
           {LADDER_STEPS.map((item, idx) => {
             const Icon = item.icon;
             return (
@@ -120,7 +120,7 @@ export default function ValueLadderSection() {
               >
                 {item.featured && (
                   <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gold px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream shadow">
-                    ★ Visszautasíthatatlan ajánlat
+                    ✦ Legnépszerűbb választás
                   </span>
                 )}
 

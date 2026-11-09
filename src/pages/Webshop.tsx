@@ -43,7 +43,7 @@ export const WORKBOOKS: WorkbookCatalogItem[] = [
     slug: "/munkafuzet",
     title: "Határok",
     subtitle: "A saját szükségleteim felismerése és képviselete",
-    tag: "1. lépcsőfok · Belépő munkafüzet",
+    tag: "Önismereti munkafüzet",
     pages: "14 oldal · PDF",
     price: "4 900 Ft",
     cover: workbookHatarokCover,
@@ -60,7 +60,7 @@ export const WORKBOOKS: WorkbookCatalogItem[] = [
     slug: "/kapcsolati-mintaim",
     title: "A kapcsolati mintáim nyomában",
     subtitle: "Családi örökség, párkapcsolati dinamika és önismereti feltárás",
-    tag: "2. lépcsőfok · Mélyelemző munkafüzet",
+    tag: "Vezetett önismereti munkafüzet",
     pages: "30 oldal · 8 fejezet · PDF",
     price: "8 900 Ft",
     cover: workbookKapcsolatCover,
@@ -181,7 +181,7 @@ export default function Webshop() {
           <div className="mx-auto max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-[11px] font-semibold tracking-[0.22em] uppercase text-earth">
               <Sparkles className="h-3.5 w-3.5 text-gold" />
-              Soul Ritual · Webshop & Értéklépcső
+              Soul Ritual · Webshop
             </div>
             <h1 className="mt-6 font-display text-4xl leading-tight text-earth sm:text-6xl">
               Önismereti <em className="italic text-gold">munkafüzetek</em> & csomagok
@@ -194,7 +194,7 @@ export default function Webshop() {
           </div>
         </section>
 
-        {/* ── 🔥 VISSZAUTASÍTHATATLAN AJÁNLAT: 2 AZ 1-BEN CSOMAG ── */}
+        {/* ── 2 AZ 1-BEN CSOMAGAJÁNLAT ── */}
         <section id="csomagajanlat" className="px-6 pb-16">
           <div className="mx-auto max-w-6xl">
             <div className="relative overflow-hidden rounded-3xl border-2 border-gold bg-gradient-to-br from-earth via-earth to-earth/95 p-8 text-cream shadow-2xl sm:p-12 lg:p-14">
@@ -229,10 +229,10 @@ export default function Webshop() {
                 <div className="lg:col-span-7 space-y-6">
                   <div className="flex flex-wrap items-center gap-3">
                     <span className="rounded-full bg-gold px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-cream shadow">
-                      🔥 Visszautasíthatatlan ajánlat · Legnépszerűbb
+                      ✦ Különleges Csomagajánlat · Legnépszerűbb
                     </span>
                     <span className="rounded-full border border-gold-soft/40 bg-cream/10 px-3.5 py-1 text-[11px] font-semibold uppercase tracking-widest text-gold-soft">
-                      3 900 Ft azonnali megtakarítás
+                      3 900 Ft kedvezmény
                     </span>
                   </div>
 
@@ -259,7 +259,7 @@ export default function Webshop() {
                           határterület, példamondatok)
                         </span>
                       </div>
-                      <span className="shrink-0 text-cream/60 line-through">4 900 Ft</span>
+                      <span className="shrink-0 font-semibold text-gold-soft">4 900 Ft érték</span>
                     </div>
 
                     <div className="flex items-start justify-between gap-4 border-b border-cream/10 pb-2.5">
@@ -270,15 +270,15 @@ export default function Webshop() {
                           családi genogram + 11 munkalap)
                         </span>
                       </div>
-                      <span className="shrink-0 text-cream/60 line-through">8 900 Ft</span>
+                      <span className="shrink-0 font-semibold text-gold-soft">8 900 Ft érték</span>
                     </div>
 
                     <div className="flex items-start justify-between gap-4 border-b border-cream/10 pb-2.5">
                       <div className="flex items-start gap-2.5">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold-soft" />
                         <span>
-                          <strong>+ AJÁNDÉK BÓNUSZ:</strong> 3 oldalas nyomtatható SOS Határtérkép
-                          & Önismereti emlékeztető
+                          <strong>+ AJÁNDÉK BÓNUSZ:</strong> Nyomtatható önismereti betekintő &
+                          emlékeztető
                         </span>
                       </div>
                       <span className="shrink-0 font-semibold text-gold-soft">AJÁNDÉK</span>
@@ -299,10 +299,10 @@ export default function Webshop() {
                   {/* Coupon input & Price box */}
                   <div className="flex flex-col gap-5 rounded-2xl border border-gold/40 bg-cream p-5 text-earth sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-widest text-earth/60">
-                        Összérték: <span className="line-through">13 800 Ft</span> helyett
-                      </p>
-                      <div className="mt-1 flex items-baseline gap-3">
+                      <div className="flex flex-wrap items-baseline gap-2.5">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-earth/60">
+                          Csomagár (<span className="line-through">13 800 Ft</span> helyett):
+                        </span>
                         {isCouponApplied ? (
                           <>
                             <span className="text-lg text-earth/45 line-through">9 900 Ft</span>
@@ -316,7 +316,7 @@ export default function Webshop() {
                           </span>
                         )}
                       </div>
-                      <div className="mt-2 flex items-center gap-2">
+                      <div className="mt-2.5 flex items-center gap-2">
                         <input
                           type="text"
                           value={couponInput}
@@ -435,23 +435,22 @@ export default function Webshop() {
             ))}
           </div>
 
-          {/* ── 4. Lépcsőfok: VIP Kísért Önismereti Folyamat (Munkafüzetek + Konzultáció) ── */}
+          {/* ── Személyes Kísérés (Munkafüzetek + Konzultáció) ── */}
           <div className="mx-auto mt-16 max-w-6xl rounded-3xl border border-gold/40 bg-gradient-to-r from-linen via-cream to-linen p-8 shadow-md sm:p-12">
             <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
               <div className="lg:col-span-8 space-y-4">
                 <div className="inline-flex items-center gap-2 rounded-full bg-gold/15 border border-gold/30 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-earth">
                   <Heart className="h-3.5 w-3.5 text-gold" />
-                  <span>Prémium lépcsőfok · Személyes kísérés</span>
+                  <span>Személyes kísérés · Egyéni folyamat</span>
                 </div>
                 <h3 className="font-display text-2xl sm:text-4xl text-earth">
                   Nem szeretnél egyedül végigmenni a kérdéseken?
                 </h3>
                 <p className="text-sm sm:text-base leading-relaxed text-earth/75">
                   A munkafüzetek kitöltése után (vagy közben) lehetőséged van{" "}
-                  <strong>személyesen a töki mongol jurtában vagy online</strong> egyéni
-                  konzultációra, ThetaHealing vagy Access Bars folyamatra érkezni hozzám, ahol
-                  biztonságos, elfogadó térben dolgozzuk át a felmerült családi és kapcsolati
-                  mintáidat.
+                  <strong>személyesen a jurtában vagy online</strong> egyéni konzultációra,
+                  ThetaHealing vagy Access Bars folyamatra érkezni hozzám, ahol biztonságos,
+                  elfogadó térben dolgozzuk át a felmerült családi és kapcsolati mintáidat.
                 </p>
               </div>
               <div className="lg:col-span-4 flex flex-col items-stretch sm:items-center lg:items-end justify-center gap-3">
