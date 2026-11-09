@@ -29,18 +29,16 @@ import EventRegistrationModal, {
 } from "@/components/EventRegistrationModal";
 import SelfDiscoveryCompass from "@/components/SelfDiscoveryCompass";
 
-import jurtaHero from "@/assets/jurta-hero.jpg";
-import kezTermeszet from "@/assets/kez-termeszet.jpg";
-import ritualObject from "@/assets/ritual-object.png";
-import sunsetWalk from "@/assets/sunset-walk.png";
-import kezekOssze from "@/assets/kezek-osszekapcsolodas.png";
 import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
-import jurtaInterior from "@/assets/jurta-interior.jpg";
 import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
 import workbookCover from "@/assets/munkafuzet-hatarok.jpg";
 import relationshipCover from "@/assets/munkafuzet-kapcsolati-mintaim.jpg";
+import izabellaPortrait from "@/assets/izabella-portrait.jpg";
+import izabellaWritingCrop from "@/assets/izabella-writing-crop.jpg";
+import izabellaSpeakingCrop from "@/assets/izabella-speaking-crop.jpg";
+import izabellaSigningCrop from "@/assets/izabella-signing-crop.jpg";
 
 const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
@@ -450,7 +448,6 @@ function Header() {
     ["Események", "#events"],
     ["Munkafüzetek", "#webshop-promo"],
     ["Szolgáltatások", "#services"],
-    ["A jurta", "#jurta"],
     ["Blog", "#blog"],
     ["Kapcsolat", "#contact"],
   ] as const;
@@ -601,18 +598,18 @@ function Hero() {
     <section id="top" className="relative h-[100svh] min-h-[560px] w-full overflow-hidden">
       <div ref={heroRef} className="absolute inset-0 will-change-transform">
         <img
-          src={jurtaHero}
-          alt="Soul Ritual jurta a levendulamező szélén"
+          src={blogSafeSpace}
+          alt="Soul Ritual — Belső nyugalom és önismeret"
           className="ken-burns h-full w-full object-cover"
           fetchPriority="high"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-earth/25 via-earth/10 to-earth/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-earth/55 via-earth/45 to-earth/75" />
       </div>
 
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
         <p className="fade-up eyebrow text-gold-soft" style={{ animationDelay: "0.1s" }}>
-          Soul Ritual · természetközeli elvonulás
+          Soul Ritual · Női önismeret, jelenlét & belső egyensúly
         </p>
         <h1
           className="fade-up mt-6 max-w-4xl text-5xl leading-[1.05] text-cream sm:text-6xl md:text-7xl lg:text-[5.5rem]"
@@ -621,10 +618,11 @@ function Hero() {
           Találj vissza <em className="italic text-gold-soft">önmagadhoz</em>
         </h1>
         <p
-          className="fade-up mt-8 max-w-xl text-base leading-relaxed text-cream/85 sm:text-lg"
+          className="fade-up mt-8 max-w-2xl text-base leading-relaxed text-cream/90 sm:text-lg"
           style={{ animationDelay: "0.5s" }}
         >
-          Egy hely, ahol lelassulhatsz, feltöltődhetsz és újra kapcsolódhatsz önmagadhoz.
+          Önismereti munkafüzetek, transzgenerációs workshopok, jóga és egyéni kísérés — egy
+          megtartó, biztonságos tér, ahol lelassulhatsz és a saját utadat járhatod.
         </p>
         <div
           className="fade-up mt-12 flex flex-col items-center gap-4 sm:flex-row"
@@ -664,35 +662,68 @@ function Hero() {
 
 function About() {
   return (
-    <section id="about" className="relative bg-cream px-6 py-28 lg:py-40">
-      <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-12 lg:gap-20">
-        <div className="lg:col-span-5" data-reveal>
-          <div className="relative">
-            <img src={kezTermeszet} alt="Izabella" className="aspect-[4/5] w-full object-cover" />
-            <div className="absolute -bottom-6 -right-6 hidden h-40 w-40 border border-gold sm:block" />
+    <section id="about" className="relative bg-cream px-6 py-28 lg:py-36">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid gap-14 lg:grid-cols-12 lg:gap-20 lg:items-center">
+          <div className="lg:col-span-5" data-reveal>
+            <div className="relative">
+              <img
+                src={izabellaPortrait}
+                alt="Erdélyi Izabella — Soul Ritual"
+                className="aspect-[4/5] w-full rounded-3xl object-cover shadow-xl"
+              />
+              <div className="pointer-events-none absolute -bottom-5 -right-5 hidden h-40 w-40 rounded-3xl border border-gold sm:block" />
+            </div>
+          </div>
+          <div className="lg:col-span-7" data-reveal>
+            <p className="eyebrow">Bemutatkozás</p>
+            <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
+              Izabella <em className="italic text-gold">vagyok</em>.
+            </h2>
+            <div className="mt-8 space-y-5 text-base leading-relaxed text-earth/80 sm:text-lg">
+              <p>
+                Építőmérnökként éveken át nagy projekteken dolgoztam, miközben több mint tíz éve a
+                jóga, a meditáció és az önismeret is meghatározó része az életemnek.
+              </p>
+              <p>
+                A Soul Ritual azért született, hogy létrehozzak egy elfogadó és biztonságos teret —
+                legyen szó az otthon feldolgozható önismereti munkafüzetekről, a budapesti
+                workshopokról, a kis létszámú jógáról vagy a személyes konzultációkról —, ahol
+                megpihenhetsz, ráláthatsz a hozott mintáidra, és újra kapcsolódhatsz önmagadhoz.
+              </p>
+              <p className="text-earth/65 italic font-display text-xl">
+                „Nem egy tanárt kapsz, hanem egy társat az úton — aki maga is jár rajta.”
+              </p>
+            </div>
+            <div className="mt-10 flex items-center gap-4">
+              <div className="hairline max-w-[80px]" />
+              <span className="font-display text-lg italic text-gold">— Erdélyi Izabella</span>
+            </div>
           </div>
         </div>
-        <div className="lg:col-span-7 lg:pt-10" data-reveal>
-          <p className="eyebrow">Bemutatkozás</p>
-          <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
-            Izabella <em className="italic text-gold">vagyok</em>.
-          </h2>
-          <div className="mt-10 space-y-6 text-base leading-relaxed text-earth/80 sm:text-lg">
-            <p>
-              Építőmérnökként éveken át nagy projekteken dolgoztam, miközben több mint tíz éve a
-              jóga, a meditáció és az önismeret is meghatározó része az életemnek.
-            </p>
-            <p>
-              A Soul Ritual azért született, hogy létrehozzak egy elfogadó és biztonságos teret,
-              ahol mindenki megpihenhet, feltöltődhet és újra kapcsolódhat önmagához.
-            </p>
-            <p className="text-earth/60">
-              Nem egy tanárt kapsz, hanem egy társat az úton — aki maga is jár rajta.
-            </p>
+
+        {/* 3 valódi életkép Izabelláról */}
+        <div className="mt-16 grid gap-6 sm:grid-cols-3" data-reveal>
+          <div className="group overflow-hidden rounded-2xl border border-earth/10 bg-linen shadow-sm">
+            <img
+              src={izabellaWritingCrop}
+              alt="Izabella — Személyes dedikálás és önreflexió"
+              className="aspect-square w-full object-cover transition duration-700 group-hover:scale-105"
+            />
           </div>
-          <div className="mt-12 flex items-center gap-4">
-            <div className="hairline max-w-[80px]" />
-            <span className="font-display text-lg italic text-gold">— Izabella</span>
+          <div className="group overflow-hidden rounded-2xl border border-earth/10 bg-linen shadow-sm">
+            <img
+              src={izabellaSpeakingCrop}
+              alt="Izabella — Önismereti előadás és workshop"
+              className="aspect-square w-full object-cover transition duration-700 group-hover:scale-105"
+            />
+          </div>
+          <div className="group overflow-hidden rounded-2xl border border-earth/10 bg-linen shadow-sm">
+            <img
+              src={izabellaSigningCrop}
+              alt="Izabella — Kapcsolódás és személyes figyelem"
+              className="aspect-square w-full object-cover transition duration-700 group-hover:scale-105"
+            />
           </div>
         </div>
       </div>
@@ -743,64 +774,6 @@ function Services() {
             Időpontot foglalok egyéni folyamatra
             <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Jurta() {
-  return (
-    <section id="jurta" className="relative bg-cream px-6 py-28 lg:py-36">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-5 lg:pt-12" data-reveal>
-            <p className="eyebrow">A jurta tere</p>
-            <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
-              Nem csupán egy <em className="italic text-gold">épület</em>.
-            </h2>
-            <div className="mt-8 space-y-5 text-base leading-relaxed text-earth/75 sm:text-lg">
-              <p>
-                Egy hely a természet ölelésében, ahol kiszakadhatsz a mindennapokból, lelassulhatsz,
-                és biztonságos, ítélkezésmentes térben kapcsolódhatsz önmagadhoz.
-              </p>
-            </div>
-            <ul className="mt-8 space-y-3 border-t border-earth/15 pt-6 text-sm text-earth/80">
-              <li className="flex items-center gap-3">
-                <Check className="h-4 w-4 shrink-0 text-gold" />
-                <span>Kis létszámú, személyes figyelem (maximum 8 fő)</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Check className="h-4 w-4 shrink-0 text-gold" />
-                <span>Természetközeli, csendes elvonulási tér</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Check className="h-4 w-4 shrink-0 text-gold" />
-                <span>Kezdőként és gyakorlóként is biztonságos közeg</span>
-              </li>
-            </ul>
-          </div>
-          <div className="lg:col-span-7" data-reveal>
-            <img
-              src={jurtaInterior}
-              alt="A jurta belső tere"
-              className="aspect-[4/5] w-full object-cover"
-            />
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-6 sm:grid-cols-3" data-reveal>
-          <img
-            src={sunsetWalk}
-            alt="Séta a természetben"
-            className="aspect-square w-full object-cover"
-          />
-          <img
-            src={ritualObject}
-            alt="Rituális tárgy"
-            className="aspect-square w-full object-cover"
-          />
-          <img src={kezekOssze} alt="Kapcsolódás" className="aspect-square w-full object-cover" />
         </div>
       </div>
     </section>
@@ -1797,7 +1770,6 @@ export default function Index() {
         <SelfDiscoveryCompass />
         <WorkbookPromo />
         <Services />
-        <Jurta />
         <Testimonials />
         <Blog />
         <FAQ />
