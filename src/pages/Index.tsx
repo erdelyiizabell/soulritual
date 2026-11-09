@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 
 import EventRegistrationModal, { EventInfo } from "@/components/EventRegistrationModal";
+import SelfDiscoveryCompass from "@/components/SelfDiscoveryCompass";
+import ValueLadderSection from "@/components/ValueLadderSection";
 
 import jurtaHero from "@/assets/jurta-hero.jpg";
 import kezTermeszet from "@/assets/kez-termeszet.jpg";
@@ -1628,6 +1630,57 @@ function WorkbookPromo() {
             </div>
           </article>
         </div>
+
+        {/* 🔥 Irresistible 2-in-1 Bundle Banner */}
+        <div
+          data-reveal
+          className="mt-10 rounded-3xl border-2 border-gold bg-gradient-to-r from-linen via-cream to-linen p-6 text-earth shadow-2xl sm:p-10"
+        >
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-8 space-y-3">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="rounded-full bg-gold px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream shadow">
+                  🔥 Visszautasíthatatlan 2 az 1-ben Csomagajánlat
+                </span>
+                <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-earth">
+                  3 900 Ft megtakarítás + 14 napos garancia
+                </span>
+              </div>
+              <h3 className="font-display text-2xl sm:text-4xl leading-snug text-earth">
+                Kérd mindkét munkafüzetet együtt:{" "}
+                <em className="italic text-gold">a másodikat 1 000 Ft-ért kapod!</em>
+              </h3>
+              <p className="text-sm sm:text-base leading-relaxed text-earth/75">
+                A <strong>Határok (4 900 Ft)</strong> és{" "}
+                <strong>A kapcsolati mintáim nyomában (8 900 Ft)</strong> együtt 44 oldalon, 28
+                strukturált önismereti gyakorlattal és családi térképpel vezet végig a teljes
+                folyamaton — és a <strong>2 000 Ft-os kuponkódod (`SOUL2000`)</strong> itt is
+                beváltható!
+              </p>
+            </div>
+            <div className="lg:col-span-4 flex flex-col items-stretch sm:items-center lg:items-end justify-center gap-3 border-t border-earth/10 pt-5 lg:border-t-0 lg:pt-0">
+              <div className="text-center lg:text-right">
+                <span className="text-xs uppercase tracking-widest text-earth/55">
+                  Összérték: <span className="line-through">13 800 Ft</span> helyett
+                </span>
+                <div className="font-display text-3xl sm:text-4xl font-bold text-earth">
+                  9 900 Ft{" "}
+                  <span className="block text-xs font-sans font-semibold text-gold">
+                    (kuponnal csak 7 900 Ft!)
+                  </span>
+                </div>
+              </div>
+              <Link
+                to="/webshop#csomagajanlat"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-cream shadow-lg transition hover:bg-earth"
+              >
+                <ShoppingBag className="h-4 w-4" />
+                <span>Megnézem a Csomagajánlatot</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1651,7 +1704,9 @@ export default function Index() {
       <main>
         <Hero />
         <About />
+        <SelfDiscoveryCompass />
         <WorkbookPromo />
+        <ValueLadderSection />
         <Services />
         <Jurta />
         <Why />

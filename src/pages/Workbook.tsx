@@ -620,6 +620,26 @@ export default function Workbook() {
                   <ShieldCheck className="h-4 w-4 text-gold" />
                   Fizetés után azonnal letölthető · Kockázatmentes vásárlás
                 </p>
+
+                {/* ── 2 az 1-ben Csomagajánlat (Order Bump) ── */}
+                <div className="mt-6 rounded-2xl border border-gold/45 bg-gold/10 p-4 text-left">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                    🔥 Visszautasíthatatlan 2 az 1-ben Csomagajánlat
+                  </p>
+                  <p className="mt-1 text-xs sm:text-sm leading-relaxed text-earth/85">
+                    Kérd mellé <strong>A kapcsolati mintáim nyomában (30 oldal, 8 900 Ft)</strong>{" "}
+                    munkafüzetet is, és vidd el mindkettőt{" "}
+                    <span className="line-through text-earth/50">13 800 Ft</span> helyett{" "}
+                    <strong>9 900 Ft-ért</strong> (kuponnal csak <strong>7 900 Ft</strong>)!
+                  </p>
+                  <Link
+                    to="/webshop#csomagajanlat"
+                    className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-earth underline decoration-gold underline-offset-4 hover:text-gold"
+                  >
+                    <span>Megnézem a 2 az 1-ben Csomagot</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
 
