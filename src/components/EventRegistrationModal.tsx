@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { createElement, useState, useEffect, useRef } from "react";
 import {
   X,
   Check,
@@ -13,11 +13,18 @@ import {
   MapPin,
 } from "lucide-react";
 
-// ─── EmailJS (used if configured) ────────────────────────────────────────────
+// ─── Google Sheets & EmailJS végpontok ────────────────────────────────────────
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxAYJBGkm6gWNt2UZ8T2wm8_HEV2vuKlcHg7ZQmT2VQ7d2UgqW1Js0rTjGdYXScr5wg/exec";
+const GOOGLE_SCRIPT_URL_ALT =
+  "https://script.google.com/macros/s/AKfycbwlCkLgtx_vq1xk_ZEHYIKkzbGh0_nN8bhJ9SDW24_bPpNcaCHYecRXKufLSH2hG15W/exec";
+
 const EMAILJS_SERVICE_ID = "service_b3x3vph";
 const EMAILJS_TEMPLATE_ID = "template_r3jdl0r";
 const EMAILJS_PUBLIC_KEY = "0hiWiCqQxp86EdGXi";
 const NOTIFY_EMAIL = "info@soulritual.hu";
+const STRIPE_PUBLISHABLE_KEY =
+  "pk_live_51TuujmV05iqq8bsGEcHVCXqFKMY0AxcMuwOwl5qe5TvQjDsGHeim19TM3GD0052Ou0iGQVf8ekIiA5Qlue28GEx600agL81W3h";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface EventInfo {
@@ -34,22 +41,54 @@ export interface EventInfo {
   color?: "earth" | "gold"; // accent colour for modal header
 }
 
-// ─── Storage helpers ──────────────────────────────────────────────────────────
-const STORAGE_KEY = "soulritual_event_regs_v2";
+// ─── Következő 4 csütörtöki dátum kiszámítása a jurtás jógához ────────────────
+export function getUpcomingThursdays(count = 4): string[] {
+  const result: string[] = [];
+  const now = new Date();
+  const current = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  // 4 = Thursday
+  let daysUntilThursday = (4 - current.getDay() + 7) % 7;
+  // Ha ma csütörtök van, de már elmúlt 10:30, akkor a jövő hetit mutassa elsőként
+  if (daysUntilThursday === 0 && now.getHours() >= 11) {
+    daysUntilThursday = 7;
+  }
+
+  current.setDate(current.getDate() + daysUntilThursday);
+
+  for (let i = 0; i < count; i++) {
+    const formatted = current.toLocaleDateString("hu-HU", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    result.push(`${formatted} (csütörtök)`);
+    current.setDate(current.getDate() + 7);
+  }
+  return result;
+}
+
+// ─── Storage helpers (dátum-specifikus létszámkövetés) ────────────────────────
+const STORAGE_KEY = "soulritual_event_regs_v3";
 
 interface Reg {
   id: string;
   eventId: string;
+  selectedDate: string;
   name: string;
   email: string;
   phone?: string;
   createdAt: string;
 }
 
-function getRegs(eventId: string): Reg[] {
+export function getRegsForDate(eventId: string, selectedDate?: string): Reg[] {
   try {
     const all: Reg[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    return all.filter((r) => r.eventId === eventId);
+    return all.filter(
+      (r) =>
+        r.eventId === eventId &&
+        (!selectedDate || r.selectedDate === selectedDate)
+    );
   } catch {
     return [];
   }
@@ -62,8 +101,8 @@ function saveReg(r: Reg) {
   } catch {}
 }
 
-function alreadyRegistered(eventId: string, email: string): boolean {
-  return getRegs(eventId).some(
+function alreadyRegistered(eventId: string, selectedDate: string, email: string): boolean {
+  return getRegsForDate(eventId, selectedDate).some(
     (r) => r.email.toLowerCase() === email.toLowerCase()
   );
 }
@@ -77,6 +116,12 @@ interface Props {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function EventRegistrationModal({ isOpen, onClose, event }: Props) {
+  const isWeeklyThursdayYoga = event.id === "jurta-yoga-thursday";
+  const upcomingThursdays = getUpcomingThursdays(4);
+
+  const [selectedDate, setSelectedDate] = useState<string>(
+    isWeeklyThursdayYoga ? upcomingThursdays[0] : event.date
+  );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -84,9 +129,10 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [showOnlinePayment, setShowOnlinePayment] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
 
-  const regs = getRegs(event.id);
+  const regs = getRegsForDate(event.id, selectedDate);
   const spotsLeft =
     event.capacity !== undefined
       ? Math.max(0, event.capacity - regs.length)
@@ -104,7 +150,7 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -116,6 +162,7 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
     setGdpr(false);
     setErrors({});
     setDone(false);
+    setShowOnlinePayment(false);
     onClose();
   }
 
@@ -125,8 +172,9 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
     if (!email.trim()) e.email = "Kérjük, add meg az e-mail címedet.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
       e.email = "Érvényes e-mail cím szükséges.";
-    else if (alreadyRegistered(event.id, email.trim()))
-      e.email = "Ezzel az e-mail címmel már van jelentkezés.";
+    else if (alreadyRegistered(event.id, selectedDate, email.trim()))
+      e.email = "Erre a dátumra ezzel az e-mail címmel már van jelentkezésed.";
+    if (!phone.trim()) e.phone = "Kérjük, add meg a telefonszámodat, hogy elérjünk.";
     if (!gdpr) e.gdpr = "Az adatkezelési hozzájárulás szükséges.";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -140,6 +188,7 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
     const rec: Reg = {
       id: crypto.randomUUID?.() ?? String(Date.now()),
       eventId: event.id,
+      selectedDate,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim() || undefined,
@@ -148,12 +197,33 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
 
     saveReg(rec);
 
+    // 1. Küldés a Google Sheet táblázatba (és azonnali e-mail értesítés az Apps Scripten keresztül)
+    const sheetPayload = JSON.stringify({
+      type: "feedback",
+      name: rec.name,
+      email: rec.email,
+      rating: 5,
+      feedback: `🧘‍♀️ JELENTKEZÉS: ${event.title} | Dátum: ${selectedDate} (${event.time}) | Tel: ${
+        rec.phone || "-"
+      }`,
+    });
+
+    for (const url of [GOOGLE_SCRIPT_URL, GOOGLE_SCRIPT_URL_ALT]) {
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: sheetPayload,
+      }).catch(() => {});
+    }
+
+    // 2. Küldés EmailJS / FormSubmit-on keresztül is
     const templateParams = {
       from_name: rec.name,
       from_email: rec.email,
       phone: rec.phone || "–",
       event_title: event.title,
-      event_date: event.date,
+      event_date: selectedDate,
       event_time: event.time,
       event_location: event.location,
       submitted_at: new Date().toLocaleString("hu-HU"),
@@ -161,7 +231,6 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
     };
 
     try {
-      // Dynamic import so bundle stays lean when emailjs is unused
       const emailjs = await import("@emailjs/browser");
       await emailjs.default.send(
         EMAILJS_SERVICE_ID,
@@ -170,32 +239,24 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
         EMAILJS_PUBLIC_KEY
       );
     } catch {
-      // Fallback: formsubmit.co (no account needed)
       try {
         await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(NOTIFY_EMAIL)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({
-            _subject: `Új jelentkezés: ${event.title} — ${rec.name}`,
+            _subject: `🧘‍♀️ Új jelentkezés: ${event.title} (${selectedDate}) — ${rec.name}`,
             _template: "table",
             _captcha: "false",
             Név: rec.name,
             "E-mail": rec.email,
             Telefon: rec.phone || "–",
             Esemény: event.title,
-            Időpont: `${event.date} ${event.time}`,
+            "Kiválasztott dátum": `${selectedDate} · ${event.time}`,
             Helyszín: event.location,
             Beküldve: new Date().toLocaleString("hu-HU"),
           }),
         });
-      } catch {
-        // Last resort: open mailto
-        const sub = encodeURIComponent(`Új jelentkezés: ${event.title} — ${rec.name}`);
-        const body = encodeURIComponent(
-          `Név: ${rec.name}\nE-mail: ${rec.email}\nTelefon: ${rec.phone || "–"}\nEsemény: ${event.title}\nIdőpont: ${event.date} ${event.time}`
-        );
-        window.open(`mailto:${NOTIFY_EMAIL}?subject=${sub}&body=${body}`, "_blank");
-      }
+      } catch {}
     } finally {
       setSubmitting(false);
       setDone(true);
@@ -231,13 +292,13 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
           <button
             onClick={reset}
             aria-label="Bezárás"
-            className="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full border border-earth/15 text-earth/60 transition hover:border-gold hover:text-earth hover:bg-white/60"
+            className="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full border border-earth/15 text-earth/60 transition hover:border-gold hover:text-earth hover:bg-white/60 cursor-pointer"
           >
             <X className="h-4.5 w-4.5" />
           </button>
 
           <p className="eyebrow" style={{ color: accent }}>
-            Jelentkezés
+            Bejelentkezés · Helyfoglalás
           </p>
           <h2
             id="modal-title"
@@ -250,7 +311,7 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
           <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/60 border border-earth/10 px-3 py-1 text-earth/80">
               <Calendar className="h-3 w-3" style={{ color: accent }} />
-              {event.date}
+              {selectedDate}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/60 border border-earth/10 px-3 py-1 text-earth/80">
               <Clock className="h-3 w-3" style={{ color: accent }} />
@@ -271,11 +332,11 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
                 }`}
               >
                 <Users className="h-3 w-3" />
-                {isFull ? "Megtelt" : `${spotsLeft} szabad hely`}
+                {isFull ? "Megtelt" : `${spotsLeft} / ${event.capacity} szabad hely`}
               </span>
             )}
             {event.price && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/60 border border-earth/10 px-3 py-1 text-earth/80">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 border border-gold/30 px-3 py-1 font-semibold text-earth">
                 {event.price}
               </span>
             )}
@@ -286,16 +347,66 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
           {!done ? (
             /* ── Form ── */
             <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-4">
+              {/* Ha csütörtöki jóga, dátumválasztó a következő 4 csütörtökre */}
+              {isWeeklyThursdayYoga && (
+                <div>
+                  <label
+                    htmlFor="er-date"
+                    className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5"
+                  >
+                    Melyik csütörtöki alkalomra érkezel? <span className="text-destructive">*</span>
+                  </label>
+                  <select
+                    id="er-date"
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value);
+                      setErrors((p) => ({ ...p, email: "" }));
+                    }}
+                    className="w-full rounded-xl border border-earth/20 bg-linen/70 px-4 py-3 text-sm font-medium text-earth focus:border-gold focus:outline-none transition"
+                  >
+                    {upcomingThursdays.map((th) => {
+                      const count = getRegsForDate(event.id, th).length;
+                      const rem =
+                        event.capacity !== undefined
+                          ? Math.max(0, event.capacity - count)
+                          : null;
+                      return (
+                        <option key={th} value={th} disabled={rem === 0}>
+                          {th} · 10:00–11:15{" "}
+                          {rem !== null
+                            ? rem === 0
+                              ? "(MEGTELT)"
+                              : `(${rem} szabad hely)`
+                            : ""}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              )}
+
               {isFull ? (
                 <p className="rounded-2xl bg-linen border border-gold/30 p-5 text-center text-sm text-earth/80">
-                  Ez az alkalom sajnos már megtelt.<br />
-                  Érdeklődj a <a href="mailto:info@soulritual.hu" className="font-medium text-gold underline-offset-2 underline">várólistára</a> kerülésről!
+                  Ez az alkalom sajnos már megtelt (max. {event.capacity} fő).
+                  <br />
+                  Válassz másik csütörtöki időpontot fent, vagy érdeklődj a{" "}
+                  <a
+                    href="mailto:info@soulritual.hu"
+                    className="font-medium text-gold underline-offset-2 underline"
+                  >
+                    várólistára
+                  </a>{" "}
+                  kerülésről!
                 </p>
               ) : (
                 <>
                   {/* Name */}
                   <div>
-                    <label htmlFor="er-name" className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5">
+                    <label
+                      htmlFor="er-name"
+                      className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5"
+                    >
                       Teljes név <span className="text-destructive">*</span>
                     </label>
                     <input
@@ -305,9 +416,14 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
                       value={name}
                       autoComplete="name"
                       placeholder="pl. Nagy Kata"
-                      onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: "" })); }}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        setErrors((p) => ({ ...p, name: "" }));
+                      }}
                       className={`w-full rounded-xl border bg-linen/60 px-4 py-3 text-sm text-earth placeholder:text-earth/35 focus:border-gold focus:outline-none transition ${
-                        errors.name ? "border-destructive ring-1 ring-destructive" : "border-earth/20"
+                        errors.name
+                          ? "border-destructive ring-1 ring-destructive"
+                          : "border-earth/20"
                       }`}
                     />
                     {errors.name && (
@@ -319,7 +435,10 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
 
                   {/* Email */}
                   <div>
-                    <label htmlFor="er-email" className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5">
+                    <label
+                      htmlFor="er-email"
+                      className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5"
+                    >
                       E-mail cím <span className="text-destructive">*</span>
                     </label>
                     <div className="relative">
@@ -330,9 +449,14 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
                         value={email}
                         autoComplete="email"
                         placeholder="pl. kata@pelda.hu"
-                        onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: "" })); }}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          setErrors((p) => ({ ...p, email: "" }));
+                        }}
                         className={`w-full rounded-xl border bg-linen/60 pl-10 pr-4 py-3 text-sm text-earth placeholder:text-earth/35 focus:border-gold focus:outline-none transition ${
-                          errors.email ? "border-destructive ring-1 ring-destructive" : "border-earth/20"
+                          errors.email
+                            ? "border-destructive ring-1 ring-destructive"
+                            : "border-earth/20"
                         }`}
                       />
                     </div>
@@ -345,8 +469,11 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
 
                   {/* Phone */}
                   <div>
-                    <label htmlFor="er-phone" className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5">
-                      Telefonszám <span className="text-earth/35 font-normal normal-case text-[10px]">(nem kötelező)</span>
+                    <label
+                      htmlFor="er-phone"
+                      className="block text-[11px] font-semibold tracking-wider uppercase text-earth/70 mb-1.5"
+                    >
+                      Telefonszám <span className="text-destructive">*</span>
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-earth/35" />
@@ -356,27 +483,55 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
                         value={phone}
                         autoComplete="tel"
                         placeholder="+36 30 123 4567"
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full rounded-xl border border-earth/20 bg-linen/60 pl-10 pr-4 py-3 text-sm text-earth placeholder:text-earth/35 focus:border-gold focus:outline-none transition"
+                        onChange={(e) => {
+                          setPhone(e.target.value);
+                          setErrors((p) => ({ ...p, phone: "" }));
+                        }}
+                        className={`w-full rounded-xl border bg-linen/60 pl-10 pr-4 py-3 text-sm text-earth placeholder:text-earth/35 focus:border-gold focus:outline-none transition ${
+                          errors.phone
+                            ? "border-destructive ring-1 ring-destructive"
+                            : "border-earth/20"
+                        }`}
                       />
                     </div>
+                    {errors.phone && (
+                      <p className="mt-1 text-xs text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" /> {errors.phone}
+                      </p>
+                    )}
                   </div>
 
                   {/* GDPR checkbox */}
-                  <label className={`flex items-start gap-3 cursor-pointer select-none rounded-2xl p-4 border transition ${errors.gdpr ? "border-destructive/40 bg-destructive/5" : "border-earth/10 bg-linen/50"}`}>
+                  <label
+                    className={`flex items-start gap-3 cursor-pointer select-none rounded-2xl p-4 border transition ${
+                      errors.gdpr
+                        ? "border-destructive/40 bg-destructive/5"
+                        : "border-earth/10 bg-linen/50"
+                    }`}
+                  >
                     <div className="mt-0.5 shrink-0">
                       <input
                         type="checkbox"
                         checked={gdpr}
-                        onChange={(e) => { setGdpr(e.target.checked); setErrors((p) => ({ ...p, gdpr: "" })); }}
+                        onChange={(e) => {
+                          setGdpr(e.target.checked);
+                          setErrors((p) => ({ ...p, gdpr: "" }));
+                        }}
                         className="sr-only"
                       />
-                      <div className={`h-5 w-5 rounded-md border flex items-center justify-center transition ${gdpr ? "bg-earth border-earth text-cream" : "border-earth/30 bg-cream"}`}>
+                      <div
+                        className={`h-5 w-5 rounded-md border flex items-center justify-center transition ${
+                          gdpr
+                            ? "bg-earth border-earth text-cream"
+                            : "border-earth/30 bg-cream"
+                        }`}
+                      >
                         {gdpr && <Check className="h-3.5 w-3.5 stroke-[3]" />}
                       </div>
                     </div>
                     <span className="text-xs leading-relaxed text-earth/80">
-                      Hozzájárulok, hogy az adataimat a Soul Ritual a jelentkezésem visszaigazolásához felhasználja. Adataimat harmadik félnek nem adják át, és bármikor kérhetem törlésüket.
+                      Hozzájárulok, hogy az adataimat a Soul Ritual a jelentkezésem
+                      visszaigazolásához felhasználja. Adataimat harmadik félnek nem adják át.
                     </span>
                   </label>
                   {errors.gdpr && (
@@ -393,17 +548,17 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
                     style={{ background: accent }}
                   >
                     {submitting ? (
-                      <span>Küldés...</span>
+                      <span>Jelentkezés rögzítése...</span>
                     ) : (
                       <>
                         <Check className="h-4 w-4" />
-                        <span>Jelentkezem</span>
+                        <span>Lefoglalom a helyem</span>
                         <ArrowRight className="h-4 w-4" />
                       </>
                     )}
                   </button>
-                  <p className="text-center text-[11px] text-earth/40">
-                    {event.price ? `${event.price} · ` : ""}Visszaigazolás e-mailben · Adataid védve
+                  <p className="text-center text-[11px] text-earth/55">
+                    Max. {event.capacity || 8} fő · A pontos címet a visszaigazolásban küldöm
                   </p>
                 </>
               )}
@@ -417,28 +572,71 @@ export default function EventRegistrationModal({ isOpen, onClose, event }: Props
               >
                 <Sparkles className="h-8 w-8 animate-pulse" style={{ color: accent }} />
               </div>
-              <p className="eyebrow" style={{ color: accent }}>Sikeresen elküldve</p>
-              <h3 className="mt-2 font-display text-2xl text-earth">Jelentkezésed rögzítettük! ✦</h3>
-              <p className="mt-3 text-sm leading-relaxed text-earth/70 max-w-sm mx-auto">
-                Kedves <strong>{name}</strong>, hamarosan visszaigazolót küldünk a{" "}
-                <strong>{email}</strong> e-mail címre.
+              <p className="eyebrow" style={{ color: accent }}>
+                Sikeres jelentkezés
+              </p>
+              <h3 className="mt-2 font-display text-2xl text-earth">
+                Helyedet lefoglaltuk! ✦
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-earth/75 max-w-sm mx-auto">
+                Kedves <strong>{name}</strong>, szeretettel várlak! A jelentkezésed bekerült a
+                nyilvántartásba, és visszaigazolást is küldtünk a <strong>{email}</strong> címre.
               </p>
 
               <div className="mt-6 rounded-2xl bg-linen border border-gold/25 p-5 text-left text-sm space-y-2">
-                <div className="flex items-center gap-3 text-earth/75">
+                <div className="flex items-center gap-3 text-earth/80">
                   <Calendar className="h-4 w-4 shrink-0 text-gold" />
-                  <span><strong>{event.date}</strong> · {event.time}</span>
+                  <span>
+                    <strong>{selectedDate}</strong> · {event.time}
+                  </span>
                 </div>
-                <div className="flex items-center gap-3 text-earth/75">
+                <div className="flex items-center gap-3 text-earth/80">
                   <MapPin className="h-4 w-4 shrink-0 text-gold" />
                   <span>{event.location}</span>
                 </div>
               </div>
 
+              {/* Opcionális online kártyás fizetés a regisztráció után — sötétbarna gombbal */}
+              {(event.stripePaymentUrl || event.stripeBuyButtonId) && (
+                <div className="mt-6 rounded-2xl border border-gold/35 bg-linen/60 p-5 space-y-3">
+                  <p className="text-xs leading-relaxed text-earth/80">
+                    A részvételi díjat (<strong>{event.price}</strong>) rendezheted személyesen a
+                    helyszínen, vagy kifizetheted most online bankkártyával:
+                  </p>
+                  {event.stripePaymentUrl ? (
+                    <a
+                      href={event.stripePaymentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-earth py-3.5 px-6 text-xs font-semibold tracking-[0.18em] uppercase text-cream shadow-md transition hover:bg-gold"
+                    >
+                      <span>Online bankkártyás fizetés ({event.price})</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </a>
+                  ) : !showOnlinePayment ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowOnlinePayment(true)}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-earth py-3.5 px-6 text-xs font-semibold tracking-[0.18em] uppercase text-cream shadow-md transition hover:bg-gold cursor-pointer"
+                    >
+                      <span>Online bankkártyás fizetés ({event.price})</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  ) : (
+                    <div className="flex justify-center pt-2">
+                      {createElement("stripe-buy-button", {
+                        "buy-button-id": event.stripeBuyButtonId,
+                        "publishable-key": STRIPE_PUBLISHABLE_KEY,
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={reset}
-                className="mt-8 inline-flex items-center justify-center rounded-full border border-earth/20 px-8 py-3 text-xs tracking-[0.22em] uppercase text-earth/70 transition hover:border-gold hover:text-earth cursor-pointer"
+                className="mt-7 inline-flex items-center justify-center rounded-full border border-earth/20 px-8 py-3 text-xs tracking-[0.22em] uppercase text-earth/70 transition hover:border-gold hover:text-earth cursor-pointer"
               >
                 Bezárom
               </button>

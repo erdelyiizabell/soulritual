@@ -26,7 +26,11 @@ import {
   X,
 } from "lucide-react";
 
-import EventRegistrationModal, { EventInfo } from "@/components/EventRegistrationModal";
+import EventRegistrationModal, {
+  EventInfo,
+  getRegsForDate,
+  getUpcomingThursdays,
+} from "@/components/EventRegistrationModal";
 import SelfDiscoveryCompass from "@/components/SelfDiscoveryCompass";
 import ValueLadderSection from "@/components/ValueLadderSection";
 
@@ -842,7 +846,7 @@ const EVENTS: EventInfo[] = [
     subtitle: "Heti rendszerességgel",
     date: "Minden csütörtökön",
     time: "10:00–11:15",
-    location: "Soul Ritual Jurta, Tök",
+    location: "Soul Ritual Jurta",
     capacity: 8,
     price: "3 800 Ft / fő",
     stripeBuyButtonId: "buy_btn_1UVVb0V05iqq8bsGQ4d23T9e",
@@ -879,15 +883,15 @@ function EventCard({
   const isExternal = event.id === "budapest-yoga";
   const accent = event.color === "gold" ? "var(--gold)" : "var(--earth)";
 
-  // Live capacity from localStorage (only for non-Stripe modal events)
+  // Live capacity from localStorage (for the next upcoming Thursday or event date)
   const [spotsLeft, setSpotsLeft] = useState<number | null>(null);
   useEffect(() => {
-    try {
-      localStorage.removeItem("soulritual_event_regs_v2");
-    } catch {}
     if (event.capacity === undefined) return;
-    setSpotsLeft(event.capacity);
-  }, [event.id, event.capacity]);
+    const targetDate =
+      event.id === "jurta-yoga-thursday" ? getUpcomingThursdays(1)[0] : event.date;
+    const used = getRegsForDate(event.id, targetDate).length;
+    setSpotsLeft(Math.max(0, event.capacity - used));
+  }, [event.id, event.capacity, event.date]);
 
   return (
     <article
@@ -915,8 +919,12 @@ function EventCard({
             </span>
           )}
           {event.capacity !== undefined && (
-            <span className="rounded-full bg-earth/10 px-3 py-1 text-[10px] font-semibold tracking-widest uppercase text-earth/60">
-              Max. {event.capacity} fő
+            <span className="rounded-full bg-earth/10 px-3 py-1 text-[10px] font-semibold tracking-widest uppercase text-earth/75">
+              {spotsLeft !== null
+                ? spotsLeft === 0
+                  ? "Megtelt"
+                  : `${spotsLeft} / ${event.capacity} szabad hely`
+                : `Max. ${event.capacity} fő`}
             </span>
           )}
           {event.price && (
@@ -994,22 +1002,14 @@ function EventCard({
               <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </div>
-        ) : event.stripeBuyButtonId ? (
-          <div className="mt-2 flex w-full justify-center">
-            {createElement("stripe-buy-button", {
-              "buy-button-id": event.stripeBuyButtonId,
-              "publishable-key": STRIPE_PUBLISHABLE_KEY,
-            })}
-          </div>
         ) : (
           <button
             type="button"
             disabled={spotsLeft === 0}
             onClick={() => onRegister(event)}
-            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-cream transition disabled:opacity-40 cursor-pointer"
-            style={{ background: accent }}
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-earth py-3.5 px-5 text-xs font-semibold tracking-[0.18em] uppercase text-cream shadow-md transition hover:bg-gold disabled:opacity-40 cursor-pointer"
           >
-            {spotsLeft === 0 ? "Megtelt" : "Bejelentkezem"}
+            <span>{spotsLeft === 0 ? "Megtelt" : "Bejelentkezem · Helyfoglalás"}</span>
             {spotsLeft !== 0 && <ArrowRight className="h-3.5 w-3.5" />}
           </button>
         )}
