@@ -48,15 +48,15 @@ const LADDER_STEPS = [
   },
   {
     step: "03 · Élő közösségi tér",
-    badge: "3 800 Ft – 9 000 Ft",
+    badge: "3 800 Ft – 5 890 Ft",
     icon: Flame,
-    title: "Csoportos alkalmak a jurtában",
-    subtitle: "Közös lelassulás a természetben",
+    title: "Csoportos alkalmak & Workshopok",
+    subtitle: "Közös elmélyülés a jurtában és Budapesten",
     description:
-      "Lépj be élőben is a Soul Ritual jurtába: csütörtöki kis létszámú jógaórák (max. 8 fő), 3 órás önismereti workshopok, női körök és szívnyitó kakaó szertartások.",
+      "Kapcsolódj élőben is: csütörtöki kis létszámú jógaórák a jurtában, november 21-i transzgenerációs női önismereti workshop (ajándék munkafüzettel!), női körök és kakaó szertartások.",
     highlights: [
       "Csütörtöki jóga a jurtában (3 800 Ft / fő)",
-      "3 órás önismereti workshopok (9 000 Ft / fő)",
+      "Nov. 21. · Ki vagyok a hozott mintáimon túl? workshop (3 890 Ft-tól + ajándék munkafüzet)",
       "Kakaó szertartás, női körök és izzasztó kunyhó",
     ],
     ctaLabel: "Eseménynaptár & Jelentkezés",

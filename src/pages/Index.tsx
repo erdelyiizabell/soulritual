@@ -849,14 +849,13 @@ const EVENTS: EventInfo[] = [
     color: "earth",
   },
   {
-    id: "onismereti-workshop-nov12",
-    title: "Ki vagyok én a hozott mintáimon túl?",
-    subtitle: "Önismereti workshop · 3 óra",
-    date: "2026. november 12. (csütörtök)",
-    time: "10:00–13:00",
-    location: "Soul Ritual Jurta, Tök",
-    price: "9 000 Ft / fő",
-    stripeBuyButtonId: "buy_btn_1UVVcCV05iqq8bsGWNmLygrW",
+    id: "onismereti-workshop-nov21",
+    title: "Ki vagyok a hozott mintáimon túl?",
+    subtitle: "Transzgenerációs női önismereti workshop",
+    date: "2026. november 21. (szombat)",
+    time: "9:00–11:45 (Érkezés: 8:45)",
+    location: "Studio Passion, 1097 Budapest, Vaskapu u. 26.",
+    price: "3 890 Ft-tól (Early bird)",
     color: "earth",
   },
 ];
@@ -866,8 +865,8 @@ const EVENT_DESCRIPTIONS: Record<string, string> = {
     "Rendszeres jóga Budapesten, a Studio Passion stúdióban. Minden szinten fogadlak — kezdőként és haladóként egyaránt.",
   "jurta-yoga-thursday":
     "Kis létszámú, személyes légkörű jóga a természetben. Maximum 8 főnek — hogy mindenkire jusson figyelem.",
-  "onismereti-workshop-nov12":
-    "3 órás mélymerülés önmagadba: feltérképezzük a hozott mintákat, és megkeressük, ki vagy te azokon túl.",
+  "onismereti-workshop-nov21":
+    "Transzgenerációs női önismereti workshop: családi minták felismerése, női szerepek és kapcsolatok. 🎁 Ajándék önismereti munkafüzettel! Sávos jegyárak (minél előbb, annál kedvezőbb): 3 890 Ft · 4 890 Ft (nov. 12-től) · 5 890 Ft (nov. 18-tól).",
 };
 
 function EventCard({
@@ -974,6 +973,27 @@ function EventCard({
             Megnézem a stúdiót
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
+        ) : event.id === "onismereti-workshop-nov21" ? (
+          <div className="mt-2 flex flex-col items-stretch gap-2.5 w-full">
+            <a
+              href="https://pontte.hu/esemeny/ki-vagyok-a-hozott-mintaimon-tul"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-earth py-3.5 px-5 text-xs font-semibold tracking-[0.18em] uppercase text-cream shadow-md transition hover:bg-gold"
+            >
+              <span>Jegyvásárlás (3 890 Ft-tól)</span>
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+            <a
+              href="https://www.facebook.com/events/4199945080308957/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-gold hover:text-earth"
+            >
+              <span>Facebook esemény megtekintése</span>
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
         ) : event.stripeBuyButtonId ? (
           <div className="mt-2 flex w-full justify-center">
             {createElement("stripe-buy-button", {
@@ -1012,6 +1032,108 @@ function Events() {
           <p className="mt-6 text-earth/70 sm:text-lg">
             Hetente, a természetben és a városban — válaszd azt, ami most illeszkedik az életedbe.
           </p>
+        </div>
+
+        {/* ── Kiemelt Workshop + Videó Szekció (Nov. 21.) ── */}
+        <div className="mt-14 overflow-hidden rounded-3xl border-2 border-gold/45 bg-cream shadow-xl">
+          <div className="grid lg:grid-cols-12">
+            {/* Left: Video Player */}
+            <div className="relative bg-earth/95 lg:col-span-5 flex flex-col justify-center min-h-[360px] sm:min-h-[440px]">
+              <iframe
+                src="https://drive.google.com/file/d/1OEjJIxJHoeKQXsKIvireLRqqvu7K-URR/preview"
+                title="Ki vagyok a hozott mintáimon túl? — Workshop videó"
+                allow="autoplay; encrypted-media; fullscreen"
+                allowFullScreen
+                className="h-full w-full min-h-[360px] sm:min-h-[440px] border-0"
+              />
+            </div>
+
+            {/* Right: Workshop Details & Early Bird Pricing */}
+            <div className="flex flex-col justify-between p-7 sm:p-10 lg:col-span-7 space-y-6">
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className="rounded-full bg-gold px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream shadow">
+                    ✦ Kiemelt Workshop · 2026. november 21. (szombat)
+                  </span>
+                  <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-earth">
+                    🎁 Ajándék önismereti munkafüzettel
+                  </span>
+                </div>
+
+                <h3 className="font-display text-3xl leading-snug text-earth sm:text-4xl">
+                  Ki vagyok a hozott <em className="italic text-gold">mintáimon túl?</em>
+                </h3>
+                <p className="font-display text-base italic text-earth/75">
+                  Transzgenerációs női önismereti workshop · Studio Passion Budapest (9:00–11:45,
+                  érkezés 8:45-től)
+                </p>
+
+                <p className="text-sm leading-relaxed text-earth/80">
+                  Lehet, hogy sokszor nem is a saját döntéseid szerint éled az életed? Mindig te
+                  alkalmazkodsz, nehéz nemet mondanod, vagy ugyanazokat a párkapcsolati helyzeteket
+                  ismétled? Ezen a délelőttön biztonságos, megtartó női körben nézünk rá a hozott
+                  családi mintákra, a női szerepekre és a saját belső erődre.
+                </p>
+
+                {/* Early bird price tiers */}
+                <div className="rounded-2xl border border-gold/30 bg-linen p-4 sm:p-5 space-y-2.5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                    🎟️ Sávos jegyárak — minél előbb jelentkezel, annál kedvezőbb:
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-3 text-xs">
+                    <div className="rounded-xl border-2 border-gold bg-cream p-3">
+                      <span className="block font-semibold text-gold uppercase tracking-wider text-[10px]">
+                        1. sáv · Early bird
+                      </span>
+                      <span className="mt-0.5 block font-display text-xl font-bold text-earth">
+                        3 890 Ft
+                      </span>
+                      <span className="text-[11px] text-earth/65">Nov. 11. éjfélig</span>
+                    </div>
+                    <div className="rounded-xl border border-earth/15 bg-cream/70 p-3">
+                      <span className="block font-semibold text-earth/60 uppercase tracking-wider text-[10px]">
+                        2. sáv · Nov. 12-től
+                      </span>
+                      <span className="mt-0.5 block font-display text-xl font-semibold text-earth">
+                        4 890 Ft
+                      </span>
+                      <span className="text-[11px] text-earth/60">Nov. 12. 00:00-tól</span>
+                    </div>
+                    <div className="rounded-xl border border-earth/15 bg-cream/70 p-3">
+                      <span className="block font-semibold text-earth/60 uppercase tracking-wider text-[10px]">
+                        3. sáv · Nov. 18-tól
+                      </span>
+                      <span className="mt-0.5 block font-display text-xl font-semibold text-earth">
+                        5 890 Ft
+                      </span>
+                      <span className="text-[11px] text-earth/60">Nov. 18. 00:00-tól</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+                <a
+                  href="https://pontte.hu/esemeny/ki-vagyok-a-hozott-mintaimon-tul"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-earth px-7 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-cream shadow-md transition hover:bg-gold"
+                >
+                  <span>Jegyvásárlás most (3 890 Ft-tól)</span>
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.facebook.com/events/4199945080308957/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-earth/25 bg-linen px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-earth transition hover:border-gold hover:text-gold"
+                >
+                  <span>Facebook esemény</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
