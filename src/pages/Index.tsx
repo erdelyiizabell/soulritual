@@ -1,16 +1,12 @@
-import { createElement, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Flower2,
   Heart,
-  Wind,
   Sparkles,
   Sun,
   Flame,
   Users,
-  Baby,
-  Building2,
-  Leaf,
   ChevronDown,
   MapPin,
   Phone,
@@ -32,7 +28,6 @@ import EventRegistrationModal, {
   getUpcomingThursdays,
 } from "@/components/EventRegistrationModal";
 import SelfDiscoveryCompass from "@/components/SelfDiscoveryCompass";
-import ValueLadderSection from "@/components/ValueLadderSection";
 
 import jurtaHero from "@/assets/jurta-hero.jpg";
 import kezTermeszet from "@/assets/kez-termeszet.jpg";
@@ -41,8 +36,6 @@ import sunsetWalk from "@/assets/sunset-walk.png";
 import kezekOssze from "@/assets/kezek-osszekapcsolodas.png";
 import logoUrl from "@/assets/soul-ritual-logo-transparent.png";
 import jurtaInterior from "@/assets/jurta-interior.jpg";
-import whyLavender from "@/assets/why-lavender.jpg";
-import eventIntimitas from "@/assets/event-intimitas-tere.jpg";
 import blogSlowLiving from "@/assets/blog-slow-living.jpg";
 import blogCacao from "@/assets/blog-cacao.jpg";
 import blogSafeSpace from "@/assets/blog-safe-space.jpg";
@@ -52,25 +45,36 @@ import relationshipCover from "@/assets/munkafuzet-kapcsolati-mintaim.jpg";
 const BUDAPEST_YOGA_URL = "https://www.studiopassion.hu/";
 
 const services = [
-  { icon: Flower2, name: "Jóga", desc: "Tudatos mozgás, légzés és jelenlét." },
-  { icon: Leaf, name: "Meditáció", desc: "Csendes befelé fordulás, vezetett gyakorlatok." },
-  { icon: Wind, name: "Légzőgyakorlatok", desc: "A lélegzet ereje a nyugalomhoz." },
-  { icon: Sparkles, name: "Access Bars", desc: "Finom energiamunka a fejed 32 pontján." },
-  { icon: Heart, name: "Theta Healing", desc: "Mély tudatalatti átprogramozás." },
-  { icon: Sun, name: "Kakaó szertartás", desc: "Szív-nyitó rituálé ceremoniális kakaóval." },
-  { icon: Flame, name: "Izzasztó kunyhó", desc: "Tisztító hőélmény, ősi hagyomány." },
-  { icon: Users, name: "Női körök", desc: "Biztonságos tér a női energia számára." },
-  { icon: Baby, name: "Gyerek mindfulness", desc: "Játékos figyelem-gyakorlatok kicsiknek." },
-  { icon: Building2, name: "Céges wellbeing", desc: "Csapatok újrahangolása a természetben." },
-];
-
-const reasons = [
-  "Természetközeli helyszín",
-  "Kis létszámú csoportok",
-  "Több mint 10 év tapasztalat",
-  "Biztonságos, elfogadó közeg",
-  "Kezdők számára is",
-  "A hétköznapokban is alkalmazható módszerek",
+  {
+    icon: Flower2,
+    name: "Jóga, meditáció & légzés",
+    desc: "Tudatos mozgás, vezetett elcsendesedés és légzőgyakorlatok a testi-lelki egyensúlyért — Budapesten és a jurtában.",
+  },
+  {
+    icon: Heart,
+    name: "Egyéni önismereti kísérés",
+    desc: "Személyes konzultáció a jurtában vagy online: hozott családi minták, határhúzás és kapcsolati elakadások oldása.",
+  },
+  {
+    icon: Sparkles,
+    name: "ThetaHealing & Access Bars",
+    desc: "Finom energetikai és tudatalatti blokkoldás, amely segít elengedni a mélyen rögzült korlátozó hitrendszereket.",
+  },
+  {
+    icon: Users,
+    name: "Női körök & Workshopok",
+    desc: "Megtartó, biztonságos közösségi tér, ahol álarcok és megfelelési kényszer nélkül kapcsolódhatsz önmagadhoz.",
+  },
+  {
+    icon: Sun,
+    name: "Kakaó szertartás",
+    desc: "Szívnyitó rituálé ceremoniális kakaóval, vezetett belső utazással és elcsendesedéssel.",
+  },
+  {
+    icon: Flame,
+    name: "Izzasztó kunyhó & Elvonulások",
+    desc: "Ősi tisztító rituálé és természetközeli elvonulások a mély testi-lelki megújulásért.",
+  },
 ];
 
 const testimonials = [
@@ -443,9 +447,9 @@ function Header() {
   const [open, setOpen] = useState(false);
   const nav = [
     ["Bemutatkozás", "#about"],
+    ["Események", "#events"],
     ["Munkafüzetek", "#webshop-promo"],
     ["Szolgáltatások", "#services"],
-    ["Események", "#events"],
     ["A jurta", "#jurta"],
     ["Blog", "#blog"],
     ["Kapcsolat", "#contact"],
@@ -698,16 +702,16 @@ function About() {
 
 function Services() {
   return (
-    <section id="services" className="relative bg-linen px-6 py-28 lg:py-40">
+    <section id="services" className="relative bg-linen px-6 py-28 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl" data-reveal>
-          <p className="eyebrow">Szolgáltatások</p>
+          <p className="eyebrow">Szolgáltatások & Módszerek</p>
           <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
-            Tíz út, egyetlen <em className="italic text-gold">cél</em>.
+            Hat út, egyetlen <em className="italic text-gold">cél</em>.
           </h2>
           <p className="mt-6 text-earth/70 sm:text-lg">
             Bármelyiket választod, ugyanoda vezet: befelé. A módszer más, a lényeg ugyanaz —
-            lelassulás, jelenlét, kapcsolódás.
+            lelassulás, jelenlét és valódi kapcsolódás önmagadhoz.
           </p>
         </div>
 
@@ -729,7 +733,7 @@ function Services() {
             </div>
           ))}
         </div>
-        <div className="mt-16 flex justify-center" data-reveal>
+        <div className="mt-14 flex justify-center" data-reveal>
           <a
             href="https://app.minup.io/book/soulritual"
             target="_blank"
@@ -747,20 +751,34 @@ function Services() {
 
 function Jurta() {
   return (
-    <section id="jurta" className="relative bg-cream px-6 py-28 lg:py-40">
+    <section id="jurta" className="relative bg-cream px-6 py-28 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-5 lg:pt-16" data-reveal>
-            <p className="eyebrow">A jurta</p>
+          <div className="lg:col-span-5 lg:pt-12" data-reveal>
+            <p className="eyebrow">A jurta tere</p>
             <h2 className="mt-6 text-4xl leading-tight sm:text-5xl lg:text-6xl">
               Nem csupán egy <em className="italic text-gold">épület</em>.
             </h2>
-            <div className="mt-10 space-y-6 text-base leading-relaxed text-earth/75 sm:text-lg">
+            <div className="mt-8 space-y-5 text-base leading-relaxed text-earth/75 sm:text-lg">
               <p>
-                Egy hely, ahol kiszakadhatsz a mindennapokból, lelassulhatsz, és biztonságos térben
-                kapcsolódhatsz önmagadhoz.
+                Egy hely a természet ölelésében, ahol kiszakadhatsz a mindennapokból, lelassulhatsz,
+                és biztonságos, ítélkezésmentes térben kapcsolódhatsz önmagadhoz.
               </p>
             </div>
+            <ul className="mt-8 space-y-3 border-t border-earth/15 pt-6 text-sm text-earth/80">
+              <li className="flex items-center gap-3">
+                <Check className="h-4 w-4 shrink-0 text-gold" />
+                <span>Kis létszámú, személyes figyelem (maximum 8 fő)</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Check className="h-4 w-4 shrink-0 text-gold" />
+                <span>Természetközeli, csendes elvonulási tér</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Check className="h-4 w-4 shrink-0 text-gold" />
+                <span>Kezdőként és gyakorlóként is biztonságos közeg</span>
+              </li>
+            </ul>
           </div>
           <div className="lg:col-span-7" data-reveal>
             <img
@@ -789,47 +807,7 @@ function Jurta() {
   );
 }
 
-function Why() {
-  return (
-    <section
-      className="relative overflow-hidden bg-earth px-6 py-28 text-cream lg:py-40"
-      style={{
-        backgroundImage: `linear-gradient(to bottom, color-mix(in oklab, var(--earth) 92%, transparent), color-mix(in oklab, var(--earth) 96%, transparent)), url(${whyLavender})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="mx-auto max-w-6xl">
-        <div className="max-w-2xl" data-reveal>
-          <p className="eyebrow text-gold-soft">Miért a Soul Ritual</p>
-          <h2 className="mt-6 text-4xl leading-tight text-cream sm:text-5xl lg:text-6xl">
-            <em className="italic text-gold-soft">Hat</em> ok, amiért ide térsz vissza.
-          </h2>
-        </div>
-
-        <ul className="mt-16 grid gap-x-12 gap-y-10 sm:grid-cols-2">
-          {reasons.map((r, i) => (
-            <li
-              key={r}
-              data-reveal
-              className="flex items-start gap-5 border-t border-cream/15 pt-6"
-            >
-              <span className="font-display text-2xl italic text-gold-soft">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="text-lg text-cream/90">{r}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
 // ─── Events ──────────────────────────────────────────────────────────────────
-const STRIPE_PUBLISHABLE_KEY =
-  "pk_live_51TuujmV05iqq8bsGEcHVCXqFKMY0AxcMuwOwl5qe5TvQjDsGHeim19TM3GD0052Ou0iGQVf8ekIiA5Qlue28GEx600agL81W3h";
-
 const EVENTS: EventInfo[] = [
   {
     id: "budapest-yoga",
@@ -852,16 +830,6 @@ const EVENTS: EventInfo[] = [
     stripeBuyButtonId: "buy_btn_1UVVb0V05iqq8bsGQ4d23T9e",
     color: "earth",
   },
-  {
-    id: "onismereti-workshop-nov21",
-    title: "Ki vagyok a hozott mintáimon túl?",
-    subtitle: "Transzgenerációs női önismereti workshop",
-    date: "2026. november 21. (szombat)",
-    time: "9:00–11:45 (Érkezés: 8:45)",
-    location: "Studio Passion, 1097 Budapest, Vaskapu u. 26.",
-    price: "3 890 Ft-tól (Early bird)",
-    color: "earth",
-  },
 ];
 
 const EVENT_DESCRIPTIONS: Record<string, string> = {
@@ -869,8 +837,6 @@ const EVENT_DESCRIPTIONS: Record<string, string> = {
     "Rendszeres jóga Budapesten, a Studio Passion stúdióban. Minden szinten fogadlak — kezdőként és haladóként egyaránt.",
   "jurta-yoga-thursday":
     "Kis létszámú, személyes légkörű jóga a természetben. Maximum 8 főnek — hogy mindenkire jusson figyelem.",
-  "onismereti-workshop-nov21":
-    "Transzgenerációs női önismereti workshop: családi minták felismerése, női szerepek és kapcsolatok. 🎁 Ajándék önismereti munkafüzettel! Sávos jegyárak (minél előbb, annál kedvezőbb): 3 890 Ft · 4 890 Ft (nov. 12-től) · 5 890 Ft (nov. 18-tól).",
 };
 
 function EventCard({
@@ -981,27 +947,6 @@ function EventCard({
             Megnézem a stúdiót
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
-        ) : event.id === "onismereti-workshop-nov21" ? (
-          <div className="mt-2 flex flex-col items-stretch gap-2.5 w-full">
-            <a
-              href="https://pontte.hu/esemeny/ki-vagyok-a-hozott-mintaimon-tul"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-earth py-3.5 px-5 text-xs font-semibold tracking-[0.18em] uppercase text-cream shadow-md transition hover:bg-gold"
-            >
-              <span>Jegyvásárlás (3 890 Ft-tól)</span>
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
-            <a
-              href="https://www.facebook.com/events/4199945080308957/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-gold hover:text-earth"
-            >
-              <span>Facebook esemény megtekintése</span>
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
-          </div>
         ) : (
           <button
             type="button"
@@ -1155,12 +1100,15 @@ function Events() {
           </div>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {EVENTS.map((e, i) => (
-            <div key={e.id} style={{ transitionDelay: `${i * 80}ms` }}>
-              <EventCard event={e} onRegister={setActiveEvent} />
-            </div>
-          ))}
+        <div className="mt-14">
+          <p className="eyebrow mb-6">Rendszeres heti jógaórák</p>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {EVENTS.map((e, i) => (
+              <div key={e.id} style={{ transitionDelay: `${i * 80}ms` }}>
+                <EventCard event={e} onRegister={setActiveEvent} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -1845,13 +1793,11 @@ export default function Index() {
       <main>
         <Hero />
         <About />
+        <Events />
         <SelfDiscoveryCompass />
         <WorkbookPromo />
-        <ValueLadderSection />
         <Services />
         <Jurta />
-        <Why />
-        <Events />
         <Testimonials />
         <Blog />
         <FAQ />
